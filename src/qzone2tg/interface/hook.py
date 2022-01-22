@@ -1,7 +1,8 @@
+import asyncio
 from aioqzone.interface.hook import Event
-from aioqzone.type import FeedRep
+from ..type import FeedModel
 
 
 class FeedEvent(Event):
-    async def BatchArrive(self, feeds: dict[int, FeedRep]):
+    async def FeedProcEnd(self, task: asyncio.Task[tuple[int, FeedModel]]):
         pass
