@@ -1,17 +1,38 @@
 from typing import Optional, Union
 
-from aioqzone.type import FeedDetailRep, FeedRep, PicRep, VideoRep, LikeData
-from pydantic import BaseModel, HttpUrl
+from aioqzone.type import FeedDetailRep, FeedRep, PicRep, VideoRep
+from pydantic import AnyHttpUrl, BaseModel, HttpUrl
+
+
+class VisualMedia(BaseModel):
+    height: int
+    width: int
+    thumbnail: HttpUrl
+    raw: HttpUrl
+
+    @classmethod
+    def from_picrep(cls, pic: PicRep):
+        if pic.is_video:
+            assert isinstance(pic, VideoRep)
+            vi = pic.video_info
+            return cls(
+                height=vi.cover_height, width=vi.cover_width, thumbnail=vi.url1, raw=vi.url3
+            )
+        else:
+            return cls(height=pic.height, width=pic.width, thumbnail=pic.url1, raw=pic.url3)
 
 
 class DetailModel(BaseModel):
     content: str = ''
-    forward: Optional[Union[HttpUrl, str]] = None
-    pic: Optional[list[Union[PicRep, VideoRep]]] = None
+    forward: Optional[Union[AnyHttpUrl, str]] = None
+    media: Optional[list[VisualMedia]] = None
 
-    @classmethod
-    def from_detailrep(cls, obj: FeedDetailRep):
-        return cls(content=obj.content, forward=obj.rt_con and obj.rt_con.content, pic=obj.pic)
+    def set_detail(self, obj: FeedDetailRep):
+        self.content = obj.content
+        self.forward = obj.rt_con and obj.rt_con.content
+        if obj.pic is None: self.media = None
+        else:
+            self.media = [VisualMedia.from_picrep(i) for i in obj.pic]
 
 
 class FeedModel(BaseModel):
@@ -22,8 +43,8 @@ class FeedModel(BaseModel):
     abstime: int
     uin: int
     nickname: str
-    curkey: Optional[str] = None
-    unikey: Optional[Union[HttpUrl, str]] = None
+    curkey: Optional[Union[HttpUrl, str]] = None
+    unikey: Optional[Union[AnyHttpUrl, str]] = None
 
     def __hash__(self) -> int:
         return hash((self.uin, self.abstime))
