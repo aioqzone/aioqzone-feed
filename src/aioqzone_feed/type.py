@@ -65,4 +65,6 @@ class FeedModel(BaseModel):
 class FeedContent(FeedModel, DetailModel):
     """FeedContent is feed with contents. This might be the common structure to
     rep a feed as it's seen."""
-    pass
+    def __hash__(self) -> int:
+        media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0
+        return hash((self.uin, self.abstime, self.content, self.forward, media_hash))
