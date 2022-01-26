@@ -2,5 +2,8 @@
 .env
 
 *.pyc
+*.egg-info
 tmp
 archive
+
+/dist

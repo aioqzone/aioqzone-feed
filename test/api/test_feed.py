@@ -3,9 +3,9 @@ import asyncio
 import pytest
 from aiohttp import ClientSession
 from aioqzone.api.loginman import MixedLoginMan
-from qzone2tg.api.feed import FeedApi
-from qzone2tg.interface.hook import FeedEvent
-from qzone2tg.type import FeedContent
+from aioqzone_feed.api.feed import FeedApi
+from aioqzone_feed.interface.hook import FeedEvent
+from aioqzone_feed.type import FeedContent
 
 pytestmark = pytest.mark.asyncio
 
