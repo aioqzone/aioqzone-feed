@@ -51,12 +51,10 @@ async def api(sess: ClientSession, man: MixedLoginMan):
 class FeedEvent4Test(FeedEvent):
     def __init__(self) -> None:
         super().__init__()
-        self.batch = []
-        self.fs = set()
+        self.batch = {}
 
     async def FeedProcEnd(self, bid: int, feed: FeedContent):
-        self.batch.append(bid)
-        self.fs.add(feed)
+        self.batch[bid] = feed
         assert feed.content
         assert feed.appid
         assert feed.fid
@@ -80,9 +78,24 @@ def showqr(png: bytes):
 async def test_by_count(api: FeedApi):
     hook = FeedEvent4Test()
     api.register_hook(hook)
-    tasks = [task async for task in api.get_feeds_by_count(10)]
-    done, pending = await asyncio.wait(tasks, timeout=60)
+    await api.get_feeds_by_count(n := 10)
+    done, pending = await api.wait(timeout=60)
     assert not pending
-    assert [i for i in range(10)] == sorted(hook.batch)
-    assert len(hook.batch) == 10
+    assert len(hook.batch) == n
+    assert len(set(hook.batch.values())) == n
+    assert all(i.exception() is None for i in done)
+    api.clear()
+    hook.batch.clear()
+
+
+async def test_by_second(api: FeedApi):
+    hook = FeedEvent4Test()
+    api.register_hook(hook)
+    await api.get_feeds_by_second(3 * 86400)
+    done, pending = await api.wait(timeout=60)
+    assert not pending
+    assert [i for i in range(len(hook.batch))] == sorted(hook.batch)
+    assert len(set(hook.batch.values())) == len(hook.batch)
+    assert all(i.exception() is None for i in done)
+    api.clear()
     hook.batch.clear()
