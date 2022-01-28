@@ -1,10 +1,12 @@
 import asyncio
 
-import pytest
-import pytest_asyncio
 from aiohttp import ClientSession
 from aioqzone.api.loginman import MixedLoginMan
-from aioqzone.interface.hook import LoginEvent, QREvent
+from aioqzone.interface.hook import LoginEvent
+from aioqzone.interface.hook import QREvent
+import pytest
+import pytest_asyncio
+
 from aioqzone_feed.api.feed import FeedApi
 from aioqzone_feed.interface.hook import FeedEvent
 from aioqzone_feed.type import FeedContent
@@ -78,7 +80,7 @@ def showqr(png: bytes):
 async def test_by_count(api: FeedApi):
     hook = FeedEvent4Test()
     api.register_hook(hook)
-    await api.get_feeds_by_count(n := 10)
+    n = await api.get_feeds_by_count(10)
     done, pending = await api.wait(timeout=60)
     assert not pending
     assert len(hook.batch) == n
@@ -91,7 +93,7 @@ async def test_by_count(api: FeedApi):
 async def test_by_second(api: FeedApi):
     hook = FeedEvent4Test()
     api.register_hook(hook)
-    await api.get_feeds_by_second(3 * 86400)
+    n = await api.get_feeds_by_second(3 * 86400)
     done, pending = await api.wait(timeout=60)
     assert not pending
     assert [i for i in range(len(hook.batch))] == sorted(hook.batch)
