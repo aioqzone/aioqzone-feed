@@ -7,3 +7,5 @@ tmp
 archive
 
 /dist
+/doc/*
+!/doc/source

@@ -81,7 +81,7 @@ async def test_by_count(api: FeedApi):
     hook = FeedEvent4Test()
     api.register_hook(hook)
     n = await api.get_feeds_by_count(10)
-    done, pending = await api.wait(timeout=60)
+    done, pending = await api.wait()
     assert not pending
     assert len(hook.batch) == n
     assert len(set(hook.batch.values())) == n
@@ -94,7 +94,7 @@ async def test_by_second(api: FeedApi):
     hook = FeedEvent4Test()
     api.register_hook(hook)
     n = await api.get_feeds_by_second(3 * 86400)
-    done, pending = await api.wait(timeout=60)
+    done, pending = await api.wait()
     assert not pending
     assert [i for i in range(len(hook.batch))] == sorted(hook.batch)
     assert len(set(hook.batch.values())) == len(hook.batch)

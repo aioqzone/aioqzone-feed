@@ -1,4 +1,4 @@
 """aioqzone plugin for handling feeds.
 """
 
-VERSION = "0.0.5.dev1"
+VERSION = "0.0.7.dev0"

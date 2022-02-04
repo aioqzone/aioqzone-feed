@@ -51,7 +51,7 @@ class BaseFeed(BaseModel):
         return cls(
             appid=obj.appid,
             typeid=obj.typeid,
-            fid=obj.key,
+            fid=obj.fid,
             abstime=obj.abstime,
             uin=obj.uin,
             nickname=obj.nickname,
