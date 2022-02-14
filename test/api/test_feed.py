@@ -57,7 +57,6 @@ class FeedEvent4Test(FeedEvent):
 
     async def FeedProcEnd(self, bid: int, feed: FeedContent):
         self.batch[bid] = feed
-        assert feed.content
         assert feed.appid
         assert feed.fid
 

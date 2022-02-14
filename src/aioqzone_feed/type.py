@@ -6,6 +6,7 @@ from aioqzone.type import LikeData
 from aioqzone.type import PicRep
 from aioqzone.type import VideoRep
 from aioqzone.utils.html import HtmlContent
+from aioqzone.utils.html import HtmlInfo
 from aioqzone.utils.time import approx_ts
 from pydantic import BaseModel
 from pydantic import HttpUrl
@@ -16,6 +17,7 @@ class VisualMedia(BaseModel):
     width: int
     thumbnail: HttpUrl
     raw: HttpUrl
+    is_video: bool
 
     @classmethod
     def from_picrep(cls, pic: PicRep):
@@ -23,10 +25,20 @@ class VisualMedia(BaseModel):
             assert isinstance(pic, VideoRep)
             vi = pic.video_info
             return cls(
-                height=vi.cover_height, width=vi.cover_width, thumbnail=vi.url1, raw=vi.url3
+                height=vi.cover_height,
+                width=vi.cover_width,
+                thumbnail=vi.thumb,
+                raw=vi.raw,
+                is_video=True
             )
         else:
-            return cls(height=pic.height, width=pic.width, thumbnail=pic.url1, raw=pic.url3)
+            return cls(
+                height=pic.height,
+                width=pic.width,
+                thumbnail=pic.url1,
+                raw=pic.url3,
+                is_video=False
+            )
 
 
 class BaseFeed(BaseModel):
@@ -34,12 +46,20 @@ class BaseFeed(BaseModel):
     appid: int
     typeid: int
     fid: str
+    """Feed id, a hex string with 24/32 chars, or a much shorter placeholder.
+    .. note::
+        fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is
+        a 24 or 32 length hex string, which might be satisfied. But for shares that appid!=311, it is a
+        short string and is commonly used by multiple shares. So do not distinguish all feeds on this field."""
     abstime: int
+    """Feed created time. common alias: `created_time`"""
     uin: int
     nickname: str
     curkey: Optional[Union[HttpUrl, str]] = None
+    """The identifier to this feed. May be a url, or just a identifier string."""
     unikey: Optional[Union[HttpUrl, str]] = None
-
+    """The identifier to the original content. May be a url in all kinds
+    (sometimes not strictly in a correct format, but it is from the meaning)"""
     class Config:
         orm_mode = True
 
@@ -97,6 +117,20 @@ class BaseDetail(BaseModel):
 class FeedContent(BaseFeed, BaseDetail):
     """FeedContent is feed with contents. This might be the common structure to
     rep a feed as it's seen."""
+    islike: Optional[int] = 0
+
     def __hash__(self) -> int:
         media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0
         return hash((self.uin, self.abstime, self.content, self.forward, media_hash))
+
+    def set_detail(self, info: HtmlInfo, obj: FeedDetailRep):
+        self.curkey = info.curkey
+        self.unikey = info.unikey
+        self.islike = info.islike
+        return super().set_detail(obj)
+
+    def set_fromhtml(self, info: HtmlInfo, obj: HtmlContent, forward: Union[HttpUrl, str] = None):
+        self.curkey = info.curkey
+        self.unikey = info.unikey
+        self.islike = info.islike
+        return super().set_fromhtml(obj, forward)

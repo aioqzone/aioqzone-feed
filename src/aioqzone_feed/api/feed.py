@@ -44,6 +44,11 @@ def add_done_callback(task: asyncio.Task[T], cb: Callable[[Optional[T]], Any]):
             raise e
         except SystemExit as e:
             raise e
+        except RuntimeError as e:
+            if e.args[0] == 'Session is closed':
+                logger.error(f'DEBUG: {task}', exc_info=True)
+            else:
+                raise e
         except:
             logger.fatal('Uncaught Exception!', exc_info=True)
             from sys import exit
@@ -57,19 +62,7 @@ class FeedApi(Emittable[FeedEvent]):
     def __init__(self, sess: ClientSession, loginman: Loginable):
         super().__init__()
         self.api = qapi.DummyQapi(sess, loginman)
-
-    def like_app(self, likedata: LikeData, like: bool) -> asyncio.Task[bool]:
-        """Wrap :external:meth:`aioqzone.api.DummyQapi.like_app` with :external:class:`asyncio.Task`.
-
-        :return: Coroutine wrapped by task.
-
-        .. seealso:: :external:meth:`aioqzone.api.DummyQapi.like_app`
-        .. note:: keep the task ref on your own
-        """
-        un = '' if like else 'un'
-        logger.debug(f"{un}like: data={likedata}")
-        # like_app is not slow, but it has the same privilege level with slow-apis.
-        return asyncio.create_task(self.api.like_app(likedata, like=like))
+        self.like_app = self.api.like_app
 
     async def get_feeds_by_count(self, count: int = 10) -> int:
         """Get feeds by count.
@@ -155,10 +148,13 @@ class FeedApi(Emittable[FeedEvent]):
         :param feed: feed
         """
 
+        if feed.fid.startswith('advertisement'):
+            logger.info(f"advertisement rule hit: {feed}")
+            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            return
+
         model = FeedContent.from_feedrep(feed)
         root, htmlinfo = HtmlInfo.from_html(feed.html)
-        model.unikey = htmlinfo.unikey
-        model.curkey = htmlinfo.curkey
         has_cur = [311]
 
         if model.appid in has_cur or \
@@ -166,7 +162,7 @@ class FeedApi(Emittable[FeedEvent]):
             # optimize for feeds, no need to parse html content
             detail = self.add_hook_ref('dispatch', self.api.emotion_msgdetail(feed.uin, feed.fid))
             add_done_callback(detail, lambda dt: dt and \
-                (model.set_detail(dt) or \
+                (model.set_detail(htmlinfo, dt) or \
                     self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model)))
             )
             return
@@ -174,7 +170,7 @@ class FeedApi(Emittable[FeedEvent]):
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(htmlct: HtmlContent):
-            model.set_fromhtml(htmlct, forward=htmlinfo.unikey)
+            model.set_fromhtml(htmlinfo, htmlct, forward=htmlinfo.unikey)
             self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
