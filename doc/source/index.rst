@@ -11,6 +11,8 @@ Welcome to aioqzone-feed's documentation!
    :caption: Contents:
 
    api/feed
+   interface/hook
+   type
 
 
 Indices and tables

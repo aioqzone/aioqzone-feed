@@ -47,6 +47,8 @@ async def man(sess: ClientSession):
 
 @pytest_asyncio.fixture(scope='module')
 async def api(sess: ClientSession, man: MixedLoginMan):
+    from qzemoji import init
+    await init()
     yield FeedApi(sess, man)
 
 

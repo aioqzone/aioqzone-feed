@@ -22,6 +22,8 @@ from qqqr.exception import UserBreak
 from ..interface.hook import FeedEvent
 from ..type import FeedContent
 from ..type import VisualMedia
+from .emoji import trans_detail
+from .emoji import trans_html
 
 logger = logging.getLogger(__name__)
 qz_exc = (QzoneError, ClientResponseError)
@@ -160,11 +162,17 @@ class FeedApi(Emittable[FeedEvent]):
         if model.appid in has_cur or \
            model.curkey and model.curkey.startswith('http'):
             # optimize for feeds, no need to parse html content
-            detail = self.add_hook_ref('dispatch', self.api.emotion_msgdetail(feed.uin, feed.fid))
-            add_done_callback(detail, lambda dt: dt and \
-                (model.set_detail(htmlinfo, dt) or \
-                    self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model)))
+            get_full = self.add_hook_ref(
+                'dispatch', self.api.emotion_msgdetail(feed.uin, feed.fid)
             )
+            add_done_callback(get_full, lambda dt: dt and (
+                model.set_detail(htmlinfo, dt),
+                (emoji2text := self.add_hook_ref('dispatch', trans_detail(model))),
+                add_done_callback(
+                    emoji2text, lambda t: t and \
+                    self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model))
+                )
+            ))
             return
 
         # has to parse html now
@@ -175,16 +183,20 @@ class FeedApi(Emittable[FeedEvent]):
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
-            htmlct = HtmlContent.from_html(root, feed.uin)
-            html_content_procs(htmlct)
+            add_done_callback(
+                self.add_hook_ref('dispatch', trans_html(root)), lambda root: root and \
+                html_content_procs(HtmlContent.from_html(root, feed.uin)))
         else:
-            detail = self.add_hook_ref(
+            get_full = self.add_hook_ref(
                 'dispatch', self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
             )
-            add_done_callback(detail, lambda dt: dt and \
-                (htmlct := HtmlContent.from_html(dt)) and \
-                html_content_procs(htmlct)
-            )
+            add_done_callback(
+                get_full, lambda full: full and \
+                add_done_callback(
+                    self.add_hook_ref('dispatch', trans_html(full)), lambda root: root and \
+                    (htmlct := HtmlContent.from_html(root)) and \
+                    html_content_procs(htmlct))
+                )
 
     def _add_mediaupdate_task(self, model: FeedContent, content: HtmlContent) -> None:
         if not (content.album and content.pic): return
@@ -243,24 +255,25 @@ class FeedApi(Emittable[FeedEvent]):
         :return: the heartbeat task
         """
         async def hb_loop():
-            i = 0
+            i, e = 0, None
             while i < retry:
                 try:
                     await asyncio.sleep(300)
                     count = await self.api.get_feeds_count()
-                except qz_exc:
+                except qz_exc as e:
                     i += 1
                     logger.warning('Error when heartbeat. retry=%d', i, exc_info=True)
                     continue
                 except login_exc as e:
                     logger.info(f'Heartbeat stopped: {e}')
+                    self.add_hook_ref('hook', self.hook.HeartbeatFailed(e))
                     return
 
                 i = 0
                 self.add_hook_ref('dispatch', self.get_feeds_by_count(count.friendFeeds_new_cnt))
-                self.add_hook_ref('hook', self.hook.Heartbeat(count))
 
             logger.error('Max retry exceeds. Heartbeat stopped.')
+            self.add_hook_ref('hook', self.hook.HeartbeatFailed(e))
 
         self.hb = asyncio.create_task(hb_loop())
         return self.hb

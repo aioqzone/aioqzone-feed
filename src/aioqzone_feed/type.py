@@ -47,6 +47,7 @@ class BaseFeed(BaseModel):
     typeid: int
     fid: str
     """Feed id, a hex string with 24/32 chars, or a much shorter placeholder.
+
     .. note::
         fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is
         a 24 or 32 length hex string, which might be satisfied. But for shares that appid!=311, it is a
@@ -116,7 +117,7 @@ class BaseDetail(BaseModel):
 
 class FeedContent(BaseFeed, BaseDetail):
     """FeedContent is feed with contents. This might be the common structure to
-    rep a feed as it's seen."""
+    represent a feed as what it's known."""
     islike: Optional[int] = 0
 
     def __hash__(self) -> int:

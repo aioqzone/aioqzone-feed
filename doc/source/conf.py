@@ -60,3 +60,6 @@ intersphinx_mapping = {
     'aiohttp': ('https://docs.aiohttp.org/en/stable/', None),
     'aioqzone': ('../../../aioqzone/doc/build/html/objects.inv')
 }
+
+# autodoc_pydantic settings
+autodoc_pydantic_model_show_json = False
