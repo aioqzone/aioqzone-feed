@@ -17,6 +17,7 @@ from aioqzone.type import LikeData
 from aioqzone.type import PicRep
 from aioqzone.utils.html import HtmlContent
 from aioqzone.utils.html import HtmlInfo
+from pydantic import ValidationError
 from qqqr.exception import UserBreak
 
 from ..interface.hook import FeedEvent
@@ -149,6 +150,10 @@ class FeedApi(Emittable[FeedEvent]):
         :param bid: batch id
         :param feed: feed
         """
+        if feed.uin == 20050606:
+            logger.info(f"advertisement rule hit: {feed}")
+            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            return
 
         if feed.fid.startswith('advertisement'):
             logger.info(f"advertisement rule hit: {feed}")
@@ -156,8 +161,14 @@ class FeedApi(Emittable[FeedEvent]):
             return
 
         model = FeedContent.from_feedrep(feed)
-        root, htmlinfo = HtmlInfo.from_html(feed.html)
         has_cur = [311]
+
+        try:
+            root, htmlinfo = HtmlInfo.from_html(feed.html)
+        except ValidationError:
+            logger.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
+            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            return
 
         if model.appid in has_cur or \
            model.curkey and model.curkey.startswith('http'):
@@ -184,7 +195,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         if htmlinfo.complete:
             add_done_callback(
-                self.add_hook_ref('dispatch', trans_html(root)), lambda root: root and \
+                self.add_hook_ref('dispatch', trans_html(root)), lambda root: root is not None and \
                 html_content_procs(HtmlContent.from_html(root, feed.uin)))
         else:
             get_full = self.add_hook_ref(
@@ -209,6 +220,8 @@ class FeedApi(Emittable[FeedEvent]):
                     break
                 except qz_exc:
                     logger.info(f'Error in floatview_photo_list, retry={i + 1}', exc_info=True)
+                    logger.debug(f'sleep {2 ** i}s')
+                    await asyncio.sleep(2 ** i)
                     continue
                 except CorruptError:
                     logger.warning(f'Response corrupt!')
