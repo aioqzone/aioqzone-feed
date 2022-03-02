@@ -215,13 +215,20 @@ class FeedApi(Emittable[FeedEvent]):
         async def fv_retry(album: AlbumData, num: int):
             assert content.album and content.pic
             for i in range(12):
+                st = 2 ** i - 1
+                logger.debug(f'sleep {st}s')
+                await asyncio.sleep(st)
                 try:
                     fv = await self.api.floatview_photo_list(album, num)
                     break
-                except qz_exc:
+                except QzoneError as e:
+                    if e.code == -10001:
+                        logger.info(f'{str(e)}, retry={i + 1}')
+                    else:
+                        logger.info(f'Error in floatview_photo_list, retry={i + 1}', exc_info=True)
+                    continue
+                except ClientResponseError:
                     logger.info(f'Error in floatview_photo_list, retry={i + 1}', exc_info=True)
-                    logger.debug(f'sleep {2 ** i}s')
-                    await asyncio.sleep(2 ** i)
                     continue
                 except CorruptError:
                     logger.warning(f'Response corrupt!')
