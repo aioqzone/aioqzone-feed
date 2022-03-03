@@ -2,6 +2,9 @@
 
 An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed operation.
 
+[![py310](https://img.shields.io/badge/python-3.10-blue.svg)][home]
+[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 ## Feature
 
 - [x] Fetch feeds easily
@@ -31,5 +34,7 @@ An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed ope
 - [AGPL-3.0](LICENSE)
 - `aioqzone-feed` is a plugin of [aioqzone][aioqzone]. This repository inherits license, instructions and any other requirements from `aioqzone`. See also: [License fragment in aioqzone README file](https://github.com/JamzumSum/aioqzone#license)
 
+
 [aioqzone]: https://github.com/JamzumSum/aioqzone "Python wrapper for Qzone web login and Qzone http api."
 [qzemoji]: https://github.com/JamzumSum/QzEmoji/tree/async "Translate Qzone emoji to text"
+[home]: https://github.com/JamzumSum/aioqzone-feed "aioqzone plugin providing higher level api for processing feed"

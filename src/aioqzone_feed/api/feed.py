@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import time
-from typing import Any, Awaitable, Callable, Optional, TypeVar
+from typing import Any, Awaitable, Callable, TypeVar
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientResponseError
@@ -13,7 +13,6 @@ from aioqzone.interface.hook import Emittable
 from aioqzone.interface.login import Loginable
 from aioqzone.type import AlbumData
 from aioqzone.type import FeedRep
-from aioqzone.type import LikeData
 from aioqzone.type import PicRep
 from aioqzone.utils.html import HtmlContent
 from aioqzone.utils.html import HtmlInfo
@@ -30,31 +29,32 @@ logger = logging.getLogger(__name__)
 qz_exc = (QzoneError, ClientResponseError)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
-def add_done_callback(task: asyncio.Task[T], cb: Callable[[Optional[T]], Any]):
+def add_done_callback(task: asyncio.Task[T], cb: Callable[[T | None], Any]):
     def safe_unpack(task: asyncio.Task[T]):
         try:
             return task.result()
         except qz_exc:
-            logger.error(f'DEBUG: {task}', exc_info=True)
+            logger.error(f"DEBUG: {task}", exc_info=True)
         except LoginError as e:
-            logger.error(f'LoginError: {e}')
+            logger.error(f"LoginError: {e}")
             raise e
         except UserBreak as e:
-            logger.info('UserBreak captured!')
+            logger.info("UserBreak captured!")
             raise e
         except SystemExit as e:
             raise e
         except RuntimeError as e:
-            if e.args[0] == 'Session is closed':
-                logger.error(f'DEBUG: {task}', exc_info=True)
+            if e.args[0] == "Session is closed":
+                logger.error(f"DEBUG: {task}", exc_info=True)
             else:
                 raise e
         except:
-            logger.fatal('Uncaught Exception!', exc_info=True)
+            logger.fatal("Uncaught Exception!", exc_info=True)
             from sys import exit
+
             exit(1)
 
     task.add_done_callback(lambda t: cb(safe_unpack(t)))
@@ -85,21 +85,23 @@ class FeedApi(Emittable[FeedEvent]):
             try:
                 ls, aux = await self.api.feeds3_html_more(page, trans, count=count - got)
             except qz_exc as e:
-                logger.warning(f'Error when fetching page. Skipped. {e}')
+                logger.warning(f"Error when fetching page. Skipped. {e}")
                 continue
-            for fd in ls[:count - got]:
+            for fd in ls[: count - got]:
                 self._dispatch_feed(got, fd)
                 got += 1
-            if not aux.hasMoreFeeds: break
-            if got >= count: break
+            if not aux.hasMoreFeeds:
+                break
+            if got >= count:
+                break
         return got
 
     async def get_feeds_by_second(
         self,
         seconds: int,
-        start: float = None,
+        start: float | None = None,
         *,
-        exceed_pred: Callable[[FeedRep], Awaitable[bool]] = None
+        exceed_pred: Callable[[FeedRep], Awaitable[bool]] | None = None,
     ) -> int:
         """Get feeds by abstime (seconds). Range: `[start - second, start]`.
 
@@ -122,17 +124,20 @@ class FeedApi(Emittable[FeedEvent]):
             try:
                 ls, aux = await self.api.feeds3_html_more(page, trans)
             except qz_exc as e:
-                logger.warning(f'Error when fetching page. Skipped. {e}')
+                logger.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             for fd in ls:
-                if fd.abstime > start: continue
+                if fd.abstime > start:
+                    continue
                 if fd.abstime < end or exceed_pred and await exceed_pred(fd):
                     exceed = True
                     continue
                 self._dispatch_feed(got, fd)
                 got += 1
-            if not aux.hasMoreFeeds: break
-            if exceed: break
+            if not aux.hasMoreFeeds:
+                break
+            if exceed:
+                break
         return got
 
     def _dispatch_feed(self, bid: int, feed: FeedRep) -> None:
@@ -152,12 +157,12 @@ class FeedApi(Emittable[FeedEvent]):
         """
         if feed.uin == 20050606:
             logger.info(f"advertisement rule hit: {feed}")
-            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
             return
 
-        if feed.fid.startswith('advertisement'):
+        if feed.fid.startswith("advertisement"):
             logger.info(f"advertisement rule hit: {feed}")
-            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
             return
 
         model = FeedContent.from_feedrep(feed)
@@ -167,83 +172,100 @@ class FeedApi(Emittable[FeedEvent]):
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
             logger.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
-            self.add_hook_ref('dispatch', self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
             return
 
-        if model.appid in has_cur or \
-           model.curkey and model.curkey.startswith('http'):
+        if model.appid in has_cur or model.curkey and model.curkey.startswith("http"):
             # optimize for feeds, no need to parse html content
             get_full = self.add_hook_ref(
-                'dispatch', self.api.emotion_msgdetail(feed.uin, feed.fid)
+                "dispatch", self.api.emotion_msgdetail(feed.uin, feed.fid)
             )
-            add_done_callback(get_full, lambda dt: dt and (
-                model.set_detail(htmlinfo, dt),
-                (emoji2text := self.add_hook_ref('dispatch', trans_detail(model))),
-                add_done_callback(
-                    emoji2text, lambda t: t and \
-                    self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model))
-                )
-            ))
+            add_done_callback(
+                get_full,
+                lambda dt: dt
+                and (
+                    model.set_detail(htmlinfo, dt),
+                    (emoji2text := self.add_hook_ref("dispatch", trans_detail(model))),
+                    add_done_callback(
+                        emoji2text,
+                        lambda t: t
+                        and (
+                            model.make_get_all(self.api.sess),
+                            self.add_hook_ref("hook", self.hook.FeedProcEnd(bid, model)),
+                        ),
+                    ),
+                ),
+            )
             return
 
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(htmlct: HtmlContent):
             model.set_fromhtml(htmlinfo, htmlct, forward=htmlinfo.unikey)
-            self.add_hook_ref('hook', self.hook.FeedProcEnd(bid, model))
+            model.make_get_all(self.api.sess)
+            self.add_hook_ref("hook", self.hook.FeedProcEnd(bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
             add_done_callback(
-                self.add_hook_ref('dispatch', trans_html(root)), lambda root: root is not None and \
-                html_content_procs(HtmlContent.from_html(root, feed.uin)))
+                self.add_hook_ref("dispatch", trans_html(root)),
+                lambda root: root is not None
+                and html_content_procs(HtmlContent.from_html(root, feed.uin)),
+            )
         else:
             get_full = self.add_hook_ref(
-                'dispatch', self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
+                "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
             )
             add_done_callback(
-                get_full, lambda full: full and \
-                add_done_callback(
-                    self.add_hook_ref('dispatch', trans_html(full)), lambda root: root and \
-                    (htmlct := HtmlContent.from_html(root)) and \
-                    html_content_procs(htmlct))
-                )
+                get_full,
+                lambda full: full
+                and add_done_callback(
+                    self.add_hook_ref("dispatch", trans_html(full)),
+                    lambda root: root
+                    and (htmlct := HtmlContent.from_html(root))
+                    and html_content_procs(htmlct),
+                ),
+            )
 
     def _add_mediaupdate_task(self, model: FeedContent, content: HtmlContent) -> None:
-        if not (content.album and content.pic): return
+        if not (content.album and content.pic):
+            return
 
         async def fv_retry(album: AlbumData, num: int):
             assert content.album and content.pic
             for i in range(12):
-                st = 2 ** i - 1
-                logger.debug(f'sleep {st}s')
+                st = 2**i - 1
+                logger.debug(f"sleep {st}s")
                 await asyncio.sleep(st)
                 try:
                     fv = await self.api.floatview_photo_list(album, num)
                     break
                 except QzoneError as e:
                     if e.code == -10001:
-                        logger.info(f'{str(e)}, retry={i + 1}')
+                        logger.info(f"{str(e)}, retry={i + 1}")
                     else:
-                        logger.info(f'Error in floatview_photo_list, retry={i + 1}', exc_info=True)
+                        logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
                 except ClientResponseError:
-                    logger.info(f'Error in floatview_photo_list, retry={i + 1}', exc_info=True)
+                    logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
                 except CorruptError:
-                    logger.warning(f'Response corrupt!')
+                    logger.warning(f"Response corrupt!")
                     continue
                 except login_exc:
                     return
             else:
                 return
             model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
-            self.add_hook_ref('hook', self.hook.FeedMediaUpdate(model))
+            model.make_get_all(self.api.sess)
+            self.add_hook_ref("hook", self.hook.FeedMediaUpdate(model))
 
-        task = self.add_hook_ref('slowapi', fv_retry(content.album, len(content.pic)))
-        logger.info(f'Media update task registered: {task}')
+        task = self.add_hook_ref("slowapi", fv_retry(content.album, len(content.pic)))
+        logger.info(f"Media update task registered: {task}")
 
-    async def wait(self, *, timeout: float = None) -> tuple[set[asyncio.Task], set[asyncio.Task]]:
+    async def wait(
+        self, *, timeout: float | None = None
+    ) -> tuple[set[asyncio.Task], set[asyncio.Task]]:
         """Wait for all dispatch and hook tasks.
 
         :param timeout: wait timeout, defaults to None
@@ -252,11 +274,10 @@ class FeedApi(Emittable[FeedEvent]):
         .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.wait`
         """
 
-        return await super().wait('dispatch', 'hook', timeout=timeout)
+        return await super().wait("dispatch", "hook", timeout=timeout)
 
     def stop(self) -> None:
-        """Clear all registered tasks. All tasks will be CANCELLED if not finished.
-        """
+        """Clear all registered tasks. All tasks will be CANCELLED if not finished."""
 
         self.hb.cancel()
         super().clear(*self._tasks.keys())
@@ -266,7 +287,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.clear`"""
 
-        super().clear('dispatch')
+        super().clear("dispatch")
 
     def add_heartbeat(self, retry: int = 5) -> asyncio.Task[None]:
         """create a heartbeat task and keep a ref of it.
@@ -274,6 +295,7 @@ class FeedApi(Emittable[FeedEvent]):
         :param retry: max retry times when exception occurs, defaults to 5.
         :return: the heartbeat task
         """
+
         async def hb_loop():
             i, e = 0, None
             while i < retry:
@@ -282,18 +304,18 @@ class FeedApi(Emittable[FeedEvent]):
                     count = await self.api.get_feeds_count()
                 except qz_exc as e:
                     i += 1
-                    logger.warning('Error when heartbeat. retry=%d', i, exc_info=True)
+                    logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
                     continue
                 except login_exc as e:
-                    logger.info(f'Heartbeat stopped: {e}')
-                    self.add_hook_ref('hook', self.hook.HeartbeatFailed(e))
+                    logger.info(f"Heartbeat stopped: {e}")
+                    self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
                     return
 
                 i = 0
-                self.add_hook_ref('dispatch', self.get_feeds_by_count(count.friendFeeds_new_cnt))
+                self.add_hook_ref("dispatch", self.get_feeds_by_count(count.friendFeeds_new_cnt))
 
-            logger.error('Max retry exceeds. Heartbeat stopped.')
-            self.add_hook_ref('hook', self.hook.HeartbeatFailed(e))
+            logger.error("Max retry exceeds. Heartbeat stopped.")
+            self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
 
         self.hb = asyncio.create_task(hb_loop())
         return self.hb
