@@ -66,6 +66,7 @@ class FeedApi(Emittable[FeedEvent]):
         super().__init__()
         self.api = qapi.DummyQapi(sess, loginman)
         self.like_app = self.api.like_app
+        self.bid = -1
 
     async def get_feeds_by_count(self, count: int = 10) -> int:
         """Get feeds by count.
@@ -78,7 +79,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         :return: feeds num got actually.
         """
-
+        self.bid += 1
         got = 0
         trans = qapi.QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
@@ -88,7 +89,7 @@ class FeedApi(Emittable[FeedEvent]):
                 logger.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             for fd in ls[: count - got]:
-                self._dispatch_feed(got, fd)
+                self._dispatch_feed(fd)
                 got += 1
             if not aux.hasMoreFeeds:
                 break
@@ -115,7 +116,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         :return: feeds num got actually.
         """
-
+        self.bid += 1
         start = start or time.time()
         end = start - seconds
         exceed = got = 0
@@ -132,7 +133,7 @@ class FeedApi(Emittable[FeedEvent]):
                 if fd.abstime < end or exceed_pred and await exceed_pred(fd):
                     exceed = True
                     continue
-                self._dispatch_feed(got, fd)
+                self._dispatch_feed(fd)
                 got += 1
             if not aux.hasMoreFeeds:
                 break
@@ -140,7 +141,7 @@ class FeedApi(Emittable[FeedEvent]):
                 break
         return got
 
-    def _dispatch_feed(self, bid: int, feed: FeedRep) -> None:
+    def _dispatch_feed(self, feed: FeedRep) -> None:
         """dispatch feed according to api support.
 
         1. Call emotion_msgdetail for supported appid
@@ -152,17 +153,16 @@ class FeedApi(Emittable[FeedEvent]):
         `dispatch` task set. Other api which can be called later or has low-priority should
         be added into `slowapi` set.
 
-        :param bid: batch id
         :param feed: feed
         """
         if feed.uin == 20050606:
             logger.info(f"advertisement rule hit: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
         if feed.fid.startswith("advertisement"):
             logger.info(f"advertisement rule hit: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
         model = FeedContent.from_feedrep(feed)
@@ -172,7 +172,7 @@ class FeedApi(Emittable[FeedEvent]):
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
             logger.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
         if model.appid in has_cur or model.curkey and model.curkey.startswith("http"):
@@ -189,10 +189,7 @@ class FeedApi(Emittable[FeedEvent]):
                     add_done_callback(
                         emoji2text,
                         lambda t: t
-                        and (
-                            model.make_get_all(self.api.sess),
-                            self.add_hook_ref("hook", self.hook.FeedProcEnd(bid, model)),
-                        ),
+                        and self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
                     ),
                 ),
             )
@@ -202,8 +199,7 @@ class FeedApi(Emittable[FeedEvent]):
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(htmlct: HtmlContent):
             model.set_fromhtml(htmlinfo, htmlct, forward=htmlinfo.unikey)
-            model.make_get_all(self.api.sess)
-            self.add_hook_ref("hook", self.hook.FeedProcEnd(bid, model))
+            self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
@@ -231,7 +227,7 @@ class FeedApi(Emittable[FeedEvent]):
         if not (content.album and content.pic):
             return
 
-        async def fv_retry(album: AlbumData, num: int):
+        async def fv_retry(bid: int, album: AlbumData, num: int):
             assert content.album and content.pic
             for i in range(12):
                 st = 2**i - 1
@@ -257,10 +253,9 @@ class FeedApi(Emittable[FeedEvent]):
             else:
                 return
             model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
-            model.make_get_all(self.api.sess)
-            self.add_hook_ref("hook", self.hook.FeedMediaUpdate(model))
+            self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
 
-        task = self.add_hook_ref("slowapi", fv_retry(content.album, len(content.pic)))
+        task = self.add_hook_ref("slowapi", fv_retry(self.bid, content.album, len(content.pic)))
         logger.info(f"Media update task registered: {task}")
 
     async def wait(

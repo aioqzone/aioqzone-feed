@@ -67,6 +67,24 @@ class BaseFeed(BaseModel):
     def __hash__(self) -> int:
         return hash((self.uin, self.abstime))
 
+    def __le__(self, o: "BaseFeed"):
+        if self.abstime > o.abstime:
+            return False
+        if self.abstime < o.abstime:
+            return True
+        if self.uin > o.uin:
+            return False
+        return True
+
+    def __lt__(self, o: "BaseFeed"):
+        if self.abstime < o.abstime:
+            return True
+        if self.abstime > o.abstime:
+            return False
+        if self.uin < o.uin:
+            return True
+        return False
+
     @classmethod
     def from_feedrep(cls, obj: FeedRep, **kwds):
         return cls(
