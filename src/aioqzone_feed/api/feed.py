@@ -68,6 +68,18 @@ class FeedApi(Emittable[FeedEvent]):
         self.like_app = self.api.like_app
         self.bid = -1
 
+    def new_batch(self):
+        """
+        The new_batch function edit internal batch id and return it.
+
+        A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
+
+        :return: The batch_id.
+        """
+
+        self.bid += 1
+        return self.bid
+
     async def get_feeds_by_count(self, count: int = 10) -> int:
         """Get feeds by count.
 
@@ -79,7 +91,6 @@ class FeedApi(Emittable[FeedEvent]):
 
         :return: feeds num got actually.
         """
-        self.bid += 1
         got = 0
         trans = qapi.QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
@@ -116,7 +127,6 @@ class FeedApi(Emittable[FeedEvent]):
 
         :return: feeds num got actually.
         """
-        self.bid += 1
         start = start or time.time()
         end = start - seconds
         exceed = got = 0
