@@ -1,29 +1,22 @@
 import asyncio
 import logging
 import time
-from typing import Any, Awaitable, Callable, TypeVar
+from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 
+import aioqzone.api as qapi
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientResponseError
-import aioqzone.api as qapi
-from aioqzone.exception import CorruptError
-from aioqzone.exception import LoginError
-from aioqzone.exception import QzoneError
+from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.interface.hook import Emittable
 from aioqzone.interface.login import Loginable
-from aioqzone.type import AlbumData
-from aioqzone.type import FeedRep
-from aioqzone.type import PicRep
-from aioqzone.utils.html import HtmlContent
-from aioqzone.utils.html import HtmlInfo
+from aioqzone.type import AlbumData, FeedRep, PicRep
+from aioqzone.utils.html import HtmlContent, HtmlInfo
 from pydantic import ValidationError
 from qqqr.exception import UserBreak
 
 from ..interface.hook import FeedEvent
-from ..type import FeedContent
-from ..type import VisualMedia
-from .emoji import trans_detail
-from .emoji import trans_html
+from ..type import FeedContent, VisualMedia
+from .emoji import trans_detail, trans_html
 
 logger = logging.getLogger(__name__)
 qz_exc = (QzoneError, ClientResponseError)
@@ -32,8 +25,10 @@ login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 T = TypeVar("T")
 
 
-def add_done_callback(task: asyncio.Task[T], cb: Callable[[T | None], Any]):
-    def safe_unpack(task: asyncio.Task[T]):
+def add_done_callback(task, cb):
+    # type: (asyncio.Task[T], Callable[[Optional[T]], Any]) -> asyncio.Task[T]
+    def safe_unpack(task):
+        # type: (asyncio.Task[T]) -> Optional[T]
         try:
             return task.result()
         except qz_exc:
@@ -53,8 +48,6 @@ def add_done_callback(task: asyncio.Task[T], cb: Callable[[T | None], Any]):
                 raise e
         except:
             logger.fatal("Uncaught Exception!", exc_info=True)
-            from sys import exit
-
             exit(1)
 
     task.add_done_callback(lambda t: cb(safe_unpack(t)))
@@ -111,9 +104,9 @@ class FeedApi(Emittable[FeedEvent]):
     async def get_feeds_by_second(
         self,
         seconds: int,
-        start: float | None = None,
+        start: Optional[float] = None,
         *,
-        exceed_pred: Callable[[FeedRep], Awaitable[bool]] | None = None,
+        exceed_pred: Optional[Callable[[FeedRep], Awaitable[bool]]] = None,
     ) -> int:
         """Get feeds by abstime (seconds). Range: `[start - second, start]`.
 
@@ -184,6 +177,7 @@ class FeedApi(Emittable[FeedEvent]):
             logger.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
+        model.set_frominfo(htmlinfo)
 
         if model.appid in has_cur or model.curkey and model.curkey.startswith("http"):
             # optimize for feeds, no need to parse html content
@@ -194,10 +188,9 @@ class FeedApi(Emittable[FeedEvent]):
                 get_full,
                 lambda dt: dt
                 and (
-                    model.set_detail(htmlinfo, dt),
-                    (emoji2text := self.add_hook_ref("dispatch", trans_detail(model))),
+                    model.set_detail(dt),
                     add_done_callback(
-                        emoji2text,
+                        (self.add_hook_ref("dispatch", trans_detail(model))),
                         lambda t: t
                         and self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
                     ),
@@ -208,7 +201,7 @@ class FeedApi(Emittable[FeedEvent]):
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(htmlct: HtmlContent):
-            model.set_fromhtml(htmlinfo, htmlct, forward=htmlinfo.unikey)
+            model.set_fromhtml(htmlct, forward=htmlinfo.unikey)
             self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
@@ -222,14 +215,13 @@ class FeedApi(Emittable[FeedEvent]):
             get_full = self.add_hook_ref(
                 "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
             )
+            cc = lambda f, a: a and f(a)
             add_done_callback(
                 get_full,
                 lambda full: full
                 and add_done_callback(
                     self.add_hook_ref("dispatch", trans_html(full)),
-                    lambda root: root
-                    and (htmlct := HtmlContent.from_html(root))
-                    and html_content_procs(htmlct),
+                    lambda root: root and cc(html_content_procs, HtmlContent.from_html(root)),
                 ),
             )
 
@@ -269,8 +261,8 @@ class FeedApi(Emittable[FeedEvent]):
         logger.info(f"Media update task registered: {task}")
 
     async def wait(
-        self, *, timeout: float | None = None
-    ) -> tuple[set[asyncio.Task], set[asyncio.Task]]:
+        self, *, timeout: Optional[float] = None
+    ) -> Tuple[Set[asyncio.Task], Set[asyncio.Task]]:
         """Wait for all dispatch and hook tasks.
 
         :param timeout: wait timeout, defaults to None
@@ -294,7 +286,8 @@ class FeedApi(Emittable[FeedEvent]):
 
         super().clear("dispatch")
 
-    def add_heartbeat(self, retry: int = 5) -> asyncio.Task[None]:
+    def add_heartbeat(self, retry: int = 5):
+        # type: (int) -> asyncio.Task[None]
         """create a heartbeat task and keep a ref of it.
 
         :param retry: max retry times when exception occurs, defaults to 5.

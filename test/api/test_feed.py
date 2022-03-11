@@ -1,11 +1,10 @@
 import asyncio
 
-from aiohttp import ClientSession
-from aioqzone.api.loginman import MixedLoginMan
-from aioqzone.interface.hook import LoginEvent
-from aioqzone.interface.hook import QREvent
 import pytest
 import pytest_asyncio
+from aiohttp import ClientSession
+from aioqzone.api.loginman import MixedLoginMan
+from aioqzone.interface.hook import LoginEvent, QREvent
 
 from aioqzone_feed.api.feed import FeedApi
 from aioqzone_feed.interface.hook import FeedEvent
@@ -57,11 +56,11 @@ async def api(sess: ClientSession, man: MixedLoginMan):
 class FeedEvent4Test(FeedEvent):
     def __init__(self) -> None:
         super().__init__()
-        self.batch = {}
+        self.batch = []
         self.drop = []
 
     async def FeedProcEnd(self, bid: int, feed: FeedContent):
-        self.batch[bid] = feed
+        self.batch.append(feed)
         assert feed.appid
         assert feed.fid
 
@@ -91,7 +90,7 @@ async def test_by_count(api: FeedApi):
     done, pending = await api.wait()
     assert not pending
     assert len(hook.batch) == n - len(hook.drop)
-    assert len(set(hook.batch.values())) == n - len(hook.drop)
+    assert len(set(hook.batch)) == n - len(hook.drop)
     assert all(i.exception() is None for i in done)
     api.clear()
     hook.batch.clear()
@@ -103,8 +102,7 @@ async def test_by_second(api: FeedApi):
     n = await api.get_feeds_by_second(3 * 86400)
     done, pending = await api.wait()
     assert not pending
-    assert [i for i in range(len(hook.batch))] == sorted(list(hook.batch) + hook.drop)
-    assert len(set(hook.batch.values())) == len(hook.batch) - len(hook.drop)
+    assert len(set(hook.batch)) == len(hook.batch) - len(hook.drop)
     assert all(i.exception() is None for i in done)
     api.clear()
     hook.batch.clear()

@@ -1,11 +1,10 @@
 """Translate emoji representation to text."""
 import asyncio
 import re
-from typing import Any, Callable, Coroutine
+from typing import Any, Callable, Coroutine, List, Union
 
-from lxml.html import fromstring
-from lxml.html import HtmlElement
 import qzemoji as qe
+from lxml.html import HtmlElement, fromstring
 from qzemoji.utils import build_tag
 
 from ..type import FeedContent
@@ -49,31 +48,35 @@ async def trans_tag(text: str):
 
 
 async def trans_detail(feed: FeedContent) -> FeedContent:
-    tasks = [
-        (t := asyncio.create_task(trans_tag(getattr(feed, i))))
-        and t.add_done_callback(lambda t: setattr(feed, i, t.result()))
-        or t
-        for i in ["nickname", "content"]
-    ]
-    done, pending = await asyncio.wait(tasks)
-    assert not pending
+    tasks = []
+    for i in ["nickname", "content"]:
+        t = asyncio.create_task(trans_tag(getattr(feed, i)))
+        t.add_done_callback(lambda t: setattr(feed, i, t.result()))
+        tasks.append(t)
+
+    if tasks:
+        done, pending = await asyncio.wait(tasks)
+        assert not pending
     return feed
 
 
-async def trans_html(txtbox: HtmlElement | str) -> HtmlElement:
+async def trans_html(txtbox: Union[HtmlElement, str]) -> HtmlElement:
     if isinstance(txtbox, str):
         txtbox = fromstring(txtbox)
     assert isinstance(txtbox, HtmlElement)
-    imgs: list[HtmlElement] = txtbox.cssselect("img")
-    tasks = [
-        (t := asyncio.create_task(qe.query(int(m.group(1)), default=build_tag)))
-        and t.add_done_callback(
+    imgs: List[HtmlElement] = txtbox.cssselect("img")
+
+    tasks = []
+    for i in imgs:
+        m = URL_RE.match(i.get("src", ""))
+        if not m:
+            continue
+        t = asyncio.create_task(qe.query(int(m.group(1)), default=build_tag))
+        t.add_done_callback(
             lambda t, e=i: setattr(e, "tail", t.result() + (e.tail or "")) or e.drop_tree()
         )
-        or t
-        for i in imgs
-        if (m := URL_RE.match(i.get("src", "")))
-    ]
+        tasks.append(t)
+
     if tasks:
         done, pending = await asyncio.wait(tasks)
         assert not pending
