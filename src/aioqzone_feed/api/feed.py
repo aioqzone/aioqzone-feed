@@ -9,7 +9,7 @@ from aiohttp.client_exceptions import ClientResponseError
 from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.interface.hook import Emittable
 from aioqzone.interface.login import Loginable
-from aioqzone.type import AlbumData, FeedRep, PicRep
+from aioqzone.type import AlbumData, FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from pydantic import ValidationError
 from qqqr.exception import UserBreak
@@ -181,23 +181,32 @@ class FeedApi(Emittable[FeedEvent]):
 
         if model.appid in has_cur or model.curkey and model.curkey.startswith("http"):
             # optimize for feeds, no need to parse html content
-            get_full = self.add_hook_ref(
-                "dispatch", self.api.emotion_msgdetail(feed.uin, feed.fid)
-            )
-            add_done_callback(
-                get_full,
-                lambda dt: dt
-                and (
-                    model.set_detail(dt),
-                    add_done_callback(
-                        (self.add_hook_ref("dispatch", trans_detail(model))),
-                        lambda t: t
-                        and self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
-                    ),
-                ),
-            )
-            return
+            return self.__optimize_dispatch(feed, model, htmlinfo, root)
+        self.__default_dispatch(feed, model, htmlinfo, root)
 
+    def __optimize_dispatch(self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root):
+        """Optimized feed processing: request for `emotion_msgdetail` api directly."""
+
+        def detail_procs(dt: Optional[FeedDetailRep]):
+            if not dt:
+                return self.__default_dispatch(feed, model, htmlinfo, root)
+
+            if dt.pic and any(not i.valid_url() for i in dt.pic):
+                return self.__default_dispatch(feed, model, htmlinfo, root)
+
+            model.set_detail(dt)
+            add_done_callback(
+                (self.add_hook_ref("dispatch", trans_detail(model))),
+                lambda t: t and self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
+            )
+
+        get_full = self.add_hook_ref("dispatch", self.api.emotion_msgdetail(feed.uin, feed.fid))
+        add_done_callback(get_full, detail_procs)
+
+    def __default_dispatch(self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root):
+        """Default feed processing: Parse info from html feed. If media is detected,
+        then request for `floatview_photo_list` album api.
+        """
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(htmlct: HtmlContent):
@@ -211,19 +220,20 @@ class FeedApi(Emittable[FeedEvent]):
                 lambda root: root is not None
                 and html_content_procs(HtmlContent.from_html(root, feed.uin)),
             )
-        else:
-            get_full = self.add_hook_ref(
-                "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
-            )
-            cc = lambda f, a: a and f(a)
-            add_done_callback(
-                get_full,
-                lambda full: full
-                and add_done_callback(
-                    self.add_hook_ref("dispatch", trans_html(full)),
-                    lambda root: root and cc(html_content_procs, HtmlContent.from_html(root)),
-                ),
-            )
+            return
+
+        get_full = self.add_hook_ref(
+            "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
+        )
+        cc = lambda f, a: a and f(a)
+        add_done_callback(
+            get_full,
+            lambda full: full
+            and add_done_callback(
+                self.add_hook_ref("dispatch", trans_html(full)),
+                lambda root: root and cc(html_content_procs, HtmlContent.from_html(root)),
+            ),
+        )
 
     def _add_mediaupdate_task(self, model: FeedContent, content: HtmlContent) -> None:
         if not (content.album and content.pic):

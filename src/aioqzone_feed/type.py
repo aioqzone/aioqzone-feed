@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, cast
 
 from aioqzone.type import FeedDetailRep, FeedRep, LikeData, PicRep, VideoRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
@@ -29,8 +29,8 @@ class VisualMedia(BaseModel):
             return cls(
                 height=pic.height,
                 width=pic.width,
-                thumbnail=pic.url1,
-                raw=pic.url3,
+                thumbnail=cast(HttpUrl, pic.thumb),
+                raw=cast(HttpUrl, pic.raw),
                 is_video=False,
             )
 
@@ -108,11 +108,11 @@ class BaseDetail(BaseModel):
         self.content = obj.content
         if obj.rt_uin:
             assert obj.rt_con
-            unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_tid)
+            unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_fid)
             self.forward = FeedContent(
                 appid=311,
                 typeid=2,
-                fid=obj.rt_tid,
+                fid=obj.rt_fid,
                 uin=obj.rt_uin,
                 nickname=obj.rt_uinname,
                 abstime=approx_ts(obj.rt_createTime) if obj.rt_createTime else 0,
@@ -121,6 +121,7 @@ class BaseDetail(BaseModel):
                 content=obj.rt_con.content,
             )
         if obj.pic:
+            assert all(i.valid_url() for i in obj.pic)
             if self.forward is None:
                 self.media = [VisualMedia.from_picrep(i) for i in obj.pic]
             else:
