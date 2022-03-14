@@ -2,7 +2,8 @@
 
 An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed operation.
 
-[![py310](https://img.shields.io/badge/python-3.10-blue.svg)][home]
+[![python](https://img.shields.io/badge/python-3.7%20%7C%203.10-blue)][home]
+[![Dev CI](https://github.com/JamzumSum/aioqzone-feed/actions/workflows/ci.yml/badge.svg)](https://github.com/JamzumSum/aioqzone-feed/actions/workflows/ci.yml)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Feature

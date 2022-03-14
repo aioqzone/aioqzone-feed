@@ -1,3 +1,5 @@
+from typing import Optional, Union
+
 from aioqzone.interface.hook import Event
 from aioqzone.type import FeedRep
 
@@ -5,7 +7,7 @@ from ..type import FeedContent
 
 
 class FeedEvent(Event):
-    async def FeedDropped(self, bid: int, feed: FeedRep | FeedContent):
+    async def FeedDropped(self, bid: int, feed: Union[FeedRep, FeedContent]):
         """
         The FeedDropped hook is called when a feed is dropped for hitting some rules (e.g. advertisement)
 
@@ -38,7 +40,7 @@ class FeedEvent(Event):
 
         pass
 
-    async def HeartbeatFailed(self, exc: BaseException | None = None):
+    async def HeartbeatFailed(self, exc: Optional[BaseException] = None):
         """
         The HeartbeatFailed function is called when the heartbeat fails.
         It can be used to log an error and call :meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat`

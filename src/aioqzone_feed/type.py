@@ -1,13 +1,9 @@
-from aioqzone.type import FeedDetailRep
-from aioqzone.type import FeedRep
-from aioqzone.type import LikeData
-from aioqzone.type import PicRep
-from aioqzone.type import VideoRep
-from aioqzone.utils.html import HtmlContent
-from aioqzone.utils.html import HtmlInfo
+from typing import List, Optional, Union, cast
+
+from aioqzone.type import FeedDetailRep, FeedRep, LikeData, PicRep, VideoRep
+from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
-from pydantic import BaseModel
-from pydantic import HttpUrl
+from pydantic import BaseModel, HttpUrl
 
 
 class VisualMedia(BaseModel):
@@ -33,8 +29,8 @@ class VisualMedia(BaseModel):
             return cls(
                 height=pic.height,
                 width=pic.width,
-                thumbnail=pic.url1,
-                raw=pic.url3,
+                thumbnail=cast(HttpUrl, pic.thumb),
+                raw=cast(HttpUrl, pic.raw),
                 is_video=False,
             )
 
@@ -55,9 +51,9 @@ class BaseFeed(BaseModel):
     """Feed created time. common alias: `created_time`"""
     uin: int
     nickname: str
-    curkey: HttpUrl | str | None = None
+    curkey: Optional[Union[HttpUrl, str]] = None
     """The identifier to this feed. May be a url, or just a identifier string."""
-    unikey: HttpUrl | str | None = None
+    unikey: Optional[Union[HttpUrl, str]] = None
     """The identifier to the original content. May be a url in all kinds
     (sometimes not strictly in a correct format, but it is from the meaning)"""
 
@@ -85,6 +81,9 @@ class BaseFeed(BaseModel):
             return True
         return False
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(uin={self.uin},abstime={self.abstime}')"
+
     @classmethod
     def from_feedrep(cls, obj: FeedRep, **kwds):
         return cls(
@@ -100,18 +99,20 @@ class BaseFeed(BaseModel):
 
 class BaseDetail(BaseModel):
     content: str = ""
-    forward: HttpUrl | str | BaseFeed | None = None  # unikey to the feed, or the content itself.
-    media: list[VisualMedia] | None = None
+    forward: Optional[
+        Union[HttpUrl, str, BaseFeed]
+    ] = None  # unikey to the feed, or the content itself.
+    media: Optional[List[VisualMedia]] = None
 
     def set_detail(self, obj: FeedDetailRep):
         self.content = obj.content
         if obj.rt_uin:
             assert obj.rt_con
-            unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_tid)
+            unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_fid)
             self.forward = FeedContent(
                 appid=311,
                 typeid=2,
-                fid=obj.rt_tid,
+                fid=obj.rt_fid,
                 uin=obj.rt_uin,
                 nickname=obj.rt_uinname,
                 abstime=approx_ts(obj.rt_createTime) if obj.rt_createTime else 0,
@@ -120,13 +121,14 @@ class BaseDetail(BaseModel):
                 content=obj.rt_con.content,
             )
         if obj.pic:
+            assert all(i.valid_url() for i in obj.pic)
             if self.forward is None:
                 self.media = [VisualMedia.from_picrep(i) for i in obj.pic]
             else:
                 assert isinstance(self.forward, FeedContent)
                 self.forward.media = [VisualMedia.from_picrep(i) for i in obj.pic]
 
-    def set_fromhtml(self, obj: HtmlContent, forward: HttpUrl | str | None = None):
+    def set_fromhtml(self, obj: HtmlContent, forward: Optional[Union[HttpUrl, str]] = None):
         self.content = obj.content
         self.forward = forward
         self.media = [VisualMedia.from_picrep(i) for i in obj.pic] if obj.pic else None
@@ -136,20 +138,18 @@ class FeedContent(BaseFeed, BaseDetail):
     """FeedContent is feed with contents. This might be the common structure to
     represent a feed as what it's known."""
 
-    islike: int | None = 0
+    islike: Optional[int] = 0
 
     def __hash__(self) -> int:
         media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0
         return hash((self.uin, self.abstime, self.content, self.forward, media_hash))
 
-    def set_detail(self, info: HtmlInfo, obj: FeedDetailRep):
+    def set_frominfo(self, info: HtmlInfo):
         self.curkey = info.curkey
         self.unikey = info.unikey
         self.islike = info.islike
-        return super().set_detail(obj)
 
-    def set_fromhtml(self, info: HtmlInfo, obj: HtmlContent, forward: HttpUrl | str | None = None):
-        self.curkey = info.curkey
-        self.unikey = info.unikey
-        self.islike = info.islike
-        return super().set_fromhtml(obj, forward)
+    def __repr__(self) -> str:
+        return (
+            super().__repr__() + f'(content="{self.content[:10]}",#media={len(self.media or "0")})'
+        )
