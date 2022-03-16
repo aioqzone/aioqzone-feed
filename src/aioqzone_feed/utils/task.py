@@ -1,13 +1,13 @@
 import asyncio
 import logging
 from time import time
-from typing import Any, Awaitable, Callable, Optional
+from typing import Awaitable, Callable, Optional
 
 logger = logging.getLogger(__name__)
 
 
 class AsyncTimer:
-    task: Optional[asyncio.Task]
+    task: Optional[asyncio.Task] = None
     last_call = 0.0
 
     def __init__(
@@ -37,17 +37,19 @@ class AsyncTimer:
             return
 
     def __call__(self):
-        self.task = asyncio.create_task(self._loop(), name=self.name)
+        self.task = asyncio.create_task(self._loop())
         return self.task
 
     @property
     def state(self):
-        return self.task._state if self.task else "init"
+        """`INIT` if not started (just initted).
+        `PENDING`, `FINISHED` as that in :class:`asyncio.Task`"""
+        return self.task._state if self.task else "INIT"
 
     def stop(self):
         if self.task:
-            return self.task.cancel()
-        return True
+            self.task.cancel()
+            self.task = None
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.state})"
