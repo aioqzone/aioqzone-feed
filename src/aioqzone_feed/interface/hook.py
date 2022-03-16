@@ -52,7 +52,7 @@ class FeedEvent(Event):
         pass
 
     async def HeartbeatRefresh(self, num: int):
-        """This event is triggered after a heartbeat succeeded and a `get_feed_by_count` is triggered.
+        """This event is triggered after a heartbeat succeeded and there are new feeds.
         Use this event to wait for all dispatch task to be finished, and send received feeds.
 
         :param num: number of new feeds
@@ -62,7 +62,8 @@ class FeedEvent(Event):
         .. code-block:: python
 
             async def HeartbeatRefresh(self, num: int):
-                await api.wait()            # wait for all dispatch tasks and hook tasks
-                await queue.send_all(num)   # send received feeds
+                await api.get_feeds_by_count(num)
+                await api.wait()        # wait for all dispatch tasks and hook tasks
+                await queue.send_all()  # send received feeds
         """
         pass

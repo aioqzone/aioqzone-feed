@@ -28,6 +28,7 @@ An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed ope
     - `interface.hook.FeedEvent.FeedDropped`: Feed is dropped for hitting some rules (e.g. advertisement)
     - `interface.hook.FeedEvent.FeedProcEnd`: All processes must be done have finished (i.e. except for slow-api that cannot return at once, and may not matters a lot)
     - `interface.hook.FeedEvent.FeedMediaUpdate`: One of the slow api. The media should be update by raw photos/videos, list order should not be changed.
+    - `interface.hook.FeedEvent.HeartbeatRefresh`: This event is triggered after a heartbeat succeeded and there are new feeds.
     - `interface.hook.FeedEvent.HeartbeatFailed`: Heartbeat failed and will not trigged again. One may call `api.feed.FeedApi.add_heartbeat` again.
 
 ## License
