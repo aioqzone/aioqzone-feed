@@ -308,10 +308,9 @@ class FeedApi(Emittable[FeedEvent]):
             exc = None
             for i in range(retry):
                 try:
-                    count = await self.api.get_feeds_count()
-                    self.add_hook_ref(
-                        "dispatch", self.get_feeds_by_count(count.friendFeeds_new_cnt)
-                    )
+                    count = (await self.api.get_feeds_count()).friendFeeds_new_cnt
+                    task = self.add_hook_ref("dispatch", self.get_feeds_by_count(count))
+                    add_done_callback(task, lambda num: num and self.hook.HeartbeatRefresh(num))
                     return False  # don't stop
                 except qz_exc as e:
                     exc = e
@@ -327,3 +326,4 @@ class FeedApi(Emittable[FeedEvent]):
             return True  # stop
 
         self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
+        return self.hb_timer()
