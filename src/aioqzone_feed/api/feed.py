@@ -327,3 +327,4 @@ class FeedApi(Emittable[FeedEvent]):
             return True  # stop
 
         self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
+        return self.hb_timer()
