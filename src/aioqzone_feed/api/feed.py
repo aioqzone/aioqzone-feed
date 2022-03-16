@@ -16,6 +16,7 @@ from qqqr.exception import UserBreak
 
 from ..interface.hook import FeedEvent
 from ..type import FeedContent, VisualMedia
+from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
 
 logger = logging.getLogger(__name__)
@@ -286,7 +287,7 @@ class FeedApi(Emittable[FeedEvent]):
     def stop(self) -> None:
         """Clear all registered tasks. All tasks will be CANCELLED if not finished."""
 
-        self.hb.cancel()
+        self.hb_timer.stop()
         super().clear(*self._tasks.keys())
 
     def clear(self):
@@ -297,33 +298,32 @@ class FeedApi(Emittable[FeedEvent]):
         super().clear("dispatch")
 
     def add_heartbeat(self, retry: int = 5):
-        # type: (int) -> asyncio.Task[None]
         """create a heartbeat task and keep a ref of it.
 
         :param retry: max retry times when exception occurs, defaults to 5.
         :return: the heartbeat task
         """
 
-        async def hb_loop():
-            i, e = 0, None
-            while i < retry:
+        async def heartbeat_refresh():
+            exc = None
+            for i in range(retry):
                 try:
-                    await asyncio.sleep(300)
                     count = await self.api.get_feeds_count()
+                    self.add_hook_ref(
+                        "dispatch", self.get_feeds_by_count(count.friendFeeds_new_cnt)
+                    )
+                    return False  # don't stop
                 except qz_exc as e:
-                    i += 1
+                    exc = e
                     logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
-                    continue
+                    # retry
                 except login_exc as e:
                     logger.info(f"Heartbeat stopped: {e}")
                     self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
-                    return
-
-                i = 0
-                self.add_hook_ref("dispatch", self.get_feeds_by_count(count.friendFeeds_new_cnt))
+                    return True  # stop at once
 
             logger.error("Max retry exceeds. Heartbeat stopped.")
-            self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
+            self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
+            return True  # stop
 
-        self.hb = asyncio.create_task(hb_loop())
-        return self.hb
+        self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
