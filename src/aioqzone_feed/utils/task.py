@@ -37,7 +37,7 @@ class AsyncTimer:
             return
 
     def __call__(self):
-        self.task = asyncio.create_task(self._loop(), name=self.name)
+        self.task = asyncio.create_task(self._loop())
         return self.task
 
     @property
