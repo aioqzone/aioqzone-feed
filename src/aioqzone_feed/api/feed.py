@@ -309,7 +309,9 @@ class FeedApi(Emittable[FeedEvent]):
             for i in range(retry):
                 try:
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
-                    cnt and self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
+                    logger.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
+                    if cnt:
+                        self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
                 except qz_exc as e:
                     exc = e
