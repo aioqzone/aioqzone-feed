@@ -104,7 +104,7 @@ class FeedApi(Emittable[FeedEvent]):
 
     async def get_feeds_by_second(
         self,
-        seconds: int,
+        seconds: float,
         start: Optional[float] = None,
         *,
         exceed_pred: Optional[Callable[[FeedRep], Awaitable[bool]]] = None,
