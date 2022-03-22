@@ -13,6 +13,13 @@ TAG_RE = re.compile(r"\[em\]e(\d+)\[/em\]")
 URL_RE = re.compile(r"https?://[\w\.]+/qzone/em/e(\d+)\.\w{3}")
 
 
+async def query_wrap(eid: int):
+    s = await qe.query(eid, default=build_tag)
+    if not re.fullmatch(r"[^\u0000-\uFFFF]*", s):
+        return f"[/{s}]"
+    return s
+
+
 async def sub(
     pattern: re.Pattern, repl: Callable[[re.Match], Coroutine[Any, Any, str]], text: str
 ):
@@ -44,7 +51,7 @@ async def sub(
 
 
 async def trans_tag(text: str):
-    return await sub(TAG_RE, lambda m: qe.query(int(m.group(1)), default=build_tag), text)
+    return await sub(TAG_RE, lambda m: query_wrap(int(m.group(1))), text)
 
 
 async def trans_detail(feed: FeedContent) -> FeedContent:
@@ -71,7 +78,7 @@ async def trans_html(txtbox: Union[HtmlElement, str]) -> HtmlElement:
         m = URL_RE.match(i.get("src", ""))
         if not m:
             continue
-        t = asyncio.create_task(qe.query(int(m.group(1)), default=build_tag))
+        t = asyncio.create_task(query_wrap(int(m.group(1))))
         t.add_done_callback(
             lambda t, e=i: setattr(e, "tail", t.result() + (e.tail or "")) or e.drop_tree()
         )
