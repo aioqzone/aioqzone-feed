@@ -21,7 +21,7 @@ copyright = "2022, JamzumSum"
 author = "JamzumSum"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.6"
+release = "0.1.0"  # overwritten by command line options
 
 # -- General configuration ---------------------------------------------------
 
@@ -33,6 +33,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.autodoc",
     "sphinx_autodoc_typehints",
+    "sphinx.ext.githubpages",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,7 +59,7 @@ html_static_path = ["_static"]
 # external inventory
 intersphinx_mapping = {
     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
-    "aioqzone": ("../../../aioqzone/doc/build/html/objects.inv"),
+    "aioqzone": ("https://jamzumsum.github.io/aioqzone", None),
 }
 
 # autodoc_pydantic settings

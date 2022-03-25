@@ -14,7 +14,7 @@ from aioqzone.utils.html import HtmlContent, HtmlInfo
 from pydantic import ValidationError
 from qqqr.exception import UserBreak
 
-from ..interface.hook import FeedEvent
+from ..interface.hook import TY_BID, FeedEvent
 from ..type import FeedContent, VisualMedia
 from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
@@ -62,12 +62,13 @@ class FeedApi(Emittable[FeedEvent]):
         self.like_app = self.api.like_app
         self.bid = -1
 
-    def new_batch(self):
+    def new_batch(self) -> TY_BID:
         """
         The new_batch function edit internal batch id and return it.
 
         A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
 
+        :rtype: :obj:`.TY_BID`
         :return: The batch_id.
         """
 
@@ -84,6 +85,8 @@ class FeedApi(Emittable[FeedEvent]):
         :raises `SystemExit`: unexcpected error
 
         :return: feeds num got actually.
+
+        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
         got = 0
         trans = qapi.QzoneApi.FeedsMoreTransaction()

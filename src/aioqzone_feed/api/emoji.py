@@ -1,9 +1,10 @@
 """Translate emoji representation to text."""
 import asyncio
 import re
-from typing import Any, Callable, Coroutine, List, Union
+from typing import Any, Callable, Coroutine, Dict, List, Type, Union
 
 import qzemoji as qe
+from aioqzone.type import AtEntity, ConEntity, TextEntity
 from lxml.html import HtmlElement, fromstring
 from qzemoji.utils import build_tag
 
@@ -12,9 +13,16 @@ from ..type import FeedContent
 TAG_RE = re.compile(r"\[em\]e(\d+)\[/em\]")
 URL_RE = re.compile(r"https?://[\w\.]+/qzone/em/e(\d+)\.\w{3}")
 
+t2a: Dict[Type[ConEntity], list[str]] = {
+    TextEntity: ["con"],
+    AtEntity: ["nick"],
+}
 
-async def query_wrap(eid: int):
-    s = await qe.query(eid, default=build_tag)
+
+async def query_wrap(eid: int) -> str:
+    s = await qe.query(eid)
+    if s is None:
+        return build_tag(eid)
     if not re.fullmatch(r"[^\u0000-\uFFFF]*", s):
         return f"[/{s}]"
     return s
@@ -44,6 +52,7 @@ async def sub(
     r.append(text[base:])
     if tasks:
         done, pending = await asyncio.wait(tasks)
+        assert not pending
         excs = list(filter(None, (i.exception() for i in done)))
         if excs:
             raise RuntimeError(*excs)
@@ -56,14 +65,27 @@ async def trans_tag(text: str):
 
 async def trans_detail(feed: FeedContent) -> FeedContent:
     tasks = []
-    for i in ["nickname", "content"]:
-        t = asyncio.create_task(trans_tag(getattr(feed, i)))
-        t.add_done_callback(lambda t: setattr(feed, i, t.result()))
+
+    def repl_attr(obj: object, attr: str):
+        t = asyncio.create_task(trans_tag(getattr(obj, attr)))
+        t.add_done_callback(lambda t: setattr(obj, attr, t.result()))
         tasks.append(t)
+
+    repl_attr(feed, "nickname")
+    if feed.entities:
+        for e in feed.entities:
+            al = t2a.get(type(e), None)
+            if al is None:
+                continue
+            for a in al:
+                repl_attr(e, a)
 
     if tasks:
         done, pending = await asyncio.wait(tasks)
         assert not pending
+        excs = list(filter(None, (i.exception() for i in done)))
+        if excs:
+            raise RuntimeError(*excs)
     return feed
 
 
@@ -87,4 +109,7 @@ async def trans_html(txtbox: Union[HtmlElement, str]) -> HtmlElement:
     if tasks:
         done, pending = await asyncio.wait(tasks)
         assert not pending
+        excs = list(filter(None, (i.exception() for i in done)))
+        if excs:
+            raise RuntimeError(*excs)
     return txtbox
