@@ -13,7 +13,7 @@ from ..type import FeedContent
 TAG_RE = re.compile(r"\[em\]e(\d+)\[/em\]")
 URL_RE = re.compile(r"https?://[\w\.]+/qzone/em/e(\d+)\.\w{3}")
 
-t2a: Dict[Type[ConEntity], list[str]] = {
+t2a: Dict[Type[ConEntity], List[str]] = {
     TextEntity: ["con"],
     AtEntity: ["nick"],
 }
