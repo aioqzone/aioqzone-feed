@@ -11,6 +11,7 @@ async def test_tag():
 
     assert "[/微笑][/撇嘴][/色]" == await trans_tag("[em]e100[/em][em]e101[/em][em]e102[/em]")
     assert "阿巴阿巴🐷啊对对🐷对" == await trans_tag("阿巴阿巴[em]e400343[/em]啊对对[em]e400343[/em]对")
+    assert "[em]e1111111[/em]" == await trans_tag("[em]e1111111[/em]")
 
 
 async def test_html():

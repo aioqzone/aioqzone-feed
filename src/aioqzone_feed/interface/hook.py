@@ -5,9 +5,11 @@ from aioqzone.type import FeedRep
 
 from ..type import FeedContent
 
+TY_BID = int
+
 
 class FeedEvent(Event):
-    async def FeedDropped(self, bid: int, feed: Union[FeedRep, FeedContent]):
+    async def FeedDropped(self, bid: TY_BID, feed: Union[FeedRep, FeedContent]):
         """
         The FeedDropped hook is called when a feed is dropped for hitting some rules (e.g. advertisement)
 
@@ -17,7 +19,7 @@ class FeedEvent(Event):
 
         pass
 
-    async def FeedProcEnd(self, bid: int, feed: FeedContent):
+    async def FeedProcEnd(self, bid: TY_BID, feed: FeedContent):
         """
         The FeedProcEnd function is called when all processes must be done have finished
         (i.e. except for slow-api that cannot return at once, and may not matters a lot)
@@ -28,7 +30,7 @@ class FeedEvent(Event):
 
         pass
 
-    async def FeedMediaUpdate(self, bid: int, feed: FeedContent):
+    async def FeedMediaUpdate(self, bid: TY_BID, feed: FeedContent):
         """
         The FeedMediaUpdate function is used to update the media of a feed.
         The :external:meth:`aioqzone.api.DummyQapi.floatview_photo_list` is one of the slow api.
