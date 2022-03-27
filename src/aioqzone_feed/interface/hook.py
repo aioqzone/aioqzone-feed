@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 from aioqzone.interface.hook import Event
-from aioqzone.type import FeedRep
+from aioqzone.type.resp import FeedRep
 
 from ..type import FeedContent
 
