@@ -4,7 +4,7 @@ import re
 from typing import Any, Callable, Coroutine, Dict, List, Type, Union
 
 import qzemoji as qe
-from aioqzone.type import AtEntity, ConEntity, TextEntity
+from aioqzone.type.entity import AtEntity, ConEntity, TextEntity
 from lxml.html import HtmlElement, fromstring
 from qzemoji.utils import build_tag
 

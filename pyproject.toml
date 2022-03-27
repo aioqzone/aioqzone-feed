@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.5.0.dev0"
+version = "0.5.1.dev0"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["JamzumSum <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
 readme = "README.md"
 homepage = "https://github.com/JamzumSum/aioqzone-feed"
 repository = "https://github.com/JamzumSum/aioqzone-feed"
-# documentation = "https://github.com/JamzumSum/aioqzone-feed/wiki"
+documentation = "https://jamzumsum.github.io/aioqzone-feed"
 
 
 [tool.poetry.dependencies]
@@ -42,7 +42,10 @@ doc = [
     "sphinx-autodoc-typehints",
     "sphinx-rtd-theme"
 ]
-
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

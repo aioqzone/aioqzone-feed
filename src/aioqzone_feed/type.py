@@ -1,6 +1,8 @@
 from typing import List, Optional, Union, cast
 
-from aioqzone.type import ConEntity, FeedDetailRep, FeedRep, LikeData, PicRep, TextEntity, VideoRep
+from aioqzone.type.entity import ConEntity
+from aioqzone.type.internal import LikeData
+from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep, VideoRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
 from pydantic import BaseModel, HttpUrl
@@ -104,7 +106,7 @@ class BaseDetail(BaseModel):
     media: Optional[List[VisualMedia]] = None
 
     def set_detail(self, obj: FeedDetailRep):
-        self.entities = obj.entities
+        self.entities = cast(Optional[list], obj.entities)
         if obj.rt_uin:
             assert obj.rt_con
             unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_fid)
@@ -117,7 +119,7 @@ class BaseDetail(BaseModel):
                 abstime=approx_ts(obj.rt_createTime) if obj.rt_createTime else 0,
                 curkey=unikey,
                 unikey=unikey,
-                entities=obj.rt_con.entities,
+                entities=cast(Optional[list], obj.rt_con.entities),
             )
         if obj.pic:
             assert all(i.valid_url() for i in obj.pic)
@@ -128,7 +130,7 @@ class BaseDetail(BaseModel):
                 self.forward.media = [VisualMedia.from_picrep(i) for i in obj.pic]
 
     def set_fromhtml(self, obj: HtmlContent, forward: Optional[Union[HttpUrl, str]] = None):
-        self.entities = [TextEntity(type=2, con=obj.content)]
+        self.entities = cast(Optional[list], obj.entities)
         self.forward = forward
         self.media = [VisualMedia.from_picrep(i) for i in obj.pic] if obj.pic else None
 
@@ -137,7 +139,7 @@ class FeedContent(BaseFeed, BaseDetail):
     """FeedContent is feed with contents. This might be the common structure to
     represent a feed as what it's known."""
 
-    islike: Optional[int] = 0
+    islike: int = 0
 
     def __hash__(self) -> int:
         media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0

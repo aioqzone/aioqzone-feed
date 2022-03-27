@@ -9,7 +9,8 @@ from aiohttp.client_exceptions import ClientResponseError
 from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.interface.hook import Emittable
 from aioqzone.interface.login import Loginable
-from aioqzone.type import AlbumData, FeedDetailRep, FeedRep, PicRep
+from aioqzone.type.internal import AlbumData
+from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from pydantic import ValidationError
 from qqqr.exception import UserBreak
