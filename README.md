@@ -3,7 +3,7 @@
 An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed operation.
 
 [![python](https://img.shields.io/badge/python-3.7%20%7C%203.10-blue)][home]
-[![Dev CI](https://github.com/JamzumSum/aioqzone-feed/actions/workflows/ci.yml/badge.svg)](https://github.com/JamzumSum/aioqzone-feed/actions/workflows/ci.yml)
+[![Dev CI](https://github.com/aioqzone/aioqzone-feed/actions/workflows/ci.yml/badge.svg)](https://github.com/aioqzone/aioqzone-feed/actions/workflows/ci.yml)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Feature
@@ -34,9 +34,9 @@ An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed ope
 ## License
 
 - [AGPL-3.0](LICENSE)
-- `aioqzone-feed` is a plugin of [aioqzone][aioqzone]. This repository inherits license, instructions and any other requirements from `aioqzone`. See also: [License fragment in aioqzone README file](https://github.com/JamzumSum/aioqzone#license)
+- `aioqzone-feed` is a plugin of [aioqzone][aioqzone]. This repository inherits license, instructions and any other requirements from `aioqzone`. See also: [License fragment in aioqzone README file](https://github.com/aioqzone/aioqzone#license)
 
 
-[aioqzone]: https://github.com/JamzumSum/aioqzone "Python wrapper for Qzone web login and Qzone http api."
-[qzemoji]: https://github.com/JamzumSum/QzEmoji/tree/async "Translate Qzone emoji to text"
-[home]: https://github.com/JamzumSum/aioqzone-feed "aioqzone plugin providing higher level api for processing feed"
+[aioqzone]: https://github.com/aioqzone/aioqzone "Python wrapper for Qzone web login and Qzone http api."
+[qzemoji]: https://github.com/aioqzone/QzEmoji/tree/async "Translate Qzone emoji to text"
+[home]: https://github.com/aioqzone/aioqzone-feed "aioqzone plugin providing higher level api for processing feed"

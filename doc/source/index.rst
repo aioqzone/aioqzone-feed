@@ -6,7 +6,7 @@
 Welcome to aioqzone-feed's documentation!
 =========================================
 
-`aioqzone-feed` is a plugin of `aioqzone <https://github.com/JamzumSum/aioqzone>`_, aiming at post-processing
+`aioqzone-feed` is a plugin of `aioqzone <https://github.com/aioqzone/aioqzone>`_, aiming at post-processing
 feeds fetched by Qzone API. `aioqzone-feed` could be regarded as a set of high-level Qzone Feed APIs.
 
 .. toctree::
