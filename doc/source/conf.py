@@ -17,8 +17,8 @@
 # -- Project information -----------------------------------------------------
 
 project = "aioqzone-feed"
-copyright = "2022, JamzumSum"
-author = "JamzumSum"
+copyright = "2022, aioqzone"
+author = "aioqzone"
 
 # The full version, including alpha/beta/rc tags
 release = "0.1.0"  # overwritten by command line options
@@ -59,7 +59,7 @@ html_static_path = ["_static"]
 # external inventory
 intersphinx_mapping = {
     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
-    "aioqzone": ("https://jamzumsum.github.io/aioqzone", None),
+    "aioqzone": ("https://aioqzone.github.io/aioqzone", None),
 }
 
 # autodoc_pydantic settings
