@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feed API &mdash; aioqzone-feed 0.5.0.dev0 documentation</title>
+  <title>Feed API &mdash; aioqzone-feed 0.5.1.dev1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/autodoc_pydantic.css" type="text/css" />
@@ -99,7 +99,7 @@
 <dd><p>Cancel all dispatch tasks registered.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.clear" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.clear()</span></code></a></p>
+<p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.clear" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.clear()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -113,8 +113,8 @@
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/qqqr/exception.html#qqqr.exception.UserBreak" title="(in aioqzone)"><strong>qqqr.exception.UserBreak</strong></a> – qr login canceled</p></li>
-<li><p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/exception.html#aioqzone.exception.LoginError" title="(in aioqzone)"><strong>aioqzone.exception.LoginError</strong></a> – not logined</p></li>
+<li><p><a class="reference external" href="https://aioqzone.github.io/aioqzone/qqqr/exception.html#qqqr.exception.UserBreak" title="(in aioqzone)"><strong>qqqr.exception.UserBreak</strong></a> – qr login canceled</p></li>
+<li><p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/exception.html#aioqzone.exception.LoginError" title="(in aioqzone)"><strong>aioqzone.exception.LoginError</strong></a> – not logined</p></li>
 <li><p><strong>SystemExit</strong> – unexcpected error</p></li>
 </ul>
 </dd>
@@ -137,13 +137,13 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>seconds</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – filter on abstime, calculate from <cite>start</cite>.</p></li>
 <li><p><strong>start</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – start timestamp, defaults to None, means now.</p></li>
-<li><p><strong>exceed_pred</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/type.html#aioqzone.type.FeedRep" title="(in aioqzone)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedRep</span></code></a>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]]) – another criterion to judge if the feed is out of range, defaults to None</p></li>
+<li><p><strong>exceed_pred</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/type/resp.html#aioqzone.type.resp.FeedRep" title="(in aioqzone)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedRep</span></code></a>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]]) – another criterion to judge if the feed is out of range, defaults to None</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/qqqr/exception.html#qqqr.exception.UserBreak" title="(in aioqzone)"><strong>qqqr.exception.UserBreak</strong></a> – qr login canceled</p></li>
-<li><p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/exception.html#aioqzone.exception.LoginError" title="(in aioqzone)"><strong>aioqzone.exception.LoginError</strong></a> – not logined</p></li>
+<li><p><a class="reference external" href="https://aioqzone.github.io/aioqzone/qqqr/exception.html#qqqr.exception.UserBreak" title="(in aioqzone)"><strong>qqqr.exception.UserBreak</strong></a> – qr login canceled</p></li>
+<li><p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/exception.html#aioqzone.exception.LoginError" title="(in aioqzone)"><strong>aioqzone.exception.LoginError</strong></a> – not logined</p></li>
 <li><p><strong>SystemExit</strong> – unexcpected error</p></li>
 </ul>
 </dd>
@@ -199,7 +199,7 @@
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.wait" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.wait()</span></code></a></p>
+<p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.wait" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.wait()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -218,7 +218,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, JamzumSum.</p>
+    <p>&#169; Copyright 2022, aioqzone.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

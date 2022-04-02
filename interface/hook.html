@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aioqzone-feed Events &mdash; aioqzone-feed 0.5.0.dev0 documentation</title>
+  <title>aioqzone-feed Events &mdash; aioqzone-feed 0.5.1.dev1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/autodoc_pydantic.css" type="text/css" />
@@ -71,7 +71,7 @@
              
   <section id="aioqzone-feed-events">
 <h1>aioqzone-feed Events<a class="headerlink" href="#aioqzone-feed-events" title="Permalink to this headline"></a></h1>
-<p>aioqzone-feed follows the hook system defined in <a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/interface/hook.html#module-aioqzone.interface.hook" title="(in aioqzone)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">aioqzone.interface.hook</span></code></a>.</p>
+<p>aioqzone-feed follows the hook system defined in <a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/interface/hook.html#module-aioqzone.interface.hook" title="(in aioqzone)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">aioqzone.interface.hook</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aioqzone_feed.interface.hook.FeedEvent">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioqzone_feed.interface.hook.</span></span><span class="sig-name descname"><span class="pre">FeedEvent</span></span><a class="headerlink" href="#aioqzone_feed.interface.hook.FeedEvent" title="Permalink to this definition"></a></dt>
@@ -83,7 +83,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Used to identify feed batch (tell from different calling).</p></li>
-<li><p><strong>feed</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/type.html#aioqzone.type.FeedRep" title="(in aioqzone)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedRep</span></code></a>, <a class="reference internal" href="../type.html#aioqzone_feed.type.FeedContent" title="aioqzone_feed.type.FeedContent"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedContent</span></code></a>]) – Used to pass a ref to the feed.</p></li>
+<li><p><strong>feed</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/type/resp.html#aioqzone.type.resp.FeedRep" title="(in aioqzone)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedRep</span></code></a>, <a class="reference internal" href="../type.html#aioqzone_feed.type.FeedContent" title="aioqzone_feed.type.FeedContent"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedContent</span></code></a>]) – Used to pass a ref to the feed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -93,7 +93,7 @@
 <dt class="sig sig-object py" id="aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FeedMediaUpdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate" title="Permalink to this definition"></a></dt>
 <dd><p>The FeedMediaUpdate function is used to update the media of a feed.
-The <a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/api/dummy.html#aioqzone.api.DummyQapi.floatview_photo_list" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.api.DummyQapi.floatview_photo_list()</span></code></a> is one of the slow api.
+The <a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/api/dummy.html#aioqzone.api.DummyQapi.floatview_photo_list" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.api.DummyQapi.floatview_photo_list()</span></code></a> is one of the slow api.
 The media will be update by raw photos/videos, list order should not be changed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -167,7 +167,7 @@ Use this event to wait for all dispatch task to be finished, and send received f
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, JamzumSum.</p>
+    <p>&#169; Copyright 2022, aioqzone.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aioqzone-feed Types &mdash; aioqzone-feed 0.5.0.dev0 documentation</title>
+  <title>aioqzone-feed Types &mdash; aioqzone-feed 0.5.1.dev1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -76,7 +76,7 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Fields</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#aioqzone_feed.type.BaseDetail.entities" title="aioqzone_feed.type.BaseDetail.entities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">entities</span> <span class="pre">(Optional[List[aioqzone.type.ConEntity]])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#aioqzone_feed.type.BaseDetail.entities" title="aioqzone_feed.type.BaseDetail.entities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">entities</span> <span class="pre">(Optional[List[aioqzone.type.entity.ConEntity]])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseDetail.forward" title="aioqzone_feed.type.BaseDetail.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span> <span class="pre">(Optional[Union[pydantic.networks.HttpUrl,</span> <span class="pre">str,</span> <span class="pre">aioqzone_feed.type.BaseFeed]])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseDetail.media" title="aioqzone_feed.type.BaseDetail.media"><code class="xref py py-obj docutils literal notranslate"><span class="pre">media</span> <span class="pre">(Optional[List[aioqzone_feed.type.VisualMedia]])</span></code></a></p></li>
 </ul>
@@ -84,7 +84,7 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseDetail.entities">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://jamzumsum.github.io/aioqzone/aioqzone/type.html#aioqzone.type.ConEntity" title="(in aioqzone)"><span class="pre">aioqzone.type.ConEntity</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.entities" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/type/entities.html#aioqzone.type.entity.ConEntity" title="(in aioqzone)"><span class="pre">aioqzone.type.entity.ConEntity</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.entities" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -204,13 +204,13 @@ represent a feed as what it’s known.</p>
 </dd>
 <dt class="field-even">Fields</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#aioqzone_feed.type.FeedContent.islike" title="aioqzone_feed.type.FeedContent.islike"><code class="xref py py-obj docutils literal notranslate"><span class="pre">islike</span> <span class="pre">(Optional[int])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#aioqzone_feed.type.FeedContent.islike" title="aioqzone_feed.type.FeedContent.islike"><code class="xref py py-obj docutils literal notranslate"><span class="pre">islike</span> <span class="pre">(int)</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.FeedContent.islike">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">islike</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#aioqzone_feed.type.FeedContent.islike" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">islike</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#aioqzone_feed.type.FeedContent.islike" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -296,7 +296,7 @@ represent a feed as what it’s known.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, JamzumSum.</p>
+    <p>&#169; Copyright 2022, aioqzone.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
