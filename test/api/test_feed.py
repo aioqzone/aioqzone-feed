@@ -24,6 +24,7 @@ class FeedEvent4Test(FeedEvent):
 
     async def FeedProcEnd(self, bid: int, feed: FeedContent):
         self.batch.append(feed)
+        assert feed.nickname
         assert feed.appid
         assert feed.fid
 

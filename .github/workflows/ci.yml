@@ -17,7 +17,7 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test.yml
+    uses: aioqzone/aioqzone/.github/workflows/test.yml@beta
     with:
       pytest_arg: test
     secrets:
