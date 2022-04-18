@@ -149,6 +149,11 @@ class FeedContent(BaseFeed, BaseDetail):
         self.curkey = info.curkey
         self.unikey = info.unikey
         self.islike = info.islike
+        self.nickname = self.nickname or info.nickname
 
     def __repr__(self) -> str:
         return super().__repr__() + f'(content="{self.entities}",#media={len(self.media or "0")})'
+
+    def set_detail(self, obj: FeedDetailRep):
+        self.nickname = self.nickname or obj.name
+        return super().set_detail(obj)
