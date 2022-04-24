@@ -33,7 +33,10 @@ def add_done_callback(task, cb):
         # type: (asyncio.Task[T]) -> Optional[T]
         try:
             return task.result()
-        except qz_exc:
+        except QzoneError as e:
+            lg = logger.debug if e.code in [-10029] else logger.error
+            lg(f"DEBUG: {task}", exc_info=True)
+        except ClientResponseError:
             logger.error(f"DEBUG: {task}", exc_info=True)
         except LoginError as e:
             logger.error(f"LoginError: {e}")
