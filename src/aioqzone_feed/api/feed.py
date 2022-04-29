@@ -4,7 +4,7 @@ import time
 from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 
 import aioqzone.api as qapi
-from aiohttp import ClientSession
+from aiohttp import ClientConnectorError, ClientSession
 from aiohttp.client_exceptions import ClientResponseError
 from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.interface.hook import Emittable
@@ -323,7 +323,10 @@ class FeedApi(Emittable[FeedEvent]):
                 except qz_exc as e:
                     exc = e
                     logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
-                    # retry
+                    # retry at once
+                except ClientConnectorError:
+                    logger.warning("Error in connector", exc_info=True)
+                    return False  # retry in next trigger
                 except login_exc as e:
                     logger.info(f"Heartbeat stopped: {e}")
                     self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
