@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.6.2.dev2"
+version = "0.6.2.dev3"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
