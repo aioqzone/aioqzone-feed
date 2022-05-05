@@ -329,12 +329,13 @@ class FeedApi(Emittable[FeedEvent]):
                     return False  # retry in next trigger
                 except login_exc as e:
                     logger.info(f"Heartbeat stopped: {e}")
-                    self.add_hook_ref("hook", self.hook.HeartbeatFailed(e))
-                    return True  # stop at once
+                except BaseException as e:
+                    exc = e
+                    logger.error("Uncaught error in heartbeat.", exc_info=True)
 
             logger.error("Max retry exceeds. Heartbeat stopped.")
             self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
-            return True  # stop
+            return True  # stop at once
 
         self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
         return self.hb_timer()
