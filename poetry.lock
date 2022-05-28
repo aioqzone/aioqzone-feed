@@ -30,7 +30,7 @@ speedups = ["aiodns", "brotli", "cchardet"]
 
 [[package]]
 name = "aioqzone"
-version = "0.8.0.dev1"
+version = "0.8.2.dev1"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
@@ -979,7 +979,7 @@ doc = ["Sphinx", "autodoc-pydantic", "sphinx-autodoc-typehints", "sphinx-rtd-the
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "5431445d8fe96030d20928990ee89f2c7a9f53b7a03fb4b32d3abfef5c0ed280"
+content-hash = "d2e2779091765905821a75eb1f993d168ae3f78cef0394509ac66a35aaa83397"
 
 [metadata.files]
 aiofiles = [
@@ -1061,8 +1061,8 @@ aiohttp = [
     {file = "aiohttp-3.8.1.tar.gz", hash = "sha256:fc5471e1a54de15ef71c1bc6ebe80d4dc681ea600e68bfd1cbce40427f0b7578"},
 ]
 aioqzone = [
-    {file = "aioqzone-0.8.0.dev1-py3-none-any.whl", hash = "sha256:987dec6e5ca678787610f29deba938eb51296d8a9ce74b3fc774614e9e83d2f0"},
-    {file = "aioqzone-0.8.0.dev1.tar.gz", hash = "sha256:b9e7a8ba51d4932f6fd530188611a0c07745a7836d75445a54323461b0b2c6a3"},
+    {file = "aioqzone-0.8.2.dev1-py3-none-any.whl", hash = "sha256:a49ec2c15a716c6b9a9e33d5ad0f441a09eb223bc00f2376fc197d53fd83eb2e"},
+    {file = "aioqzone-0.8.2.dev1.tar.gz", hash = "sha256:c721216eb497802cc306547c7a1e0e66acd873ebf2a6c10ab00fffa88b6118fe"},
 ]
 aiosignal = [
     {file = "aiosignal-1.2.0-py3-none-any.whl", hash = "sha256:26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a"},
