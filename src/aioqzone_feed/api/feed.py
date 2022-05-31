@@ -6,6 +6,7 @@ from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 import aioqzone.api as qapi
 from aiohttp import ClientConnectorError, ClientSession
 from aiohttp.client_exceptions import ClientResponseError
+from aioqzone.api.raw import QzoneApi
 from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.interface.hook import Emittable
 from aioqzone.interface.login import Loginable
@@ -93,7 +94,7 @@ class FeedApi(Emittable[FeedEvent]):
         ..note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
         got = 0
-        trans = qapi.QzoneApi.FeedsMoreTransaction()
+        trans = QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
             try:
                 ls, aux = await self.api.feeds3_html_more(page, trans, count=count - got)
@@ -131,7 +132,7 @@ class FeedApi(Emittable[FeedEvent]):
         start = start or time.time()
         end = start - seconds
         exceed = got = 0
-        trans = qapi.QzoneApi.FeedsMoreTransaction()
+        trans = QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
             try:
                 ls, aux = await self.api.feeds3_html_more(page, trans)
@@ -323,15 +324,17 @@ class FeedApi(Emittable[FeedEvent]):
                 except qz_exc as e:
                     exc = e
                     logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
-                    # retry at once
+                    continue  # retry at once
                 except ClientConnectorError:
                     logger.warning("Error in connector", exc_info=True)
                     return False  # retry in next trigger
                 except login_exc as e:
                     logger.info(f"Heartbeat stopped: {e}")
+                    break
                 except BaseException as e:
                     exc = e
                     logger.error("Uncaught error in heartbeat.", exc_info=True)
+                    break
 
             logger.error("Max retry exceeds. Heartbeat stopped.")
             self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
