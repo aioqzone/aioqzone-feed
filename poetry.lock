@@ -30,7 +30,7 @@ speedups = ["aiodns", "brotli", "cchardet"]
 
 [[package]]
 name = "aioqzone"
-version = "0.8.0.dev1"
+version = "0.8.2.dev1"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
@@ -150,7 +150,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "autodoc-pydantic"
-version = "1.7.0"
+version = "1.7.1"
 description = "Seamlessly integrate pydantic models in your Sphinx documentation."
 category = "main"
 optional = true
@@ -161,8 +161,8 @@ pydantic = ">=1.5"
 Sphinx = ">=3.4"
 
 [package.extras]
-docs = ["sphinx-rtd-theme (>=1.0,<2.0)", "sphinx-tabs (==3.2)", "sphinx-copybutton (>=0.4,<0.5)", "sphinxcontrib-mermaid (==0.7.1)"]
-dev = ["sphinx-rtd-theme (>=1.0,<2.0)", "sphinx-tabs (==3.2)", "sphinx-copybutton (>=0.4,<0.5)", "sphinxcontrib-mermaid (==0.7.1)", "pytest (>=6,<7)", "coverage (>=5,<6)", "flake8 (>=3,<4)", "tox (>=3,<4)"]
+docs = ["sphinx-rtd-theme (>=1.0,<2.0)", "sphinx-tabs (>=3,<4)", "sphinx-copybutton (>=0.4,<0.5)", "sphinxcontrib-mermaid (>=0.7,<0.8)"]
+dev = ["sphinx-rtd-theme (>=1.0,<2.0)", "sphinx-tabs (>=3,<4)", "sphinx-copybutton (>=0.4,<0.5)", "sphinxcontrib-mermaid (>=0.7,<0.8)", "pytest (>=6,<7)", "coverage (>=5,<6)", "flake8 (>=3,<4)", "tox (>=3,<4)"]
 test = ["pytest (>=6,<7)", "coverage (>=5,<6)"]
 
 [[package]]
@@ -979,7 +979,7 @@ doc = ["Sphinx", "autodoc-pydantic", "sphinx-autodoc-typehints", "sphinx-rtd-the
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "5431445d8fe96030d20928990ee89f2c7a9f53b7a03fb4b32d3abfef5c0ed280"
+content-hash = "d2e2779091765905821a75eb1f993d168ae3f78cef0394509ac66a35aaa83397"
 
 [metadata.files]
 aiofiles = [
@@ -1061,8 +1061,8 @@ aiohttp = [
     {file = "aiohttp-3.8.1.tar.gz", hash = "sha256:fc5471e1a54de15ef71c1bc6ebe80d4dc681ea600e68bfd1cbce40427f0b7578"},
 ]
 aioqzone = [
-    {file = "aioqzone-0.8.0.dev1-py3-none-any.whl", hash = "sha256:987dec6e5ca678787610f29deba938eb51296d8a9ce74b3fc774614e9e83d2f0"},
-    {file = "aioqzone-0.8.0.dev1.tar.gz", hash = "sha256:b9e7a8ba51d4932f6fd530188611a0c07745a7836d75445a54323461b0b2c6a3"},
+    {file = "aioqzone-0.8.2.dev1-py3-none-any.whl", hash = "sha256:a49ec2c15a716c6b9a9e33d5ad0f441a09eb223bc00f2376fc197d53fd83eb2e"},
+    {file = "aioqzone-0.8.2.dev1.tar.gz", hash = "sha256:c721216eb497802cc306547c7a1e0e66acd873ebf2a6c10ab00fffa88b6118fe"},
 ]
 aiosignal = [
     {file = "aiosignal-1.2.0-py3-none-any.whl", hash = "sha256:26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a"},
@@ -1094,8 +1094,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 autodoc-pydantic = [
-    {file = "autodoc_pydantic-1.7.0-py3-none-any.whl", hash = "sha256:5bb1561647e8bc2c3c66a5331b15e4c458c5dba04c21b027a0c0306b8d39ae9b"},
-    {file = "autodoc_pydantic-1.7.0.tar.gz", hash = "sha256:c48f80431fa45a531333dac96584efe8ce2177d5ffd0af21b6b4eadd6f1dd1df"},
+    {file = "autodoc_pydantic-1.7.1-py3-none-any.whl", hash = "sha256:2df45d54fedf66a5fb81f2317b20126ff7fe41a63bc555538806f8e8c5b30a51"},
+    {file = "autodoc_pydantic-1.7.1.tar.gz", hash = "sha256:b7900e3323307d94044555b11b7c328b504e4d3e6406a837f687a3cfb8e1501c"},
 ]
 babel = [
     {file = "Babel-2.10.1-py3-none-any.whl", hash = "sha256:3f349e85ad3154559ac4930c3918247d319f21910d5ce4b25d439ed8693b98d2"},
