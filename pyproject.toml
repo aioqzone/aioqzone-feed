@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.8.2.dev1"
+version = "0.8.3.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -14,7 +14,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.11"
-aioqzone = {version = "^0.8.2.dev1", allow-prereleases = true}
+aioqzone = {version = "^0.8.3.dev1", allow-prereleases = true}
 QzEmoji = { git = "https://github.com/aioqzone/QzEmoji.git", branch = "async" }
 # extras: dev
 tox = {version = "^3.24.5", optional = true}
@@ -22,9 +22,9 @@ pre-commit = {version = "^2.17.0", optional = true}
 black = {version = "^22.1.0", optional = true}
 isort = {version = "^5.10.1", optional = true}
 # extras: doc
-Sphinx = {version = "^4.4.0", optional = true}
+Sphinx = {version = "^5.0.1", optional = true}
 autodoc-pydantic = {version = "^1.6.1", optional = true}
-sphinx-autodoc-typehints = {version = "^1.17.0", optional = true}
+sphinx-autodoc-typehints = {version = "^1.18.2", optional = true}
 sphinx-rtd-theme = {version = "^1.0.0", optional = true}
 
 [tool.poetry.dev-dependencies]

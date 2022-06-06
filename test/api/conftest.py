@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from aiohttp import ClientSession
 from aioqzone.api.loginman import MixedLoginMan, QrStrategy
-from aioqzone.interface.hook import QREvent, UPEvent
+from aioqzone.interface.login import QREvent, UPEvent
 
 from . import showqr
 

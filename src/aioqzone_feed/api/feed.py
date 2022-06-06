@@ -61,6 +61,8 @@ def add_done_callback(task, cb):
 
 
 class FeedApi(Emittable[FeedEvent]):
+    hb_timer = None
+
     def __init__(self, sess: ClientSession, loginman: Loginable):
         super().__init__()
         self.api = qapi.DummyQapi(sess, loginman)
@@ -294,8 +296,8 @@ class FeedApi(Emittable[FeedEvent]):
 
     def stop(self) -> None:
         """Clear all registered tasks. All tasks will be CANCELLED if not finished."""
-
-        self.hb_timer.stop()
+        if self.hb_timer:
+            self.hb_timer.stop()
         super().clear(*self._tasks.keys())
 
     def clear(self):
