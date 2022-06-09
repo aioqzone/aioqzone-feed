@@ -9,7 +9,6 @@ on:
       - "src/**"
       - "test/**"
       - ".github/workflows/ci.yml"
-      - ".github/workflows/test.yml"
       - "poetry.lock"
     branches:
       - dev
@@ -19,7 +18,7 @@ jobs:
   test:
     uses: aioqzone/aioqzone/.github/workflows/test.yml@beta
     with:
-      pytest_arg: test
+      PYTEST_ARGS: test
     secrets:
       TEST_UIN: ${{ secrets.TEST_UIN }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}

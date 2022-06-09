@@ -170,12 +170,14 @@ class FeedApi(Emittable[FeedEvent]):
         :param feed: feed
         """
         if feed.uin == 20050606:
-            logger.info(f"advertisement rule hit: {feed}")
+            logger.info(f"advertisement rule hit: {feed.uin}")
+            logger.debug(f"Dropped: {feed}")
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
         if feed.fid.startswith("advertisement"):
-            logger.info(f"advertisement rule hit: {feed}")
+            logger.info(f"advertisement rule hit: {feed.fid}")
+            logger.debug(f"Dropped: {feed}")
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
