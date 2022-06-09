@@ -30,7 +30,7 @@ speedups = ["aiodns", "brotli", "cchardet"]
 
 [[package]]
 name = "aioqzone"
-version = "0.8.3.dev1"
+version = "0.8.3.dev2"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
@@ -445,7 +445,7 @@ python-versions = ">=3.8"
 
 [[package]]
 name = "opencv-python-headless"
-version = "4.5.5.64"
+version = "4.6.0.66"
 description = "Wrapper package for OpenCV python bindings."
 category = "main"
 optional = false
@@ -627,11 +627,11 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "qzemoji"
-version = "3.1.0.dev1"
+version = "3.2.0a1"
 description = "Translate Qzone emoji link to text."
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "^3.7"
 develop = false
 
 [package.dependencies]
@@ -641,13 +641,13 @@ PyYAML = "^6.0"
 SQLAlchemy = {version = "^1.4.32", extras = ["asyncio"]}
 
 [package.extras]
-dev = ["tox (>=3.24.5,<4.0.0)", "pre-commit (>=2.17.0,<3.0.0)", "black (>=22.1.0,<23.0.0)", "isort (>=5.10.1,<6.0.0)"]
+dev = ["pre-commit (>=2.17.0,<3.0.0)", "black (>=22.1.0,<23.0.0)", "isort (>=5.10.1,<6.0.0)"]
 
 [package.source]
 type = "git"
 url = "https://github.com/aioqzone/QzEmoji.git"
-reference = "async"
-resolved_reference = "fc57dfab40749b3ed3f7eb2c2dd9e004066c6507"
+reference = "beta"
+resolved_reference = "a9484f92f7521cbaca698ff6f9a3000d1052b15e"
 
 [[package]]
 name = "requests"
@@ -979,7 +979,7 @@ doc = ["Sphinx", "autodoc-pydantic", "sphinx-autodoc-typehints", "sphinx-rtd-the
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "279a65077a1cae30a17ab855912ceb4b50e8e74ab9b56f03ab4569e370074834"
+content-hash = "7cd8842ab5ae60abf9501a0109fa7c54884d2dac8eb251a417f10c5ad2ba9ccf"
 
 [metadata.files]
 aiofiles = [
@@ -1061,8 +1061,8 @@ aiohttp = [
     {file = "aiohttp-3.8.1.tar.gz", hash = "sha256:fc5471e1a54de15ef71c1bc6ebe80d4dc681ea600e68bfd1cbce40427f0b7578"},
 ]
 aioqzone = [
-    {file = "aioqzone-0.8.3.dev1-py3-none-any.whl", hash = "sha256:febdcba4ea049697c2088bb3d87a4141699a9e65c2bf8a92d45b0e72328036bd"},
-    {file = "aioqzone-0.8.3.dev1.tar.gz", hash = "sha256:519afc877d78b312818764489ba3bf18fb6b59ec8e37bc05ac8a44d5094afb87"},
+    {file = "aioqzone-0.8.3.dev2-py3-none-any.whl", hash = "sha256:9f4039b815fd585aa3f9f0e40afb32bd1f21b9a3205bb8d8fa0f3a103a30444b"},
+    {file = "aioqzone-0.8.3.dev2.tar.gz", hash = "sha256:19ac7e21d35194713002fc87a378c00a1dbde85429feceae8b6a61bf50fea264"},
 ]
 aiosignal = [
     {file = "aiosignal-1.2.0-py3-none-any.whl", hash = "sha256:26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a"},
@@ -1540,13 +1540,13 @@ numpy = [
     {file = "numpy-1.22.4.zip", hash = "sha256:425b390e4619f58d8526b3dcf656dde069133ae5c240229821f01b5f44ea07af"},
 ]
 opencv-python-headless = [
-    {file = "opencv-python-headless-4.5.5.64.tar.gz", hash = "sha256:c3c2dda44d601757a508b07d628537c49f31223ad4edd0f747a70d4c852a7b98"},
-    {file = "opencv_python_headless-4.5.5.64-cp36-abi3-macosx_10_15_x86_64.whl", hash = "sha256:62e31878641a8f96e773118d1eea9f34bdda87c9990a0faab04ebaafb5ae015c"},
-    {file = "opencv_python_headless-4.5.5.64-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:567a54c1919bcf5b3d20a9830e3c511e57134de8def286ce137c3544a892f98c"},
-    {file = "opencv_python_headless-4.5.5.64-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3f330468c29882dbbec5af25695c5e575572c6b855cb0f9fe53e14116fd46bfc"},
-    {file = "opencv_python_headless-4.5.5.64-cp36-abi3-win32.whl", hash = "sha256:4bdf982574bf2fefc5f82c86df7cb42e56ad627874c7c0f4d94ecf4ae8885304"},
-    {file = "opencv_python_headless-4.5.5.64-cp36-abi3-win_amd64.whl", hash = "sha256:a60e9ff48854ec37be391e19dd634883cc26c2f0f814e5325b3deca33420912c"},
-    {file = "opencv_python_headless-4.5.5.64-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:ca4f013fa958f60fb2327fe87e6127c1ac0ab536890b1d4b00847f417b7af1ba"},
+    {file = "opencv-python-headless-4.6.0.66.tar.gz", hash = "sha256:d5291d7e10aa2c19cab6fd86f0d61af8617290ecd2d7ffcb051e446868d04cc5"},
+    {file = "opencv_python_headless-4.6.0.66-cp36-abi3-macosx_10_15_x86_64.whl", hash = "sha256:21e70f8b0c04098cdf466d27184fe6c3820aaef944a22548db95099959c95889"},
+    {file = "opencv_python_headless-4.6.0.66-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:eec6281054346103d6af93f173b7c6a206beb2663d3adc04aa3ddc66e85093df"},
+    {file = "opencv_python_headless-4.6.0.66-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2c032c373e447c3fc2a670bca20e2918a1205a6e72854df60425fd3f82c78c32"},
+    {file = "opencv_python_headless-4.6.0.66-cp36-abi3-win32.whl", hash = "sha256:3bacd806cce1f1988e58f3d6f761538e0215d6621d316de94c009dc0acbd6ad3"},
+    {file = "opencv_python_headless-4.6.0.66-cp36-abi3-win_amd64.whl", hash = "sha256:e6c069bc963d7e8fcec21b3e33e594d35948badd63eccb2e80f88b0a12102c03"},
+    {file = "opencv_python_headless-4.6.0.66-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:ffbf26fcd697af996408440a93bc69c49c05a36845771f984156dfbeaa95d497"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
