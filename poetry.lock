@@ -150,7 +150,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "autodoc-pydantic"
-version = "1.7.1"
+version = "1.7.2"
 description = "Seamlessly integrate pydantic models in your Sphinx documentation."
 category = "main"
 optional = true
@@ -979,7 +979,7 @@ doc = ["Sphinx", "autodoc-pydantic", "sphinx-autodoc-typehints", "sphinx-rtd-the
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "cc2a4657ffdf6c04c3a04a7ce0abb28292d3cb6d3c249c3f5120a7863cac8b79"
+content-hash = "6c13daab81ef0fa5afc9a143220075bc19762291475d648562623b0f4985adaf"
 
 [metadata.files]
 aiofiles = [
@@ -1094,8 +1094,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 autodoc-pydantic = [
-    {file = "autodoc_pydantic-1.7.1-py3-none-any.whl", hash = "sha256:2df45d54fedf66a5fb81f2317b20126ff7fe41a63bc555538806f8e8c5b30a51"},
-    {file = "autodoc_pydantic-1.7.1.tar.gz", hash = "sha256:b7900e3323307d94044555b11b7c328b504e4d3e6406a837f687a3cfb8e1501c"},
+    {file = "autodoc_pydantic-1.7.2-py3-none-any.whl", hash = "sha256:fb1cd5a2d211c0be9b5c4b516a5879cbe7c6532b6b33aebe33b66bed08a1177f"},
+    {file = "autodoc_pydantic-1.7.2.tar.gz", hash = "sha256:1b987b66ef92212ea4743cae880000a24d1334d63358a3e505a6c925780248f3"},
 ]
 babel = [
     {file = "Babel-2.10.1-py3-none-any.whl", hash = "sha256:3f349e85ad3154559ac4930c3918247d319f21910d5ce4b25d439ed8693b98d2"},
