@@ -1,8 +1,8 @@
 import pytest
 import pytest_asyncio
-from aiohttp import ClientSession
 from aioqzone.api.loginman import MixedLoginMan
 from aioqzone.exception import LoginError
+from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.feed import FeedApi
 from aioqzone_feed.interface.hook import FeedEvent
@@ -12,8 +12,8 @@ pytestmark = pytest.mark.asyncio
 
 
 @pytest_asyncio.fixture(scope="module")
-async def api(sess: ClientSession, man: MixedLoginMan):
-    yield FeedApi(sess, man)
+async def api(client: ClientAdapter, man: MixedLoginMan):
+    yield FeedApi(client, man)
 
 
 class FeedEvent4Test(FeedEvent):

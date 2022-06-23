@@ -4,17 +4,17 @@ import time
 from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 
 import aioqzone.api as qapi
-from aiohttp import ClientConnectorError, ClientSession
-from aiohttp.client_exceptions import ClientResponseError
 from aioqzone.api.raw import QzoneApi
+from aioqzone.event.login import Loginable
 from aioqzone.exception import CorruptError, LoginError, QzoneError
-from aioqzone.interface.hook import Emittable
-from aioqzone.interface.login import Loginable
 from aioqzone.type.internal import AlbumData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
+from httpx import HTTPStatusError, TimeoutException
 from pydantic import ValidationError
+from qqqr.event import Emittable
 from qqqr.exception import UserBreak
+from qqqr.utils.net import ClientAdapter
 
 from ..interface.hook import TY_BID, FeedEvent
 from ..type import FeedContent, VisualMedia
@@ -22,7 +22,7 @@ from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
 
 logger = logging.getLogger(__name__)
-qz_exc = (QzoneError, ClientResponseError)
+qz_exc = (QzoneError, HTTPStatusError)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
 T = TypeVar("T")
@@ -37,7 +37,7 @@ def add_done_callback(task, cb):
         except QzoneError as e:
             lg = logger.debug if e.code in [-10029] else logger.error
             lg(f"DEBUG: {task}", exc_info=True)
-        except ClientResponseError:
+        except HTTPStatusError:
             logger.error(f"DEBUG: {task}", exc_info=True)
         except LoginError as e:
             logger.error(f"LoginError: {e}")
@@ -63,9 +63,9 @@ def add_done_callback(task, cb):
 class FeedApi(Emittable[FeedEvent]):
     hb_timer = None
 
-    def __init__(self, sess: ClientSession, loginman: Loginable):
+    def __init__(self, client: ClientAdapter, loginman: Loginable):
         super().__init__()
-        self.api = qapi.DummyQapi(sess, loginman)
+        self.api = qapi.DummyQapi(client, loginman)
         self.like_app = self.api.like_app
         self.bid = -1
 
@@ -99,14 +99,14 @@ class FeedApi(Emittable[FeedEvent]):
         trans = QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
             try:
-                ls, aux = await self.api.feeds3_html_more(page, trans, count=count - got)
+                resp = await self.api.feeds3_html_more(page, trans, count=count - got)
             except qz_exc as e:
                 logger.warning(f"Error when fetching page. Skipped. {e}")
                 continue
-            for fd in ls[: count - got]:
+            for fd in resp.feeds[: count - got]:
                 self._dispatch_feed(fd)
                 got += 1
-            if not aux.hasMoreFeeds:
+            if not resp.aux.hasMoreFeeds:
                 break
             if got >= count:
                 break
@@ -137,11 +137,11 @@ class FeedApi(Emittable[FeedEvent]):
         trans = QzoneApi.FeedsMoreTransaction()
         for page in range(1000):
             try:
-                ls, aux = await self.api.feeds3_html_more(page, trans)
+                resp = await self.api.feeds3_html_more(page, trans)
             except qz_exc as e:
                 logger.warning(f"Error when fetching page. Skipped. {e}")
                 continue
-            for fd in ls:
+            for fd in resp.feeds:
                 if fd.abstime > start:
                     continue
                 if fd.abstime < end or exceed_pred and await exceed_pred(fd):
@@ -149,7 +149,7 @@ class FeedApi(Emittable[FeedEvent]):
                     continue
                 self._dispatch_feed(fd)
                 got += 1
-            if not aux.hasMoreFeeds:
+            if not resp.aux.hasMoreFeeds:
                 break
             if exceed:
                 break
@@ -267,7 +267,7 @@ class FeedApi(Emittable[FeedEvent]):
                     else:
                         logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
-                except ClientResponseError:
+                except HTTPStatusError:
                     logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
                 except CorruptError:
@@ -329,7 +329,7 @@ class FeedApi(Emittable[FeedEvent]):
                     exc = e
                     logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
                     continue  # retry at once
-                except ClientConnectorError:
+                except TimeoutException:
                     logger.warning("Error in connector", exc_info=True)
                     return False  # retry in next trigger
                 except login_exc as e:
