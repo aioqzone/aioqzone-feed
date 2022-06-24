@@ -2,7 +2,7 @@ from typing import List, Optional, Union, cast
 
 from aioqzone.type.entity import ConEntity
 from aioqzone.type.internal import LikeData
-from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep, VideoRep
+from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep, VideoInfo, VideoRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
 from pydantic import BaseModel, HttpUrl
@@ -19,14 +19,7 @@ class VisualMedia(BaseModel):
     def from_picrep(cls, pic: PicRep):
         if pic.is_video:
             assert isinstance(pic, VideoRep)
-            vi = pic.video_info
-            return cls(
-                height=vi.cover_height,
-                width=vi.cover_width,
-                thumbnail=vi.thumb,
-                raw=vi.raw,
-                is_video=True,
-            )
+            return cls.from_video(pic.video_info)
         else:
             return cls(
                 height=pic.height,
@@ -35,6 +28,16 @@ class VisualMedia(BaseModel):
                 raw=cast(HttpUrl, pic.raw),
                 is_video=False,
             )
+
+    @classmethod
+    def from_video(cls, video: VideoInfo):
+        return cls(
+            height=video.cover_height,
+            width=video.cover_width,
+            thumbnail=video.thumb,
+            raw=video.raw,
+            is_video=True,
+        )
 
 
 class BaseFeed(BaseModel):
@@ -128,6 +131,15 @@ class BaseDetail(BaseModel):
             else:
                 assert isinstance(self.forward, FeedContent)
                 self.forward.media = [VisualMedia.from_picrep(i) for i in obj.pic]
+
+        if obj.video:
+            if self.forward is None:
+                self.media = self.media or []
+                self.media.extend(VisualMedia.from_video(i) for i in obj.video)
+            else:
+                assert isinstance(self.forward, FeedContent)
+                self.forward.media = self.forward.media or []
+                self.forward.media.extend(VisualMedia.from_video(i) for i in obj.video)
 
     def set_fromhtml(self, obj: HtmlContent, forward: Optional[Union[HttpUrl, str]] = None):
         self.entities = cast(Optional[list], obj.entities)
