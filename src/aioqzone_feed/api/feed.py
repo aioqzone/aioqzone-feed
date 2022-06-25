@@ -21,7 +21,7 @@ from ..type import FeedContent, VisualMedia
 from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 qz_exc = (QzoneError, HTTPStatusError)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
@@ -35,25 +35,25 @@ def add_done_callback(task, cb):
         try:
             return task.result()
         except QzoneError as e:
-            lg = logger.debug if e.code in [-10029] else logger.error
+            lg = log.debug if e.code in [-10029] else log.error
             lg(f"DEBUG: {task}", exc_info=True)
         except HTTPStatusError:
-            logger.error(f"DEBUG: {task}", exc_info=True)
+            log.error(f"DEBUG: {task}", exc_info=True)
         except LoginError as e:
-            logger.error(f"LoginError: {e}")
+            log.error(f"LoginError: {e}")
             raise e
         except UserBreak as e:
-            logger.info("UserBreak captured!")
+            log.info("UserBreak captured!")
             raise e
         except SystemExit as e:
             raise e
         except RuntimeError as e:
             if e.args[0] == "Session is closed":
-                logger.error(f"DEBUG: {task}", exc_info=True)
+                log.error(f"DEBUG: {task}", exc_info=True)
             else:
                 raise e
         except:
-            logger.fatal("Uncaught Exception!", exc_info=True)
+            log.fatal("Uncaught Exception!", exc_info=True)
             exit(1)
 
     task.add_done_callback(lambda t: cb(safe_unpack(t)))
@@ -101,7 +101,7 @@ class FeedApi(Emittable[FeedEvent]):
             try:
                 resp = await self.api.feeds3_html_more(page, trans, count=count - got)
             except qz_exc as e:
-                logger.warning(f"Error when fetching page. Skipped. {e}")
+                log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             for fd in resp.feeds[: count - got]:
                 self._dispatch_feed(fd)
@@ -139,7 +139,7 @@ class FeedApi(Emittable[FeedEvent]):
             try:
                 resp = await self.api.feeds3_html_more(page, trans)
             except qz_exc as e:
-                logger.warning(f"Error when fetching page. Skipped. {e}")
+                log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             for fd in resp.feeds:
                 if fd.abstime > start:
@@ -170,14 +170,14 @@ class FeedApi(Emittable[FeedEvent]):
         :param feed: feed
         """
         if feed.uin == 20050606:
-            logger.info(f"advertisement rule hit: {feed.uin}")
-            logger.debug(f"Dropped: {feed}")
+            log.info(f"advertisement rule hit: {feed.uin}")
+            log.debug(f"Dropped: {feed}")
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
         if feed.fid.startswith("advertisement"):
-            logger.info(f"advertisement rule hit: {feed.fid}")
-            logger.debug(f"Dropped: {feed}")
+            log.info(f"advertisement rule hit: {feed.fid}")
+            log.debug(f"Dropped: {feed}")
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
 
@@ -187,7 +187,7 @@ class FeedApi(Emittable[FeedEvent]):
         try:
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
-            logger.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
+            log.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
             self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return
         model.set_frominfo(htmlinfo)
@@ -256,22 +256,22 @@ class FeedApi(Emittable[FeedEvent]):
             assert content.album and content.pic
             for i in range(12):
                 st = 2**i - 1
-                logger.debug(f"sleep {st}s")
+                log.debug(f"sleep {st}s")
                 await asyncio.sleep(st)
                 try:
                     fv = await self.api.floatview_photo_list(album, num)
                     break
                 except QzoneError as e:
                     if e.code == -10001:
-                        logger.info(f"{str(e)}, retry={i + 1}")
+                        log.info(f"{str(e)}, retry={i + 1}")
                     else:
-                        logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
+                        log.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
                 except HTTPStatusError:
-                    logger.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
+                    log.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
                     continue
                 except CorruptError:
-                    logger.warning(f"Response corrupt!")
+                    log.warning(f"Response corrupt!")
                     continue
                 except login_exc:
                     return
@@ -281,7 +281,7 @@ class FeedApi(Emittable[FeedEvent]):
             self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
 
         task = self.add_hook_ref("slowapi", fv_retry(self.bid, content.album, len(content.pic)))
-        logger.info(f"Media update task registered: {task}")
+        log.info(f"Media update task registered: {task}")
 
     async def wait(
         self, *, timeout: Optional[float] = None
@@ -297,13 +297,14 @@ class FeedApi(Emittable[FeedEvent]):
         return await super().wait("dispatch", "hook", timeout=timeout)
 
     def stop(self) -> None:
-        """Clear all registered tasks. All tasks will be CANCELLED if not finished."""
+        """Clear __all__ registered tasks. All tasks will be CANCELLED if not finished."""
+        log.warning("FeedApi stopping...")
         if self.hb_timer:
             self.hb_timer.stop()
         super().clear(*self._tasks.keys())
 
     def clear(self):
-        """Cancel all dispatch tasks registered.
+        """Cancel all __dispatch__ tasks registered.
 
         .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.clear`"""
 
@@ -321,26 +322,26 @@ class FeedApi(Emittable[FeedEvent]):
             for i in range(retry):
                 try:
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
-                    logger.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
+                    log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
                     if cnt:
                         self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
                 except qz_exc as e:
                     exc = e
-                    logger.warning("Error when heartbeat. retry=%d", i, exc_info=True)
+                    log.warning("Error when heartbeat. retry=%d", i, exc_info=True)
                     continue  # retry at once
                 except TimeoutException:
-                    logger.warning("Error in connector", exc_info=True)
+                    log.warning("Error in connector", exc_info=True)
                     return False  # retry in next trigger
                 except login_exc as e:
-                    logger.info(f"Heartbeat stopped: {e}")
+                    log.info(f"Heartbeat stopped: {e}")
                     break
                 except BaseException as e:
                     exc = e
-                    logger.error("Uncaught error in heartbeat.", exc_info=True)
+                    log.error("Uncaught error in heartbeat.", exc_info=True)
                     break
 
-            logger.error("Max retry exceeds. Heartbeat stopped.")
+            log.error("Max retry exceeds. Heartbeat stopped.")
             self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
             return True  # stop at once
 
