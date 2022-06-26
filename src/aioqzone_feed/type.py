@@ -55,12 +55,20 @@ class BaseFeed(BaseModel):
     abstime: int
     """Feed created time. common alias: `created_time`"""
     uin: int
+    """Feed owner uin. (hostuin)"""
     nickname: str
+    """Feed owner nickname."""
     curkey: Optional[Union[HttpUrl, str]] = None
     """The identifier to this feed. May be a url, or just a identifier string."""
     unikey: Optional[Union[HttpUrl, str]] = None
     """The identifier to the original content. May be a url in all kinds
     (sometimes not strictly in a correct format, but it is from the meaning)"""
+    topicId: str = ""
+    """This is used to reply to this feed, or can be used to update this feed
+    if current user own this feed.
+
+    .. versionadded:: 0.9.2a1
+    """
 
     class Config:
         orm_mode = True
@@ -161,6 +169,7 @@ class FeedContent(BaseFeed, BaseDetail):
         self.curkey = info.curkey
         self.unikey = info.unikey
         self.islike = info.islike
+        self.topicId = info.topicid
         self.nickname = self.nickname or info.nickname
 
     def __repr__(self) -> str:
