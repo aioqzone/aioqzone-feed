@@ -8,7 +8,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "aioqzone"
-version = "0.9.3a1.dev1"
+version = "0.9.3a2.dev1"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
@@ -961,7 +961,7 @@ doc = ["Sphinx", "autodoc-pydantic", "sphinx-autodoc-typehints", "sphinx-rtd-the
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "a16198690144a5ae7a7c56eb80df45ebe461899a66fc23dbcea8b31cd35bc24d"
+content-hash = "377f3302adfd409e8c432c7cf772361ec1779f553a4c30f6e49da1c7ba2059a6"
 
 [metadata.files]
 aiofiles = [
@@ -969,8 +969,8 @@ aiofiles = [
     {file = "aiofiles-0.8.0.tar.gz", hash = "sha256:8334f23235248a3b2e83b2c3a78a22674f39969b96397126cc93664d9a901e59"},
 ]
 aioqzone = [
-    {file = "aioqzone-0.9.3a1.dev1-py3-none-any.whl", hash = "sha256:ba90b70819271df43b9e349681f7d347d5f8a72e9db5f3be48860b72d4aa030f"},
-    {file = "aioqzone-0.9.3a1.dev1.tar.gz", hash = "sha256:4c37f2493446e15136a103698b84d29e96132d192205e67a41a5bbb4d7ded18e"},
+    {file = "aioqzone-0.9.3a2.dev1-py3-none-any.whl", hash = "sha256:de2f0e70d9c2a8375ec9a929652771784a8c4c96cb4034465826421a5ac34952"},
+    {file = "aioqzone-0.9.3a2.dev1.tar.gz", hash = "sha256:b3fd2179c65af45568dd7cd2cc844507a74743e1a717ca06b5fe6c4d9b0b2abb"},
 ]
 aiosqlite = [
     {file = "aiosqlite-0.17.0-py3-none-any.whl", hash = "sha256:6c49dc6d3405929b1d08eeccc72306d3677503cc5e5e43771efc1e00232e8231"},
