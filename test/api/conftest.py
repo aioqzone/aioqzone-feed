@@ -35,8 +35,20 @@ async def man(client: ClientAdapter):
     )
 
     class inner_qrevent(MixedLoginEvent):
-        async def QrFetched(self, png: bytes):
+        def __init__(self) -> None:
+            self._cancel_flag = asyncio.Event()
+            self._refresh_flag = asyncio.Event()
+
+        async def QrFetched(self, png: bytes, times: int):
             showqr(png)
+
+        @property
+        def cancel_flag(self) -> asyncio.Event:
+            return self._cancel_flag
+
+        @property
+        def refresh_flag(self) -> asyncio.Event:
+            return self._refresh_flag
 
     man.register_hook(inner_qrevent())
     yield man
