@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feed API &mdash; aioqzone-feed 0.5.1a2 documentation</title>
+  <title>Feed API &mdash; aioqzone-feed 0.9.3a1.dev1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/autodoc_pydantic.css" type="text/css" />
@@ -15,6 +15,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -75,10 +76,10 @@
            <div itemprop="articleBody">
              
   <section id="feed-api">
-<h1>Feed API<a class="headerlink" href="#feed-api" title="Permalink to this headline"></a></h1>
+<h1>Feed API<a class="headerlink" href="#feed-api" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="aioqzone_feed.api.feed.FeedApi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioqzone_feed.api.feed.</span></span><span class="sig-name descname"><span class="pre">FeedApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loginman</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.api.feed.FeedApi" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioqzone_feed.api.feed.</span></span><span class="sig-name descname"><span class="pre">FeedApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loginman</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.api.feed.FeedApi" title="Permalink to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="aioqzone_feed.api.feed.FeedApi.add_heartbeat">
 <span class="sig-name descname"><span class="pre">add_heartbeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.api.feed.FeedApi.add_heartbeat" title="Permalink to this definition"></a></dt>
@@ -96,10 +97,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aioqzone_feed.api.feed.FeedApi.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.api.feed.FeedApi.clear" title="Permalink to this definition"></a></dt>
-<dd><p>Cancel all dispatch tasks registered.</p>
+<dd><p>Cancel all __dispatch__ tasks registered.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.clear" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.clear()</span></code></a></p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.clear()</span></code></p>
 </div>
 </dd></dl>
 
@@ -109,7 +110,7 @@
 <dd><p>Get feeds by count.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>count</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – feeds count to get, defaults to 10</p>
+<dd class="field-odd"><p><strong>count</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – feeds count to get, max as 10, defaults to 10</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
@@ -174,7 +175,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="aioqzone_feed.api.feed.FeedApi.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.api.feed.FeedApi.stop" title="Permalink to this definition"></a></dt>
-<dd><p>Clear all registered tasks. All tasks will be CANCELLED if not finished.</p>
+<dd><p>Clear __all__ registered tasks. All tasks will be CANCELLED if not finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -199,7 +200,7 @@
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/interface/hook.html#aioqzone.interface.hook.Emittable.wait" title="(in aioqzone)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.wait()</span></code></a></p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">aioqzone.interface.hook.Emittable.wait()</span></code></p>
 </div>
 </dd></dl>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>aioqzone-feed Types &mdash; aioqzone-feed 0.5.1a2 documentation</title>
+  <title>aioqzone-feed Types &mdash; aioqzone-feed 0.9.3a1.dev1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -69,7 +70,7 @@
            <div itemprop="articleBody">
              
   <section id="module-aioqzone_feed.type">
-<span id="aioqzone-feed-types"></span><h1>aioqzone-feed Types<a class="headerlink" href="#module-aioqzone_feed.type" title="Permalink to this headline"></a></h1>
+<span id="aioqzone-feed-types"></span><h1>aioqzone-feed Types<a class="headerlink" href="#module-aioqzone_feed.type" title="Permalink to this heading"></a></h1>
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseDetail">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aioqzone_feed.type.</span></span><span class="sig-name descname"><span class="pre">BaseDetail</span></span><a class="headerlink" href="#aioqzone_feed.type.BaseDetail" title="Permalink to this definition"></a></dt>
@@ -84,18 +85,18 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseDetail.entities">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/type/entities.html#aioqzone.type.entity.ConEntity" title="(in aioqzone)"><span class="pre">aioqzone.type.entity.ConEntity</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.entities" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://aioqzone.github.io/aioqzone/aioqzone/type/entities.html#aioqzone.type.entity.ConEntity" title="(in aioqzone)"><span class="pre">ConEntity</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.entities" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseDetail.forward">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pydantic.networks.HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#aioqzone_feed.type.BaseFeed" title="aioqzone_feed.type.BaseFeed"><span class="pre">aioqzone_feed.type.BaseFeed</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.forward" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#aioqzone_feed.type.BaseFeed" title="aioqzone_feed.type.BaseFeed"><span class="pre">BaseFeed</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.forward" title="Permalink to this definition"></a></dt>
 <dd><p>unikey to the feed, or the content itself.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseDetail.media">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aioqzone_feed.type.VisualMedia" title="aioqzone_feed.type.VisualMedia"><span class="pre">aioqzone_feed.type.VisualMedia</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.media" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#aioqzone_feed.type.VisualMedia" title="aioqzone_feed.type.VisualMedia"><span class="pre">VisualMedia</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseDetail.media" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -127,6 +128,7 @@
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.curkey" title="aioqzone_feed.type.BaseFeed.curkey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">curkey</span> <span class="pre">(Optional[Union[pydantic.networks.HttpUrl,</span> <span class="pre">str]])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.fid" title="aioqzone_feed.type.BaseFeed.fid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fid</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.nickname" title="aioqzone_feed.type.BaseFeed.nickname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nickname</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.topicId" title="aioqzone_feed.type.BaseFeed.topicId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">topicId</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.typeid" title="aioqzone_feed.type.BaseFeed.typeid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">typeid</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.uin" title="aioqzone_feed.type.BaseFeed.uin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uin</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#aioqzone_feed.type.BaseFeed.unikey" title="aioqzone_feed.type.BaseFeed.unikey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unikey</span> <span class="pre">(Optional[Union[pydantic.networks.HttpUrl,</span> <span class="pre">str]])</span></code></a></p></li>
@@ -146,7 +148,7 @@
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.curkey">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">curkey</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pydantic.networks.HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.curkey" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">curkey</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.curkey" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier to this feed. May be a url, or just a identifier string.</p>
 </dd></dl>
 
@@ -165,7 +167,18 @@ short string and is commonly used by multiple shares. So do not distinguish all 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.nickname">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nickname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.nickname" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Feed owner nickname.</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.topicId">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">topicId</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.topicId" title="Permalink to this definition"></a></dt>
+<dd><p>This is used to reply to this feed, or can be used to update this feed
+if current user own this feed.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.9.2a1.</span></p>
+</div>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.typeid">
@@ -175,11 +188,12 @@ short string and is commonly used by multiple shares. So do not distinguish all 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.uin">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.uin" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Feed owner uin. (hostuin)</p>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.BaseFeed.unikey">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unikey</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pydantic.networks.HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.unikey" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unikey</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">HttpUrl</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#aioqzone_feed.type.BaseFeed.unikey" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier to the original content. May be a url in all kinds
 (sometimes not strictly in a correct format, but it is from the meaning)</p>
 </dd></dl>
@@ -211,6 +225,11 @@ represent a feed as what it’s known.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.FeedContent.islike">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">islike</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#aioqzone_feed.type.FeedContent.islike" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioqzone_feed.type.FeedContent.set_detail">
+<span class="sig-name descname"><span class="pre">set_detail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.type.FeedContent.set_detail" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -246,7 +265,7 @@ represent a feed as what it’s known.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.VisualMedia.raw">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pydantic.networks.HttpUrl</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.raw" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">HttpUrl</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.raw" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints</dt>
 <dd class="field-odd"><ul class="simple">
@@ -260,7 +279,7 @@ represent a feed as what it’s known.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="aioqzone_feed.type.VisualMedia.thumbnail">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thumbnail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pydantic.networks.HttpUrl</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.thumbnail" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thumbnail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">HttpUrl</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.thumbnail" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints</dt>
 <dd class="field-odd"><ul class="simple">
@@ -280,6 +299,11 @@ represent a feed as what it’s known.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="aioqzone_feed.type.VisualMedia.from_picrep">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_picrep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.from_picrep" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioqzone_feed.type.VisualMedia.from_video">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioqzone_feed.type.VisualMedia.from_video" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
