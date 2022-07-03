@@ -85,7 +85,7 @@ class FeedApi(Emittable[FeedEvent]):
     async def get_feeds_by_count(self, count: int = 10) -> int:
         """Get feeds by count.
 
-        :param count: feeds count to get, defaults to 10
+        :param count: feeds count to get, max as 10, defaults to 10
 
         :raises `qqqr.exception.UserBreak`: qr login canceled
         :raises `aioqzone.exception.LoginError`: not logined
@@ -96,13 +96,14 @@ class FeedApi(Emittable[FeedEvent]):
         ..note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
         got = 0
-        trans = QzoneApi.FeedsMoreTransaction()
+        aux = None
         for page in range(1000):
             try:
-                resp = await self.api.feeds3_html_more(page, trans, count=count - got)
+                resp = await self.api.feeds3_html_more(page, count=count - got, aux=aux)
             except qz_exc as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
+            aux = resp.aux
             for fd in resp.feeds[: count - got]:
                 self._dispatch_feed(fd)
                 got += 1
@@ -134,13 +135,14 @@ class FeedApi(Emittable[FeedEvent]):
         start = start or time.time()
         end = start - seconds
         exceed = got = 0
-        trans = QzoneApi.FeedsMoreTransaction()
+        aux = None
         for page in range(1000):
             try:
-                resp = await self.api.feeds3_html_more(page, trans)
+                resp = await self.api.feeds3_html_more(page, aux=aux)
             except qz_exc as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
+            aux = resp.aux
             for fd in resp.feeds:
                 if fd.abstime > start:
                     continue

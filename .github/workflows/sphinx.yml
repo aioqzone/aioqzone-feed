@@ -6,11 +6,12 @@ on:
     paths:
       - doc/**
       - ".github/workflows/sphinx.yml"
-
-concurrency:
-  group: doc-${{ github.ref }}
-  cancel-in-progress: true
+    branches:
+      - dev
+      - dev/**
+      - doc/**
 
 jobs:
   sphinx-build-deploy:
+    if: "!contains(github.event.head_commit.message, '@no-doc')"
     uses: aioqzone/aioqzone/.github/workflows/sphinx.yml@beta
