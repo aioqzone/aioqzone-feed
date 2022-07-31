@@ -4,7 +4,6 @@ import time
 from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 
 import aioqzone.api as qapi
-from aioqzone.api.raw import QzoneApi
 from aioqzone.event.login import Loginable
 from aioqzone.exception import CorruptError, LoginError, QzoneError
 from aioqzone.type.internal import AlbumData
