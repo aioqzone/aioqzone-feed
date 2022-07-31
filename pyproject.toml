@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.9.3a1.dev2"
+version = "0.9.3a2.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -28,7 +28,7 @@ sphinx-rtd-theme = {version = "^1.0.0", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
-pytest-asyncio = "^0.18.2"
+pytest-asyncio = "~0.19.0"
 
 [tool.poetry.extras]
 dev = [
