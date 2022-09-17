@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   test:
+    if: "!contains(github.event.head_commit.message, '@no-test')"
     uses: aioqzone/aioqzone/.github/workflows/test.yml@beta
     with:
       PYTEST_ARGS: test
@@ -29,16 +30,15 @@ jobs:
 
   merge:
     needs: test
+    if: "!contains(github.event.head_commit.message, '@no-pr')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           ref: beta
-
-      - name: Get beta SHA
-        id: beta-sha
+      - name: Get SHA
+        id: sha
         run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
-
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
@@ -48,13 +48,12 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
-          args: -t ${{ needs.test.outputs.package-version }} ${{ steps.beta-sha.outputs.sha }}..HEAD
+          args: -t ${{ needs.test.outputs.package-version }} ${{ steps.sha.outputs.sha }}..HEAD
         env:
           OUTPUT: CHANGELOG.md
 
       - name: Create Pull Request
         uses: repo-sync/pull-request@v2
-        if: "!contains(github.event.head_commit.message, '@no-pr')"
         with:
           destination_branch: beta
           github_token: ${{ secrets.GITHUB_TOKEN }}
