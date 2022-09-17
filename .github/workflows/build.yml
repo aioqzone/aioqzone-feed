@@ -4,10 +4,11 @@
 name: Build
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
     branches:
+      - "beta"
       - "release"
       - "release/**"
 
@@ -19,7 +20,6 @@ jobs:
       #       check-out repo and set-up python
       #----------------------------------------------
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v4
@@ -30,8 +30,14 @@ jobs:
       #  --------    Build and release   ---------
       #----------------------------------------------
       - name: Build dist
+        id: build
         run: |
           poetry build
+          echo "::set-output name=package::$(poetry version -s)"
       - uses: softprops/action-gh-release@v1
         with:
           files: dist/*
+          prerelease: ${{ startsWith(github.head_ref, 'beta') }}
+          tag_name: ${{ steps.build.outputs.package }}
+          name: ${{ steps.build.outputs.package }}
+          generate_release_notes: true
