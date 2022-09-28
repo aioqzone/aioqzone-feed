@@ -1,7 +1,12 @@
+from typing import Optional, Type
+from unittest import mock
+
 import pytest
 import pytest_asyncio
 from aioqzone.api.loginman import MixedLoginMan
 from aioqzone.exception import LoginError
+from httpx import HTTPStatusError, TimeoutException
+from qqqr.exception import UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.feed import FeedApi
@@ -62,3 +67,25 @@ async def test_by_second(api: FeedApi):
     assert len(set(hook.batch)) == len(hook.batch)
     api.clear()
     hook.batch.clear()
+
+
+@pytest.mark.parametrize(
+    "exc2r,exc2e",
+    [
+        (LoginError("mock", "forbid"), LoginError),
+        (HTTPStatusError("mock", request=..., response=...), HTTPStatusError),  # type: ignore
+        (TimeoutException("mock"), TimeoutException),
+        (UserBreak(), UserBreak),
+        (SystemExit(1), SystemExit),
+    ],
+)
+async def test_heartbeat_exc(api: FeedApi, exc2r: BaseException, exc2e: Type[BaseException]):
+    class coll_exc(FeedEvent):
+        async def HeartbeatFailed(self, exc: Optional[BaseException] = None):
+            assert isinstance(exc, exc2e)
+            if api.hb_timer:
+                api.hb_timer.stop()
+
+    api.register_hook(coll_exc())
+    with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
+        await api.add_heartbeat(retry=2, refresh_intv=0.1)

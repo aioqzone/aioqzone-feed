@@ -26,12 +26,12 @@ class AsyncTimer:
     async def _loop(self):
         try:
             await asyncio.sleep(self.delay)
-            stop = await self.func()
             self.last_call = time()
+            stop = await self.func()
             while not stop:
                 await asyncio.sleep(self.itvl)
-                stop = await self.func()
                 self.last_call = time()
+                stop = await self.func()
         except asyncio.CancelledError:
             logger.info("%s cancelled.", self.name)
             return
@@ -53,3 +53,10 @@ class AsyncTimer:
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.state})"
+
+    def change_interval(self, intv: float, stop=True):
+        self.itvl = intv
+        if stop and self.task and self.task._state == "PENDING":
+            self.stop()
+            self.delay = intv - (time() - self.last_call)
+            self()
