@@ -305,46 +305,50 @@ class FeedApi(Emittable[FeedEvent]):
         super().clear(*self._tasks.keys())
 
     def clear(self):
-        """Cancel all __dispatch__ tasks registered.
+        """Cancel all **dispatch** tasks registered.
 
         .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.clear`"""
 
         super().clear("dispatch")
 
-    def add_heartbeat(self, retry: int = 5):
+    def add_heartbeat(self, *, retry: int = 5, refresh_intv: float = 300):
         """create a heartbeat task and keep a ref of it.
 
         :param retry: max retry times when exception occurs, defaults to 5.
+        :param refresh_intv: refresh interval in seconds, defaults to 300.
         :return: the heartbeat task
         """
 
         async def heartbeat_refresh():
-            exc = None
+            excg = []
+            emit = lambda c: self.add_hook_ref("hook", c)
             for i in range(retry):
                 try:
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
                     log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
                     if cnt:
-                        self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
+                        emit(self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
                 except qz_exc as e:
-                    exc = e
-                    log.warning("Error when heartbeat. retry=%d", i, exc_info=True)
+                    log.warning("Error in heartbeat, retry at once %d", i, exc_info=e)
+                    excg.append(e)
                     continue  # retry at once
-                except TimeoutException:
-                    log.warning("Error in connector", exc_info=True)
+                except TimeoutException as e:
+                    log.warning("Error in connector, retry on next trigger", exc_info=True)
+                    emit(self.hook.HeartbeatFailed(e))
                     return False  # retry in next trigger
                 except login_exc as e:
-                    log.info(f"Heartbeat stopped: {e}")
-                    break
+                    log.error(f"Heartbeat stopped, stop at once.", exc_info=e)
+                    excg.append(e)
+                    break  # stop at once
                 except BaseException as e:
-                    exc = e
-                    log.error("Uncaught error in heartbeat.", exc_info=True)
-                    break
+                    log.error("Uncaught error in heartbeat, stop at once.", exc_info=e)
+                    excg.append(e)
+                    break  # stop at once
 
-            log.error("Max retry exceeds. Heartbeat stopped.")
-            self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
+            log.error("Max retry exceeds. Heartbeat stopped.", exc_info=excg[-1])
+            emit(self.hook.HeartbeatFailed(excg[-1]))
             return True  # stop at once
 
-        self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
+        self.hb_timer = AsyncTimer(refresh_intv, heartbeat_refresh, delay=refresh_intv)
         return self.hb_timer()
