@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.9.3a4.dev2"
+version = "0.9.4a1.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -16,28 +16,34 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 python = ">=3.7,<3.11"
 aioqzone = { version = "^0.9.6.dev1", allow-prereleases = true }
 QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/3.3.3/qzemoji-3.3.3-py3-none-any.whl" }
-# extras: dev
-pre-commit = { version = "^2.17.0", optional = true }
-black = { version = "^22.1.0", optional = true }
-isort = { version = "^5.10.1", optional = true }
-# extras: doc
-Sphinx = { version = "^5.0.2", optional = true }
-autodoc-pydantic = { version = "^1.6.1", optional = true }
-sphinx-autodoc-typehints = { version = "^1.18.3", optional = true }
-sphinx-rtd-theme = { version = "^1.0.0", optional = true }
 
-[tool.poetry.dev-dependencies]
+
+# dependency groups
+[tool.poetry.group.test]
+optional = false
+
+[tool.poetry.group.test.dependencies]
 pytest = "^7.0.1"
 pytest-asyncio = "~0.19.0"
+pytest-mock = "^3.8.2"
 
-[tool.poetry.extras]
-dev = ["pre-commit", "black", "isort"]
-doc = [
-    "Sphinx",
-    "autodoc-pydantic",
-    "sphinx-autodoc-typehints",
-    "sphinx-rtd-theme",
-]
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.17.0"
+black = "^22.1.0"
+isort = "^5.10.1"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "^5.0.2"
+autodoc-pydantic = "^1.6.1"
+sphinx-autodoc-typehints = "^1.18.3"
+sphinx-rtd-theme = "^1.0.0"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

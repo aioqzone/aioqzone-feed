@@ -305,7 +305,7 @@ class FeedApi(Emittable[FeedEvent]):
         super().clear(*self._tasks.keys())
 
     def clear(self):
-        """Cancel all __dispatch__ tasks registered.
+        """Cancel all **dispatch** tasks registered.
 
         .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.clear`"""
 
@@ -327,7 +327,7 @@ class FeedApi(Emittable[FeedEvent]):
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
                     log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
                     if cnt:
-                        self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
+                        emit(self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
                 except (
                     QzoneError,

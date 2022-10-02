@@ -34,7 +34,7 @@ An [aioqzone][aioqzone] plugin for handling feeds, a high-level api for feed ope
 ## License
 
 - [AGPL-3.0](LICENSE)
-- `aioqzone-feed` is a plugin of [aioqzone][aioqzone]. This repository inherits license, instructions and any other requirements from `aioqzone`. See also: [License fragment in aioqzone README file](https://github.com/aioqzone/aioqzone#license)
+- `aioqzone-feed` is a plugin of [aioqzone][aioqzone]. This repository inherits license, instructions and any other disclaimers from `aioqzone`. See also: [License fragment in aioqzone README file](https://github.com/aioqzone/aioqzone#license)
 
 
 [aioqzone]: https://github.com/aioqzone/aioqzone "Python wrapper for Qzone web login and Qzone http api."
