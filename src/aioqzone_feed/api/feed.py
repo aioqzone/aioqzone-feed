@@ -4,12 +4,13 @@ import time
 from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
 
 import aioqzone.api as qapi
+from aioqzone.api.loginman import QrStrategy
 from aioqzone.event.login import Loginable
-from aioqzone.exception import CorruptError, LoginError, QzoneError
+from aioqzone.exception import CorruptError, LoginError, QzoneError, SkipLoginInterrupt
 from aioqzone.type.internal import AlbumData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
-from httpx import HTTPStatusError, TimeoutException
+from httpx import HTTPError, HTTPStatusError
 from pydantic import ValidationError
 from qqqr.event import Emittable
 from qqqr.exception import UserBreak
@@ -21,7 +22,6 @@ from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
 
 log = logging.getLogger(__name__)
-qz_exc = (QzoneError, HTTPStatusError)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
 T = TypeVar("T")
@@ -99,7 +99,7 @@ class FeedApi(Emittable[FeedEvent]):
         for page in range(1000):
             try:
                 resp = await self.api.feeds3_html_more(page, count=count - got, aux=aux)
-            except qz_exc as e:
+            except (QzoneError, HTTPStatusError) as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             aux = resp.aux
@@ -138,7 +138,7 @@ class FeedApi(Emittable[FeedEvent]):
         for page in range(1000):
             try:
                 resp = await self.api.feeds3_html_more(page, aux=aux)
-            except qz_exc as e:
+            except (QzoneError, HTTPStatusError) as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             aux = resp.aux
@@ -311,15 +311,17 @@ class FeedApi(Emittable[FeedEvent]):
 
         super().clear("dispatch")
 
-    def add_heartbeat(self, retry: int = 5):
+    def add_heartbeat(self, *, retry: int = 5, retry_intv: float = 5, hb_intv: float = 300):
         """create a heartbeat task and keep a ref of it.
 
-        :param retry: max retry times when exception occurs, defaults to 5.
+        :param retry: max retry times when some exceptions occurs, defaults to 5.
+        :param hb_intv: retry interval, defaults to 5.
+        :param hb_intv: heartbeat interval, defaults to 300.
         :return: the heartbeat task
         """
 
         async def heartbeat_refresh():
-            exc = None
+            exc, r = None, False
             for i in range(retry):
                 try:
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
@@ -327,24 +329,44 @@ class FeedApi(Emittable[FeedEvent]):
                     if cnt:
                         self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
-                except qz_exc as e:
-                    exc = e
-                    log.warning("Error when heartbeat. retry=%d", i, exc_info=True)
-                    continue  # retry at once
-                except TimeoutException:
-                    log.warning("Error in connector", exc_info=True)
-                    return False  # retry in next trigger
-                except login_exc as e:
-                    log.info(f"Heartbeat stopped: {e}")
+                except (
+                    QzoneError,
+                    HTTPStatusError,
+                ) as e:
+                    # retry at once
+                    exc, excname = e, e.__class__.__name__
+                    log.warning("%s captured in heartbeat, retry at once (%d)", excname, i)
+                    log.debug(excname, exc_info=e)
+                except (
+                    HTTPError,
+                    SkipLoginInterrupt,
+                    UserBreak,
+                    asyncio.CancelledError,
+                ) as e:
+                    # retry in next trigger
+                    exc, excname = e, e.__class__.__name__
+                    log.warning("%s captured in heartbeat, retry in next trigger", excname)
+                    log.debug(excname, exc_info=e)
+                    break
+                except LoginError as e:
+                    if e.strategy != QrStrategy.force:
+                        # login error means all methods failed.
+                        # we should stop HB if up login will fail.
+                        r = True
                     break
                 except BaseException as e:
-                    exc = e
-                    log.error("Uncaught error in heartbeat.", exc_info=True)
+                    exc, r = e, True
+                    log.error("Uncaught error in heartbeat.", exc_info=e)
                     break
+                await asyncio.sleep(retry_intv)
+            else:
+                log.error("Max retry exceeds (%d)", retry)
 
-            log.error("Max retry exceeds. Heartbeat stopped.")
+            if r:
+                log.warning(f"Heartbeat stopped.")
+
             self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
-            return True  # stop at once
+            return r  # stop at once
 
-        self.hb_timer = AsyncTimer(300, heartbeat_refresh, delay=300)
+        self.hb_timer = AsyncTimer(hb_intv, heartbeat_refresh, delay=hb_intv)
         return self.hb_timer()
