@@ -1,11 +1,12 @@
-from typing import Optional, Type
+import asyncio
+from typing import Type
 from unittest import mock
 
 import pytest
 import pytest_asyncio
 from aioqzone.api.loginman import MixedLoginMan
-from aioqzone.exception import LoginError
-from httpx import HTTPStatusError, TimeoutException
+from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
+from httpx import ConnectError, HTTPError, HTTPStatusError, TimeoutException
 from qqqr.exception import UserBreak
 from qqqr.utils.net import ClientAdapter
 
@@ -18,7 +19,9 @@ pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture(scope="module")
 async def api(client: ClientAdapter, man: MixedLoginMan):
-    yield FeedApi(client, man)
+    api = FeedApi(client, man)
+    yield api
+    api.stop()
 
 
 class FeedEvent4Test(FeedEvent):
@@ -89,3 +92,28 @@ async def test_heartbeat_exc(api: FeedApi, exc2r: BaseException, exc2e: Type[Bas
     api.register_hook(coll_exc())
     with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
         await api.add_heartbeat(retry=2, refresh_intv=0.1)
+
+
+@pytest.mark.parametrize(
+    "exc2r,should_alive",
+    [
+        (LoginError("mock", "allow"), False),
+        (SystemExit(), False),
+        (LoginError("mock", "force"), True),
+        (ConnectError("mock"), True),
+        (TimeoutException("mock"), True),
+        (HTTPStatusError("mock", request=..., response=...), True),  # type: ignore
+        (HTTPError("mock"), True),
+        (QzoneError(-3000), True),
+        (SkipLoginInterrupt(), True),
+        (UserBreak(), True),
+        (asyncio.CancelledError(), True),
+    ],
+)
+async def test_heartbeat_exc(api: FeedApi, exc2r: Type[BaseException], should_alive: bool):
+    api.register_hook(FeedEvent4Test())
+    with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
+        api.add_heartbeat(retry=2, hb_intv=0.1, retry_intv=0)
+        assert api.hb_timer
+        await asyncio.sleep(0.4)
+        assert (api.hb_timer.state == "PENDING") is should_alive
