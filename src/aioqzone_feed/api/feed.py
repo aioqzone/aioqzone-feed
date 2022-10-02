@@ -327,7 +327,7 @@ class FeedApi(Emittable[FeedEvent]):
                     cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
                     log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
                     if cnt:
-                        emit(self.hook.HeartbeatRefresh(cnt))
+                        self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
                     return False  # don't stop
                 except (
                     QzoneError,
