@@ -292,7 +292,7 @@ class FeedApi(Emittable[FeedEvent]):
         :param timeout: wait timeout, defaults to None
         :return: two set of tasks means (done, pending)
 
-        .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.wait`
+        .. seealso:: :external:meth:`qqqr.event.Emittable.wait`
         """
 
         return await super().wait("dispatch", "hook", timeout=timeout)
@@ -307,7 +307,7 @@ class FeedApi(Emittable[FeedEvent]):
     def clear(self):
         """Cancel all **dispatch** tasks registered.
 
-        .. seealso:: :external:meth:`aioqzone.interface.hook.Emittable.clear`"""
+        .. seealso:: :external:meth:`qqqr.event.Emittable.clear`"""
 
         super().clear("dispatch")
 

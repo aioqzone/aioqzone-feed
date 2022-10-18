@@ -1,0 +1,106 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, aioqzone
+# This file is distributed under the same license as the aioqzone-feed
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: aioqzone-feed \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-18 13:17+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+#: ../../source/interface/hook.rst:2
+msgid "aioqzone-feed Events"
+msgstr ""
+
+#: ../../source/interface/hook.rst:4
+msgid ""
+"aioqzone-feed follows the hook system defined in "
+":external:mod:`qqqr.event`."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedDropped:1 of
+msgid ""
+"The FeedDropped hook is called when a feed is dropped for hitting some "
+"rules (e.g. advertisement)"
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedDropped
+#: aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate
+#: aioqzone_feed.interface.hook.FeedEvent.FeedProcEnd
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatFailed
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatRefresh of
+msgid "Parameters"
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedDropped:4
+#: aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate:6
+#: aioqzone_feed.interface.hook.FeedEvent.FeedProcEnd:5 of
+msgid "Used to identify feed batch (tell from different calling)."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedDropped:6 of
+msgid "Used to pass a ref to the feed."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate:1 of
+msgid ""
+"The FeedMediaUpdate function is used to update the media of a feed. The "
+":external:meth:`aioqzone.api.DummyQapi.floatview_photo_list` is one of "
+"the slow api. The media will be update by raw photos/videos, list order "
+"should not be changed"
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedMediaUpdate:8 of
+msgid ""
+"To tell which feed is updated. The feed itself is updated by ref already,"
+" the ref should have been passed by :meth:`.FeedProcEnd` in the past."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedProcEnd:1 of
+msgid ""
+"The FeedProcEnd function is called when all processes must be done have "
+"finished (i.e. except for slow-api that cannot return at once, and may "
+"not matters a lot)"
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.FeedProcEnd:7 of
+msgid "Used to pass the feed content."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatFailed:1 of
+msgid ""
+"The HeartbeatFailed function is called when the heartbeat fails. It can "
+"be used to log an error and call "
+":meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat` again if possible."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatFailed:6 of
+msgid ""
+"Used to pass an exception object that can be used to determine the cause "
+"of the heartbeat failure."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatRefresh:1 of
+msgid ""
+"This event is triggered after a heartbeat succeeded and there are new "
+"feeds. Use this event to wait for all dispatch task to be finished, and "
+"send received feeds."
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatRefresh:5 of
+msgid "number of new feeds"
+msgstr ""
+
+#: aioqzone_feed.interface.hook.FeedEvent.HeartbeatRefresh:7 of
+msgid "Example:"
+msgstr ""
