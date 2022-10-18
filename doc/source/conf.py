@@ -36,6 +36,11 @@ extensions = [
     "sphinx.ext.githubpages",
 ]
 
+# translations
+language = "zh_CN"
+locale_dirs = ["locale/"]
+gettext_compact = False
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 

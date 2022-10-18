@@ -73,28 +73,6 @@ async def test_by_second(api: FeedApi):
 
 
 @pytest.mark.parametrize(
-    "exc2r,exc2e",
-    [
-        (LoginError("mock", "forbid"), LoginError),
-        (HTTPStatusError("mock", request=..., response=...), HTTPStatusError),  # type: ignore
-        (TimeoutException("mock"), TimeoutException),
-        (UserBreak(), UserBreak),
-        (SystemExit(1), SystemExit),
-    ],
-)
-async def test_heartbeat_exc(api: FeedApi, exc2r: BaseException, exc2e: Type[BaseException]):
-    class coll_exc(FeedEvent):
-        async def HeartbeatFailed(self, exc: Optional[BaseException] = None):
-            assert isinstance(exc, exc2e)
-            if api.hb_timer:
-                api.hb_timer.stop()
-
-    api.register_hook(coll_exc())
-    with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
-        await api.add_heartbeat(retry=2, refresh_intv=0.1)
-
-
-@pytest.mark.parametrize(
     "exc2r,should_alive",
     [
         (LoginError("mock", "allow"), False),

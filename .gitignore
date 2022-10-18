@@ -21,6 +21,7 @@ tmp
 /dist
 /build
 *.egg-info
+/doc/source/locale/**/*.mo
 
 # useless documents
 archive
