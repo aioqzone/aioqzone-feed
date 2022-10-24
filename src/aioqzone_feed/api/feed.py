@@ -371,15 +371,25 @@ class FeedApi(Emittable[FeedEvent]):
         self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
         return r  # stop at once
 
-    def add_heartbeat(self, *, retry: int = 5, retry_intv: float = 5, hb_intv: float = 300):
+    def add_heartbeat(
+        self,
+        *,
+        retry: int = 5,
+        retry_intv: float = 5,
+        hb_intv: float = 300,
+        name: Optional[str] = None,
+    ):
         """A helper function that creates a heartbeat task and keep a ref of it.
         A heartbeat task is a timer that circularly calls `.heartbeat_refresh`.
 
         :param retry: max retry times when some exceptions occurs, defaults to 5.
         :param hb_intv: retry interval, defaults to 5.
         :param hb_intv: heartbeat interval, defaults to 300.
+        :param name: timer name
         :return: the heartbeat task
         """
         heartbeat_refresh = partial(self.heartbeat_refresh, retry=retry, retry_intv=retry_intv)
-        self.hb_timer = AsyncTimer(hb_intv, heartbeat_refresh, delay=hb_intv)
+        self.hb_timer = AsyncTimer(
+            hb_intv, heartbeat_refresh, delay=hb_intv, name=name or "heartbeat"
+        )
         return self.hb_timer()
