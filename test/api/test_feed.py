@@ -7,7 +7,8 @@ import pytest_asyncio
 from aioqzone.api.loginman import MixedLoginMan
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
 from httpx import ConnectError, HTTPError, HTTPStatusError, TimeoutException
-from qqqr.exception import UserBreak
+from qqqr.event.login import UpEvent
+from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.feed import FeedApi
@@ -86,6 +87,7 @@ async def test_by_second(api: FeedApi):
         (SkipLoginInterrupt(), True),
         (UserBreak(), True),
         (asyncio.CancelledError(), True),
+        (HookError(UpEvent.GetSmsCode), False),
     ],
 )
 async def test_heartbeat_exc(api: FeedApi, exc2r: Type[BaseException], should_alive: bool):

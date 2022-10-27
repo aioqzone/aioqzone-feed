@@ -39,7 +39,6 @@ repos:
       #   entry: poetry run pytest test
       #   language: system
       #   pass_filenames: false
-      #   always_run: true
       #   types: [python]
 default_language_version:
   python: python3
