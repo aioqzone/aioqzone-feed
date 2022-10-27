@@ -14,7 +14,7 @@ from aioqzone.utils.html import HtmlContent, HtmlInfo
 from httpx import HTTPError, HTTPStatusError
 from pydantic import ValidationError
 from qqqr.event import Emittable
-from qqqr.exception import UserBreak
+from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from ..interface.hook import TY_BID, FeedEvent
@@ -312,7 +312,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         super().clear("dispatch")
 
-    async def heartbeat_refresh(self, *, retry: int = 5, retry_intv: float = 5):
+    async def heartbeat_refresh(self, *, retry: int = 2, retry_intv: float = 5):
         """A wrapper function that calls :external:meth:`aioqzone.api.DummyQapi.get_feeds_count`
         and handles all kinds of excpetions raised during heartbeat.
 
@@ -320,11 +320,12 @@ class FeedApi(Emittable[FeedEvent]):
             This method calls heartbeat **ONLY ONCE** so it should be called circularly by using
             `.add_heartbeat` or other timer/scheduler.
 
-        :param retry: retry times on QzoneError
+        :param retry: retry times on QzoneError, default as 2.
         :param retry_intv: retry interval on QzoneError
         :return: whether the timer should stop, means heartbeat will always fail until something is changed.
         """
-        exc, r = None, False
+        exc = last_fail_hook = None
+        r = False
         for i in range(retry):
             try:
                 cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
@@ -340,6 +341,14 @@ class FeedApi(Emittable[FeedEvent]):
                 exc, excname = e, e.__class__.__name__
                 log.warning("%s captured in heartbeat, retry at once (%d)", excname, i)
                 log.debug(excname, exc_info=e)
+            except HookError as e:
+                if e.hook.__qualname__ == last_fail_hook:
+                    # if the same hook raises exception twice, we assume it is systematically broken
+                    # so we should stop heartbeat at once.
+                    r = True
+                    break
+                last_fail_hook = e.hook.__qualname__
+                log.error("HookError captured in heartbeat, retry at once (%d)", i)
             except (
                 HTTPError,
                 SkipLoginInterrupt,
