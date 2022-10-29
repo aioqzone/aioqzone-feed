@@ -8,7 +8,7 @@ python-versions = ">=3.7,<4.0"
 
 [[package]]
 name = "aioqzone"
-version = "0.9.9.dev2"
+version = "0.9.9.dev3"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
@@ -630,7 +630,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "qzemoji"
-version = "4.0.0.dev1"
+version = "4.0.0.dev2"
 description = "Translate Qzone emoji link to text."
 category = "main"
 optional = false
@@ -644,7 +644,7 @@ SQLAlchemy = {version = ">=1.4.32,<2.0.0", extras = ["asyncio"]}
 
 [package.source]
 type = "url"
-url = "https://github.com/aioqzone/QzEmoji/releases/download/4.0.0.dev1/qzemoji-4.0.0.dev1-py3-none-any.whl"
+url = "https://github.com/aioqzone/QzEmoji/releases/download/4.0.0.dev2/qzemoji-4.0.0.dev2-py3-none-any.whl"
 [[package]]
 name = "requests"
 version = "2.28.1"
@@ -994,8 +994,8 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7,<3.11"
-content-hash = "7c691fa2bedbaba0f89daa124c4e29f385109811404700283c3c928452593c3f"
+python-versions = "^3.7"
+content-hash = "e36ed41f5960447e2a2783a2704986962cb83d132ee04bba022ca71b6662cb56"
 
 [metadata.files]
 aiofiles = [
@@ -1003,8 +1003,8 @@ aiofiles = [
     {file = "aiofiles-22.1.0.tar.gz", hash = "sha256:9107f1ca0b2a5553987a94a3c9959fe5b491fdf731389aa5b7b1bd0733e32de6"},
 ]
 aioqzone = [
-    {file = "aioqzone-0.9.9.dev2-py3-none-any.whl", hash = "sha256:6fd39c226cdb506bcfc011dc06102e10bbc836932669ce2346e79dfce916ccf7"},
-    {file = "aioqzone-0.9.9.dev2.tar.gz", hash = "sha256:99541e16d1c5e339a1b61d2f76825b05657dcf93b4a6000dbfd457dc74d6e1fa"},
+    {file = "aioqzone-0.9.9.dev3-py3-none-any.whl", hash = "sha256:5fb9b21090bb3afdb10d1edc9366bb5233b0a492a32ebc9f81e73e58a71877bc"},
+    {file = "aioqzone-0.9.9.dev3.tar.gz", hash = "sha256:879804c36835c6950b9cc76ebd1c6157d7cc0344ff9478abf6fcee023c17a96a"},
 ]
 aiosqlite = [
     {file = "aiosqlite-0.17.0-py3-none-any.whl", hash = "sha256:6c49dc6d3405929b1d08eeccc72306d3677503cc5e5e43771efc1e00232e8231"},
