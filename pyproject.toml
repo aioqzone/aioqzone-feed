@@ -14,7 +14,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aioqzone = { version = "^0.9.10.dev2", allow-prereleases = true }
+aioqzone = { version = "^0.9.11.dev2", allow-prereleases = true }
 QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/4.1.0.dev2/qzemoji-4.1.0.dev2-py3-none-any.whl" }
 
 
