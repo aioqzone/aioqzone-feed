@@ -12,6 +12,7 @@ from aioqzone.type.internal import AlbumData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from httpx import HTTPError, HTTPStatusError
+from lxml.html import HtmlElement, fromstring
 from pydantic import ValidationError
 from qqqr.event import Emittable
 from qqqr.exception import HookError, UserBreak
@@ -199,32 +200,37 @@ class FeedApi(Emittable[FeedEvent]):
             return self.__optimize_dispatch(feed, model, htmlinfo, root)
         self.__default_dispatch(feed, model, htmlinfo, root)
 
-    def __optimize_dispatch(self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root):
+    def __optimize_dispatch(
+        self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root: HtmlElement
+    ):
         """Optimized feed processing: request for `emotion_msgdetail` api directly."""
 
         def detail_procs(dt: Optional[FeedDetailRep]):
             if not dt:
                 return self.__default_dispatch(feed, model, htmlinfo, root)
 
-            if dt.pic and any(not i.valid_url() for i in dt.pic):
+            if dt.pic and not all(i.valid_url() for i in dt.pic):
                 return self.__default_dispatch(feed, model, htmlinfo, root)
 
             model.set_detail(dt)
             add_done_callback(
-                (self.add_hook_ref("dispatch", trans_detail(model))),
-                lambda t: t and self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
+                self.add_hook_ref("dispatch", trans_detail(model)),
+                lambda t: self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
             )
 
         get_full = self.add_hook_ref("dispatch", self.api.emotion_msgdetail(feed.uin, feed.fid))
         add_done_callback(get_full, detail_procs)
 
-    def __default_dispatch(self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root):
+    def __default_dispatch(
+        self, feed: FeedRep, model: FeedContent, htmlinfo: HtmlInfo, root: HtmlElement
+    ):
         """Default feed processing: Parse info from html feed. If media is detected,
         then request for `floatview_photo_list` album api.
         """
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
-        def html_content_procs(htmlct: HtmlContent):
+        def html_content_procs(root: HtmlElement):
+            htmlct = HtmlContent.from_html(root, feed.uin)
             model.set_fromhtml(htmlct, forward=htmlinfo.unikey)
             self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
@@ -232,58 +238,67 @@ class FeedApi(Emittable[FeedEvent]):
         if htmlinfo.complete:
             add_done_callback(
                 self.add_hook_ref("dispatch", trans_html(root)),
-                lambda root: root is not None
-                and html_content_procs(HtmlContent.from_html(root, feed.uin)),
+                lambda trans_root: html_content_procs(trans_root or root),
             )
             return
+
+        def full_html_procs(full: str):
+            full_root = fromstring(full)
+            add_done_callback(
+                self.add_hook_ref("dispatch", trans_html(full_root)),
+                lambda trans_root: html_content_procs(trans_root or full_root),
+            )
 
         get_full = self.add_hook_ref(
             "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
         )
-        cc = lambda f, a: a and f(a)
-        add_done_callback(
-            get_full,
-            lambda full: full
-            and add_done_callback(
-                self.add_hook_ref("dispatch", trans_html(full)),
-                lambda root: root and cc(html_content_procs, HtmlContent.from_html(root)),
-            ),
-        )
+        add_done_callback(get_full, lambda full: full and full_html_procs(full))
 
     def _add_mediaupdate_task(self, model: FeedContent, content: HtmlContent) -> None:
         if not (content.album and content.pic):
             return
 
-        async def fv_retry(bid: int, album: AlbumData, num: int):
-            assert content.album and content.pic
-            for i in range(12):
-                st = 2**i - 1
-                log.debug(f"sleep {st}s")
-                await asyncio.sleep(st)
-                try:
-                    fv = await self.api.floatview_photo_list(album, num)
-                    break
-                except QzoneError as e:
-                    if e.code == -10001:
-                        log.info(f"{str(e)}, retry={i + 1}")
-                    else:
-                        log.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
-                    continue
-                except HTTPStatusError:
-                    log.info(f"Error in floatview_photo_list, retry={i + 1}", exc_info=True)
-                    continue
-                except CorruptError:
-                    log.warning(f"Response corrupt!")
-                    continue
-                except login_exc:
-                    return
-            else:
-                return
-            model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
-            self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
-
-        task = self.add_hook_ref("slowapi", fv_retry(self.bid, content.album, len(content.pic)))
+        task = self.add_hook_ref(
+            "slowapi", self.__fv_retry(model, content, self.bid, content.album, len(content.pic))
+        )
         log.info(f"Media update task registered: {task}")
+
+    async def __fv_retry(
+        self, model: FeedContent, content: HtmlContent, bid: int, album: AlbumData, num: int
+    ):
+        assert content.album
+        assert content.pic
+
+        for i in range(12):
+            st = 2**i - 1
+            log.debug(f"sleep {st}s")
+            await asyncio.sleep(st)
+            try:
+                fv = await self.api.floatview_photo_list(album, num)
+                break
+            except QzoneError as e:
+                if e.code == -10001:
+                    log.info(f"{str(e)}, retry={i + 1}")
+                else:
+                    log.info(f"Error in floatview_photo_list, retry={i + 1}")
+                log.debug(e)
+                continue
+            except HTTPStatusError as e:
+                log.info(f"Error in floatview_photo_list, retry={i + 1}")
+                log.debug(e)
+                continue
+            except CorruptError:
+                log.warning(f"Photo corrupt!")
+                continue
+            except login_exc:
+                return
+            except:
+                log.fatal("unexpected exception in fv_retry", exc_info=True)
+                return
+        else:
+            return
+        model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
+        self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
 
     async def wait(
         self, *, timeout: Optional[float] = None
@@ -299,7 +314,7 @@ class FeedApi(Emittable[FeedEvent]):
         return await super().wait("dispatch", "hook", timeout=timeout)
 
     def stop(self) -> None:
-        """Clear __all__ registered tasks. All tasks will be CANCELLED if not finished."""
+        """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
         log.warning("FeedApi stopping...")
         if self.hb_timer:
             self.hb_timer.stop()
