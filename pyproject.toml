@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.9.7.dev1"
+version = "0.9.8.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -14,8 +14,8 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aioqzone = { version = "^0.9.10.dev1", allow-prereleases = true }
-QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/4.1.0.dev1/qzemoji-4.1.0.dev1-py3-none-any.whl" }
+aioqzone = { version = "^0.9.10.dev2", allow-prereleases = true }
+QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/4.1.0.dev2/qzemoji-4.1.0.dev2-py3-none-any.whl" }
 
 
 # dependency groups
@@ -25,15 +25,14 @@ optional = false
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.0"
 pytest-asyncio = "~0.20.1"
-pytest-mock = "^3.8.2"
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.17.0"
-black = "^22.1.0"
-isort = "^5.10.1"
+pre-commit = "^2.20.0"
+black = "^22.12.0"
+isort = "^5.11.2"
 
 [tool.poetry.group.docs]
 optional = true
@@ -54,7 +53,6 @@ build-backend = "poetry.core.masonry.api"
 # customize begin
 [tool.pytest.ini_options]
 pythonpath = 'src'
-asyncio_mode = 'strict'
 log_cli = 1
 log_cli_level = 'WARNING'
 
