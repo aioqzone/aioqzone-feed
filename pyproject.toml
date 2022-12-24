@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.9.8.dev1"
+version = "0.10.1.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -14,7 +14,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aioqzone = { version = "^0.9.11.dev2", allow-prereleases = true }
+aioqzone = { version = "^0.10.1.dev1", allow-prereleases = true }
 QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/4.1.0.dev2/qzemoji-4.1.0.dev2-py3-none-any.whl" }
 
 
