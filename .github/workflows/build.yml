@@ -33,7 +33,7 @@ jobs:
         id: build
         run: |
           poetry build
-          echo "::set-output name=package::$(poetry version -s)"
+          echo "package=$(poetry version -s)" >> $GITHUB_OUTPUT
       - uses: softprops/action-gh-release@v1
         with:
           files: dist/*
