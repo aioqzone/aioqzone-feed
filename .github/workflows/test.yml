@@ -30,6 +30,9 @@ jobs:
           cache: poetry
 
       - name: Install and Test
+        env:
+          TEST_UIN: ${{ secrets.TEST_UIN }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           echo "::group::Install Dependencies"
           poetry install -n -vv
