@@ -23,7 +23,7 @@ QzEmoji = { url = "https://github.com/aioqzone/QzEmoji/releases/download/4.1.1.d
 optional = false
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.2.0"
+pytest = "^7.2.1"
 pytest-asyncio = "~0.20.1"
 
 [tool.poetry.group.dev]
