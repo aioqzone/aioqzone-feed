@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Build
+name: Release and Upload to aioqzone-index
 
 on:
   pull_request_target:
@@ -9,35 +9,51 @@ on:
       - closed
     branches:
       - "beta"
-      - "release"
-      - "release/**"
+      - "beta/**"
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-upload:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'python')
+    env:
+      GH_TOKEN: ${{ github.token }}
+      index-repo: aioqzone/aioqzone-index
+    permissions:
+      contents: write # release needs write permission
     steps:
-      #----------------------------------------------
-      #       check-out repo and set-up python
-      #----------------------------------------------
       - uses: actions/checkout@v3
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-          cache: poetry
-      #----------------------------------------------
-      #  --------    Build and release   ---------
-      #----------------------------------------------
+          python-version: "3.10"
+          # cache: poetry
+
       - name: Build dist
         id: build
         run: |
+          version=$(poetry version -s)
+          echo "version=$version" >> $GITHUB_ENV
+
           poetry build
-          echo "package=$(poetry version -s)" >> $GITHUB_OUTPUT
-      - uses: softprops/action-gh-release@v1
+
+      - name: Upload to Release
+        id: upload
+        uses: JamzumSum/actions/hash-release@master
         with:
+          tag: ${{ env.version }}
           files: dist/*
-          prerelease: ${{ startsWith(github.head_ref, 'beta') }}
-          tag_name: ${{ steps.build.outputs.package }}
-          name: ${{ steps.build.outputs.package }}
-          generate_release_notes: true
+
+      - name: Add to aioqzone-index
+        env:
+          urls: ${{ steps.upload.outputs.urls }}
+          GH_TOKEN: ${{ secrets.REPO_TOKEN }} # this is a fine-grained PAT
+        run: |
+          gh workflow -R ${{ env.index-repo }} run add.yml \
+                      -f project=aioqzone-feed \
+                      -f urls="$urls"
