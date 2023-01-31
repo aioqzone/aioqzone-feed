@@ -1202,14 +1202,14 @@ files = [
 
 [[package]]
 name = "qzemoji"
-version = "5.0.0.dev1"
+version = "5.0.0.dev3"
 description = "Translate Qzone emoji link to text."
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "qzemoji-5.0.0.dev1-py3-none-any.whl", hash = "sha256:4eb0b083ca57764b41a6f9be663a9c4ab4ecf594a633e856d903b26a396d047b"},
-    {file = "qzemoji-5.0.0.dev1.tar.gz", hash = "sha256:bc9415417d1317ed7d122c0d6d56e3ec914a981c4de70281f5bd6a9a158938b8"},
+    {file = "qzemoji-5.0.0.dev3-py3-none-any.whl", hash = "sha256:88fde93f06234c9c43c9fd6eabbf05dd9c683900910ffee3bbd04fccdc0ecc4e"},
+    {file = "qzemoji-5.0.0.dev3.tar.gz", hash = "sha256:262c5a7e7294fefd8d25fc255cd1b58699b56644318cdf02a43f4c1147bc697c"},
 ]
 
 [package.dependencies]
@@ -1698,4 +1698,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "9c2ae190072909ddf5088496bf72d556a3370031a92a5ca835e5d1cdd7f89d2e"
+content-hash = "98dbd6de09c3786bc1cc2a5ab7fdce719005430de4bdb9c83fab0f9ac868ab04"
