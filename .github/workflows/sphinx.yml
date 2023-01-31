@@ -3,7 +3,7 @@ name: Sphinx Build and Deploy
 on:
   pull_request:
     types:
-      - ready_for_review
+      - review_requested
     branches:
       - beta
   push:
@@ -35,8 +35,9 @@ jobs:
       - name: Install Library and Build HTML
         run: |
           echo "::group::Install Library"
-          poetry install --with docs
+          poetry install --with docs --without test
           echo "::endgroup::"
+
           echo "::group::Build HTML"
           poetry run sphinx-build doc/source doc/build/html -D release=$(poetry version -s)
           echo "::endgroup::"
