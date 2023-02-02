@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.10.2.dev2"
+version = "0.10.3.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -15,7 +15,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 [tool.poetry.dependencies]
 python = "^3.7"
 aioqzone = { version = "^0.10.2.dev2", allow-prereleases = true }
-QzEmoji = "^4.2.0.dev1"
+QzEmoji = { version = "^5.0.0.dev3", source = "aioqzone-index" }
 
 
 # dependency groups
@@ -30,7 +30,10 @@ pytest-asyncio = "~0.20.1"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
+pre-commit = [
+    { version = "^2.20.0", python = "~3.7" },
+    { version = "^3.0.1", python = "^3.8" },
+]
 black = "^22.12.0"
 isort = "^5.11.2"
 
@@ -60,7 +63,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = 'src'
 log_cli = 1
 log_cli_level = 'WARNING'
-
 
 [tool.isort]
 profile = "black"
