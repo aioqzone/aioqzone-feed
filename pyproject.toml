@@ -45,7 +45,7 @@ Sphinx = "^5.0.2"
 autodoc-pydantic = "^1.6.1"
 sphinx-autodoc-typehints = "^1.18.3"
 sphinx-rtd-theme = "^1.0.0"
-sphinx-intl = "^2.0.1"
+sphinx-intl = "^2.1.0"
 
 [[tool.poetry.source]]
 name = "aioqzone-index"
