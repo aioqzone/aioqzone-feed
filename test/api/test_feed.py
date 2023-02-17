@@ -12,7 +12,7 @@ from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.feed import FeedApi
-from aioqzone_feed.interface.hook import FeedEvent
+from aioqzone_feed.event import FeedEvent
 from aioqzone_feed.type import FeedContent
 
 pytestmark = pytest.mark.asyncio

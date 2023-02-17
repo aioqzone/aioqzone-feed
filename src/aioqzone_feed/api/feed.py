@@ -18,7 +18,7 @@ from qqqr.event import Emittable
 from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
-from ..interface.hook import TY_BID, FeedEvent
+from ..event.feed import TY_BID, FeedEvent
 from ..type import FeedContent, VisualMedia
 from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
