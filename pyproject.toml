@@ -14,7 +14,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aioqzone = { version = "^0.11.1.dev1", allow-prereleases = true }
+aioqzone = { version = "^0.11.1.dev2", allow-prereleases = true }
 QzEmoji = { version = "^5.0.0.dev3", source = "aioqzone-index" }
 
 
