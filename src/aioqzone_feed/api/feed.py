@@ -1,11 +1,9 @@
 import asyncio
 import logging
 import time
-from functools import partial
-from typing import Any, Awaitable, Callable, Optional, Set, Tuple, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 import aioqzone.api as qapi
-from aioqzone.api.loginman import QrStrategy
 from aioqzone.event.login import Loginable
 from aioqzone.exception import CorruptError, LoginError, QzoneError, SkipLoginInterrupt
 from aioqzone.type.internal import AlbumData
@@ -14,14 +12,14 @@ from aioqzone.utils.html import HtmlContent, HtmlInfo
 from httpx import HTTPError, HTTPStatusError
 from lxml.html import HtmlElement, fromstring
 from pydantic import ValidationError
-from qqqr.event import Emittable
+from qqqr.event import Emittable, hook_guard
 from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
-from ..event.feed import TY_BID, FeedEvent
+from ..event import FeedEvent
 from ..type import FeedContent, VisualMedia
-from ..utils.task import AsyncTimer
 from .emoji import trans_detail, trans_html
+from .heartbeat import HeartbeatApi
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
@@ -35,24 +33,30 @@ def add_done_callback(task, cb):
         # type: (asyncio.Task[T]) -> Optional[T]
         try:
             return task.result()
-        except QzoneError as e:
-            lg = log.debug if e.code in [-10029] else log.error
-            lg(f"DEBUG: {task}", exc_info=True)
-        except HTTPStatusError:
-            log.error(f"DEBUG: {task}", exc_info=True)
-        except LoginError as e:
-            log.error(f"LoginError: {e}")
-            raise e
-        except UserBreak as e:
-            log.info("UserBreak captured!")
-            raise e
-        except SystemExit as e:
-            raise e
+        except (
+            QzoneError,
+            HTTPStatusError,
+            SkipLoginInterrupt,
+            KeyboardInterrupt,
+            CorruptError,
+        ) as e:
+            log.warning(f"{e.__class__.__name__} caught in {task}.")
+            log.debug("", exc_info=e)
+        except HookError as e:
+            log.error(f"Error occurs in {e.hook}", exc_info=e)
+        except (
+            HTTPError,
+            LoginError,
+            asyncio.CancelledError,
+        ) as e:
+            log.warning(f"{e.__class__.__name__} caught.", exc_info=e)
+        except SystemExit:
+            raise
         except RuntimeError as e:
             if e.args[0] == "Session is closed":
                 log.error(f"DEBUG: {task}", exc_info=True)
             else:
-                raise e
+                raise
         except:
             log.fatal("Uncaught Exception!", exc_info=True)
             exit(1)
@@ -61,22 +65,21 @@ def add_done_callback(task, cb):
     return task
 
 
-class FeedApi(Emittable[FeedEvent]):
-    hb_timer = None
-
-    def __init__(self, client: ClientAdapter, loginman: Loginable):
-        super().__init__()
-        self.api = qapi.DummyQapi(client, loginman)
-        self.like_app = self.api.like_app
+class FeedApi(qapi.DummyQapi, Emittable[FeedEvent]):
+    def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
+        super(qapi.DummyQapi, self).__init__(client, loginman)
+        super(Emittable, self).__init__()
         self.bid = -1
+        if init_hb:
+            self.hb_api = HeartbeatApi(self)
 
-    def new_batch(self) -> TY_BID:
+    def new_batch(self) -> FeedEvent.TY_BID:
         """
         The new_batch function edit internal batch id and return it.
 
         A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
 
-        :rtype: :obj:`.TY_BID`
+        :rtype: :obj:`FeedEvent.TY_BID`
         :return: The batch_id.
         """
 
@@ -95,22 +98,29 @@ class FeedApi(Emittable[FeedEvent]):
         :return: feeds num got actually.
 
         ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+
+        .. versionchanged:: 0.12.0
+
+            `FeedEvent.StopFeedFetch` works in this method as well.
         """
+        stop_fetching = False
         got = 0
         aux = None
+        exceed_pred = hook_guard(self.hook.StopFeedFetch)
         for page in range(1000):
             try:
-                resp = await self.api.feeds3_html_more(page, count=count - got, aux=aux)
+                resp = await self.feeds3_html_more(page, count=count - got, aux=aux)
             except (QzoneError, HTTPStatusError) as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
             aux = resp.aux
             for fd in resp.feeds[: count - got]:
+                if await exceed_pred(fd):
+                    stop_fetching = True
+                    continue
                 self._dispatch_feed(fd)
                 got += 1
-            if not resp.aux.hasMoreFeeds:
-                break
-            if got >= count:
+            if stop_fetching or got >= count or not resp.aux.hasMoreFeeds:
                 break
         return got
 
@@ -118,8 +128,6 @@ class FeedApi(Emittable[FeedEvent]):
         self,
         seconds: float,
         start: Optional[float] = None,
-        *,
-        exceed_pred: Optional[Callable[[FeedRep], Awaitable[bool]]] = None,
     ) -> int:
         """Get feeds by abstime (seconds). Range: `[start - second, start]`.
 
@@ -132,14 +140,22 @@ class FeedApi(Emittable[FeedEvent]):
         :raises `SystemExit`: unexcpected error
 
         :return: feeds num got actually.
+
+        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+
+        .. versionchanged:: 0.12.0
+
+            removed ``exceed_pred``, use `FeedEvent.StopFeedFetch` instead.
         """
         start = start or time.time()
         end = start - seconds
-        exceed = got = 0
+        stop_fetching = False
+        got = 0
         aux = None
+        exceed_pred = hook_guard(self.hook.StopFeedFetch)
         for page in range(1000):
             try:
-                resp = await self.api.feeds3_html_more(page, aux=aux)
+                resp = await self.feeds3_html_more(page, aux=aux)
             except (QzoneError, HTTPStatusError) as e:
                 log.warning(f"Error when fetching page. Skipped. {e}")
                 continue
@@ -147,16 +163,37 @@ class FeedApi(Emittable[FeedEvent]):
             for fd in resp.feeds:
                 if fd.abstime > start:
                     continue
-                if fd.abstime < end or exceed_pred and await exceed_pred(fd):
-                    exceed = True
+                if fd.abstime < end or await exceed_pred(fd):
+                    stop_fetching = True
                     continue
                 self._dispatch_feed(fd)
                 got += 1
-            if not resp.aux.hasMoreFeeds:
-                break
-            if exceed:
+            if stop_fetching or not resp.aux.hasMoreFeeds:
                 break
         return got
+
+    def drop_rule(self, feed: FeedRep) -> bool:
+        """Drop feeds according to some rules.
+        Dropping a feed will trigger :meth:`FeedEvent.FeedDropped` event.
+
+        Subclasses may inherit this method to customize their own rules.
+
+        :param feed: the feed
+        :return: if the feed is dropped.
+        """
+        if feed.uin == 20050606:
+            log.info(f"advertisement rule hit: {feed.uin}")
+            log.debug(f"Dropped: {feed}")
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
+            return True
+
+        if feed.fid.startswith("advertisement"):
+            log.info(f"advertisement rule hit: {feed.fid}")
+            log.debug(f"Dropped: {feed}")
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
+            return True
+
+        return False
 
     def _dispatch_feed(self, feed: FeedRep) -> None:
         """dispatch feed according to api support.
@@ -172,16 +209,7 @@ class FeedApi(Emittable[FeedEvent]):
 
         :param feed: feed
         """
-        if feed.uin == 20050606:
-            log.info(f"advertisement rule hit: {feed.uin}")
-            log.debug(f"Dropped: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
-            return
-
-        if feed.fid.startswith("advertisement"):
-            log.info(f"advertisement rule hit: {feed.fid}")
-            log.debug(f"Dropped: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
+        if self.drop_rule(feed):
             return
 
         model = FeedContent.from_feedrep(feed)
@@ -218,7 +246,7 @@ class FeedApi(Emittable[FeedEvent]):
                 lambda t: self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
             )
 
-        get_full = self.add_hook_ref("dispatch", self.api.emotion_msgdetail(feed.uin, feed.fid))
+        get_full = self.add_hook_ref("dispatch", self.emotion_msgdetail(feed.uin, feed.fid))
         add_done_callback(get_full, detail_procs)
 
     def __default_dispatch(
@@ -250,7 +278,7 @@ class FeedApi(Emittable[FeedEvent]):
             )
 
         get_full = self.add_hook_ref(
-            "dispatch", self.api.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
+            "dispatch", self.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
         )
         add_done_callback(get_full, lambda full: full and full_html_procs(full))
 
@@ -274,7 +302,7 @@ class FeedApi(Emittable[FeedEvent]):
             log.debug(f"sleep {st}s")
             await asyncio.sleep(st)
             try:
-                fv = await self.api.floatview_photo_list(album, num)
+                fv = await self.floatview_photo_list(album, num)
                 break
             except QzoneError as e:
                 if e.code == -10001:
@@ -300,120 +328,9 @@ class FeedApi(Emittable[FeedEvent]):
         model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
         self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
 
-    async def wait(
-        self, *, timeout: Optional[float] = None
-    ) -> Tuple[Set[asyncio.Task], Set[asyncio.Task]]:
-        """Wait for all dispatch and hook tasks.
-
-        :param timeout: wait timeout, defaults to None
-        :return: two set of tasks means (done, pending)
-
-        .. seealso:: :external:meth:`qqqr.event.Emittable.wait`
-        """
-
-        return await super().wait("dispatch", "hook", timeout=timeout)
-
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
         log.warning("FeedApi stopping...")
-        if self.hb_timer:
-            self.hb_timer.stop()
-        super().clear(*self._tasks.keys())
-
-    def clear(self):
-        """Cancel all **dispatch** tasks registered.
-
-        .. seealso:: :external:meth:`qqqr.event.Emittable.clear`"""
-
-        super().clear("dispatch")
-
-    async def heartbeat_refresh(self, *, retry: int = 2, retry_intv: float = 5):
-        """A wrapper function that calls :external:meth:`aioqzone.api.DummyQapi.get_feeds_count`
-        and handles all kinds of excpetions raised during heartbeat.
-
-        .. note::
-            This method calls heartbeat **ONLY ONCE** so it should be called circularly by using
-            `.add_heartbeat` or other timer/scheduler.
-
-        :param retry: retry times on QzoneError, default as 2.
-        :param retry_intv: retry interval on QzoneError
-        :return: whether the timer should stop, means heartbeat will always fail until something is changed.
-        """
-        exc = last_fail_hook = None
-        r = False
-        for i in range(retry):
-            try:
-                cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
-                log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
-                if cnt:
-                    self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
-                return False  # don't stop
-            except (
-                QzoneError,
-                HTTPStatusError,
-            ) as e:
-                # retry at once
-                exc, excname = e, e.__class__.__name__
-                log.warning("%s captured in heartbeat, retry at once (%d)", excname, i)
-                log.debug(excname, exc_info=e)
-            except HookError as e:
-                if e.hook.__qualname__ == last_fail_hook:
-                    # if the same hook raises exception twice, we assume it is systematically broken
-                    # so we should stop heartbeat at once.
-                    r = True
-                    break
-                last_fail_hook = e.hook.__qualname__
-                log.error("HookError captured in heartbeat, retry at once (%d)", i)
-            except (
-                HTTPError,
-                SkipLoginInterrupt,
-                UserBreak,
-                asyncio.CancelledError,
-            ) as e:
-                # retry in next trigger
-                exc, excname = e, e.__class__.__name__
-                log.warning("%s captured in heartbeat, retry in next trigger", excname)
-                log.debug(excname, exc_info=e)
-                break
-            except LoginError as e:
-                if e.strategy != QrStrategy.force:
-                    # login error means all methods failed.
-                    # we should stop HB if up login will fail.
-                    r = True
-                break
-            except BaseException as e:
-                exc, r = e, True
-                log.error("Uncaught error in heartbeat.", exc_info=e)
-                break
-            await asyncio.sleep(retry_intv)
-        else:
-            log.error("Max retry exceeds (%d)", retry)
-
-        if r:
-            log.warning(f"Heartbeat stopped.")
-
-        self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
-        return r  # stop at once
-
-    def add_heartbeat(
-        self,
-        *,
-        retry: int = 5,
-        retry_intv: float = 5,
-        hb_intv: float = 300,
-        name: Optional[str] = None,
-    ):
-        """A helper function that creates a heartbeat task and keep a ref of it.
-        A heartbeat task is a timer that circularly calls `.heartbeat_refresh`.
-
-        :param retry: max retry times when some exceptions occurs, defaults to 5.
-        :param hb_intv: retry interval, defaults to 5.
-        :param hb_intv: heartbeat interval, defaults to 300.
-        :param name: timer name
-        :return: the heartbeat task
-        """
-        heartbeat_refresh = partial(self.heartbeat_refresh, retry=retry, retry_intv=retry_intv)
-        self.hb_timer = AsyncTimer(
-            hb_intv, heartbeat_refresh, delay=hb_intv, name=name or "heartbeat"
-        )
-        return self.hb_timer()
+        self.clear(*self._tasks.keys())
+        if hasattr(self, "hb_api"):
+            self.hb_api.stop()

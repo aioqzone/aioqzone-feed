@@ -1,14 +1,14 @@
-from typing import Optional, Union
+from typing import Union
 
 from aioqzone.type.resp import FeedRep
 from qqqr.event import Event
 
 from ..type import FeedContent
 
-TY_BID = int
-
 
 class FeedEvent(Event):
+    TY_BID = int
+
     async def FeedDropped(self, bid: TY_BID, feed: Union[FeedRep, FeedContent]):
         """
         The FeedDropped hook is called when a feed is dropped for hitting some rules (e.g. advertisement)
@@ -42,30 +42,13 @@ class FeedEvent(Event):
 
         pass
 
-    async def HeartbeatFailed(self, exc: Optional[BaseException] = None):
+    async def StopFeedFetch(self, feed: FeedRep) -> bool:
+        """Used to judge if a feed fetching loop should break. Once this hook returns `True`, new pages will
+        not be fetched any more. Note that the rest feeds of current page may still trigger `FeedProcEnd`.
+
+        This is used to replace the ``exceed_pred`` paramater of `FeedApi.get_feeds_by_second`.
+        This will also be used in `FeedApi.get_feeds_by_count`.
+
+        .. versionadded:: 0.12.0
         """
-        The HeartbeatFailed function is called when the heartbeat fails.
-        It can be used to log an error and call :meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat`
-        again if possible.
-
-        :param exc: Used to pass an exception object that can be used to determine the cause of the heartbeat failure.
-        """
-
-        pass
-
-    async def HeartbeatRefresh(self, num: int):
-        """This event is triggered after a heartbeat succeeded and there are new feeds.
-        Use this event to wait for all dispatch task to be finished, and send received feeds.
-
-        :param num: number of new feeds
-
-        Example:
-
-        .. code-block:: python
-
-            async def HeartbeatRefresh(self, num: int):
-                await api.get_feeds_by_count(num)
-                await api.wait()        # wait for all dispatch tasks and hook tasks
-                await queue.send_all()  # send received feeds
-        """
-        pass
+        return False
