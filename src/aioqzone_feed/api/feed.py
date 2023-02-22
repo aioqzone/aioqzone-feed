@@ -67,7 +67,8 @@ def add_done_callback(task, cb):
 
 class FeedApi(qapi.DummyQapi, Emittable[FeedEvent]):
     def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
-        super().__init__(client, loginman)
+        super(qapi.DummyQapi, self).__init__(client, loginman)
+        super(Emittable, self).__init__()
         self.bid = -1
         if init_hb:
             self.hb_api = HeartbeatApi(self)
