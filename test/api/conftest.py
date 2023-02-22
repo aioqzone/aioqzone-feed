@@ -4,7 +4,6 @@ import pytest
 import pytest_asyncio
 from aioqzone.api.loginman import MixedLoginEvent, MixedLoginMan, QrStrategy
 from httpx import AsyncClient
-from qqqr.ssl import ssl_context
 from qqqr.utils.net import ClientAdapter
 
 from . import showqr
@@ -19,7 +18,7 @@ def event_loop():
 
 @pytest_asyncio.fixture(scope="module")
 async def client():
-    async with AsyncClient(verify=ssl_context()) as client:
+    async with AsyncClient() as client:
         yield ClientAdapter(client)
 
 
@@ -35,20 +34,8 @@ async def man(client: ClientAdapter):
     )
 
     class inner_qrevent(MixedLoginEvent):
-        def __init__(self) -> None:
-            self._cancel_flag = asyncio.Event()
-            self._refresh_flag = asyncio.Event()
-
         async def QrFetched(self, png: bytes, times: int):
             showqr(png)
-
-        @property
-        def cancel_flag(self) -> asyncio.Event:
-            return self._cancel_flag
-
-        @property
-        def refresh_flag(self) -> asyncio.Event:
-            return self._refresh_flag
 
     man.register_hook(inner_qrevent())
     yield man
