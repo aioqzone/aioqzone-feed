@@ -6,9 +6,11 @@ on:
       - review_requested
     branches:
       - beta
+      - "beta/**"
   push:
     branches:
       - beta
+      - "beta/**"
     paths:
       - doc/**
       - .github/workflows/sphinx.yml

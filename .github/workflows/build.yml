@@ -4,6 +4,12 @@
 name: Release and Upload to aioqzone-index
 
 on:
+  pull_request:
+    types:
+      - review_requested
+    branches:
+      - "beta"
+      - "beta/**"
   pull_request_target:
     types:
       - closed
@@ -45,14 +51,16 @@ jobs:
           poetry build
 
       - name: Upload to Release
+        if: github.event_name != 'pull_request'
         id: upload
         uses: JamzumSum/actions/hash-release@master
         with:
           tag: ${{ env.version }}
-          notes: ${{ github.event.pull_request.body || "" }}
+          notes: ${{ github.event.pull_request.body || '' }}
           files: dist/*
 
       - name: Add to aioqzone-index
+        if: github.event_name != 'pull_request'
         env:
           urls: ${{ steps.upload.outputs.urls }}
           GH_TOKEN: ${{ secrets.REPO_TOKEN }} # this is a fine-grained PAT
