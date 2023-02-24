@@ -44,7 +44,7 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
     ],
 )
 async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], should_alive: bool):
-    with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
+    with mock.patch("aioqzone.api.QzoneWebApi.get_feeds_count", side_effect=exc2r):
         api.add_heartbeat(retry=2, hb_intv=0.1, retry_intv=0)
         assert api.hb_timer
         await asyncio.sleep(0.4)

@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.12.1.dev1"
+version = "0.12.1.dev2"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.12.1.dev1-py3-none-any.whl", hash = "sha256:f4aeecd0601e3cbb4a22c6993d1c52943a2d33a909b00648be686e23a952d7d9"},
-    {file = "aioqzone-0.12.1.dev1.tar.gz", hash = "sha256:cd0514f0d638a600b9c1110b2cc09b53bf595225f6c997a74f90ed00c20af3a7"},
+    {file = "aioqzone-0.12.1.dev2-py3-none-any.whl", hash = "sha256:24bdabc04044dc1af6589db60255d4034dade054ddc74bfc9812bb1746f4f99d"},
+    {file = "aioqzone-0.12.1.dev2.tar.gz", hash = "sha256:424c5806dbef44c9c7e707515158f8bfb21e22f6afb84283d9117c551f3cb9e6"},
 ]
 
 [package.dependencies]
@@ -1121,20 +1121,20 @@ files = [
 
 [[package]]
 name = "qzemoji"
-version = "5.0.0.dev4"
+version = "5.1.0"
 description = "Translate Qzone emoji link to text."
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8,<4.0"
 files = [
-    {file = "qzemoji-5.0.0.dev4-py3-none-any.whl", hash = "sha256:eae1f8327b1b2bbaf316610339af396f194d206a3b4374b32a4e5256a9347764"},
-    {file = "qzemoji-5.0.0.dev4.tar.gz", hash = "sha256:fde1a73fcbb47707adf8818f7428597b93d2a0eaa61d89fc147fed061077444d"},
+    {file = "qzemoji-5.1.0-py3-none-any.whl", hash = "sha256:92162f92f37bf2438bc5348d7caa485967e05e5ece1109ef643d7e5efb876e2d"},
+    {file = "qzemoji-5.1.0.tar.gz", hash = "sha256:40159c73c4ac1a1853b8b9370d3c0fd6c62e5eb18e268f1c3da8f7a91bcb1a44"},
 ]
 
 [package.dependencies]
 httpx = ">=0.23.0,<0.24.0"
 PyYAML = ">=6.0,<7.0"
-SQLAlchemy = {version = ">=2.0.3,<3.0.0", extras = ["aiosqlite", "asyncio"]}
+SQLAlchemy = {version = ">=2.0.4,<3.0.0", extras = ["aiosqlite", "asyncio"]}
 
 [package.source]
 type = "legacy"
@@ -1607,4 +1607,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "2aaa77ba30aa6014a592d0c4386530ef6aa85f101213f8cdcd467471177a85af"
+content-hash = "c615dd8ed05f566ff6e686a0a4146b956775e55451e68422a4fa0f37a1f48e8c"
