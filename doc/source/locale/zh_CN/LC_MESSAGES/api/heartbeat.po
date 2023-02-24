@@ -1,0 +1,102 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, aioqzone
+# This file is distributed under the same license as the aioqzone-feed package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: aioqzone-feed \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-24 15:43+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../source/api/heartbeat.rst:2
+msgid "Heartbeat API"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:1 of
+msgid ""
+"A helper function that creates a heartbeat task and keep a ref of it. A heartbeat task is a "
+"timer that circularly calls `.heartbeat_refresh`."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh of
+msgid "参数"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:5 of
+msgid "max retry times when some exceptions occurs, defaults to 5."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:7 of
+msgid "retry interval, defaults to 5."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:8 of
+msgid "heartbeat interval, defaults to 300."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:10 of
+msgid "timer name"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh of
+msgid "返回"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:11 of
+msgid "the heartbeat task"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:1 of
+msgid ""
+"A wrapper function that calls :external:meth:`aioqzone.api.QzoneWebAPI.get_feeds_count` and "
+"handles all kinds of excpetions raised during heartbeat."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:5 of
+msgid ""
+"This method calls heartbeat **ONLY ONCE** so it should be called circularly by using "
+"`.add_heartbeat` or other timer/scheduler."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:9 of
+msgid "retry times on QzoneError, default as 2."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:11 of
+msgid "retry interval on QzoneError"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:12 of
+msgid "whether the timer should stop, means heartbeat will always fail until something is changed."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.stop:1 of
+msgid "Clear **all** registered tasks. All tasks will be CANCELLED if not finished."
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.stop of
+msgid "返回类型"
+msgstr ""
+
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.stop:4 of
+msgid ":py:obj:`None`"
+msgstr ""
+
+#~ msgid ""
+#~ "A wrapper function that calls "
+#~ ":external:meth:`aioqzone.api.DummyQapi.get_feeds_count` and handles all "
+#~ "kinds of excpetions raised during heartbeat."
+#~ msgstr ""

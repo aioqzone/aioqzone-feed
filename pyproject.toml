@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioqzone-feed"
-version = "0.12.0.dev1"
+version = "0.12.1.dev1"
 description = "aioqzone plugin providing higher level api for processing feed."
 authors = ["aioqzone <zzzzss990315@gmail.com>"]
 license = "AGPL-3.0"
@@ -14,8 +14,8 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-aioqzone = { version = ">=0.11.4.dev1,<0.13.0.dev0", allow-prereleases = true }
-QzEmoji = { version = "^5.0.0.dev3", source = "aioqzone-index" }
+aioqzone = { version = "^0.12.1.dev2", allow-prereleases = true }
+QzEmoji = { version = "^5.1.0", source = "aioqzone-index" }
 
 
 # dependency groups

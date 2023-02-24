@@ -1,11 +1,12 @@
 import asyncio
 from typing import Type
-from unittest import mock
+from unittest.mock import patch
 
 import pytest
 import pytest_asyncio
-from aioqzone.api import DummyQapi
+from aioqzone.api import QzoneWebAPI
 from aioqzone.api.loginman import MixedLoginMan
+from aioqzone.event import LoginMethod
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
 from httpx import ConnectError, HTTPError, HTTPStatusError, TimeoutException
 from qqqr.event.login import UpEvent
@@ -20,7 +21,7 @@ pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture(scope="module")
 async def api(client: ClientAdapter, man: MixedLoginMan):
-    api = HeartbeatApi(DummyQapi(client, man))
+    api = HeartbeatApi(QzoneWebAPI(client, man))
     api.register_hook(HeartbeatEvent())
     yield api
     api.stop()
@@ -29,9 +30,9 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
 @pytest.mark.parametrize(
     "exc2r,should_alive",
     [
-        (LoginError("mock", "allow"), False),
+        (LoginError("mock", [LoginMethod.up, LoginMethod.qr]), False),
         (SystemExit(), False),
-        (LoginError("mock", "force"), True),
+        (LoginError("mock", [LoginMethod.qr]), True),
         (ConnectError("mock"), True),
         (TimeoutException("mock"), True),
         (HTTPStatusError("mock", request=..., response=...), True),  # type: ignore
@@ -44,7 +45,9 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
     ],
 )
 async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], should_alive: bool):
-    with mock.patch("aioqzone.api.raw.QzoneApi.get_feeds_count", side_effect=exc2r):
+    from aioqzone.api import QzoneWebAPI
+
+    with patch.object(QzoneWebAPI, "get_feeds_count", side_effect=exc2r):
         api.add_heartbeat(retry=2, hb_intv=0.1, retry_intv=0)
         assert api.hb_timer
         await asyncio.sleep(0.4)

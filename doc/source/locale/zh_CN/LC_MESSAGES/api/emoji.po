@@ -1,0 +1,97 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, aioqzone
+# This file is distributed under the same license as the aioqzone-feed package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: aioqzone-feed \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-24 15:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../source/api/emoji.rst:2
+msgid "Emoji API"
+msgstr ""
+
+#: aioqzone_feed.api.emoji:1 of
+msgid "Translate emoji representation to text."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap:1 of
+msgid ""
+"This function query the given eid and wraps it if it is not a pure emoji word. If the name is "
+"not stored in the database, then it will return a ``[/em]`` tag."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap aioqzone_feed.api.emoji.wrap_plain_text of
+msgid "返回类型"
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap:4 aioqzone_feed.api.emoji.wrap_plain_text:7 of
+msgid ":py:class:`str`"
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap aioqzone_feed.api.emoji.sub
+#: aioqzone_feed.api.emoji.wrap_plain_text of
+msgid "返回"
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap:5 of
+msgid "a ``[/em]`` tag if query has no result, otherwise a wrapped name."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.query_wrap:7 of
+msgid ":meth:`wrap_plain_text`, :meth:`~qzemoji.utils.build_tag`"
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub:1 of
+msgid ""
+"The sub function is a async-version of :meth:`re.sub`. It works like pattern.sub(repl, text), "
+"except for this `repl` is an async-function."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub aioqzone_feed.api.emoji.wrap_plain_text of
+msgid "参数"
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub:5 of
+msgid "regex expression."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub:7 of
+msgid "Used to replace the matched text. Input an :class:`re.Match`, returns a string, async."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub:9 of
+msgid "String to be searched."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.sub:10 of
+msgid "replaced string."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.wrap_plain_text:1 of
+msgid "This function wraps the given `name` with the given `fmt`, if it is not a pure emoji word."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.wrap_plain_text:4 of
+msgid "the customized emoji name."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.wrap_plain_text:6 of
+msgid "a format string in ``{`` style, default as ``[/{name}]``."
+msgstr ""
+
+#: aioqzone_feed.api.emoji.wrap_plain_text:8 of
+msgid "The emoji itself if it is a pure emoji word, otherwise a string wrapped by the `fmt`."
+msgstr ""

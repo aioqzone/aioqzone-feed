@@ -2,8 +2,10 @@ import asyncio
 
 import pytest
 import pytest_asyncio
-from aioqzone.api.loginman import MixedLoginEvent, MixedLoginMan, QrStrategy
+from aioqzone.api.loginman import MixedLoginMan, strategy_to_order
+from aioqzone.event import QREvent
 from httpx import AsyncClient
+from qqqr.event import sub_of
 from qqqr.utils.net import ClientAdapter
 
 from . import showqr
@@ -26,16 +28,20 @@ async def client():
 async def man(client: ClientAdapter):
     from os import environ as env
 
-    man = MixedLoginMan(
+    class show_qr_in_test(MixedLoginMan):
+        @sub_of(QREvent)
+        def _sub_qrevent(self, base):
+            class inner_qrevent(QREvent):
+                async def QrFetched(self, png: bytes, times: int):
+                    showqr(png)
+
+            return inner_qrevent
+
+    man = show_qr_in_test(
         client,
         int(env["TEST_UIN"]),
-        QrStrategy[env.get("TEST_QRSTRATEGY", "forbid")],  # forbid QR by default.
+        strategy_to_order[env.get("TEST_QRSTRATEGY", "forbid")],  # forbid QR by default.
         pwd=env.get("TEST_PASSWORD", None),
     )
 
-    class inner_qrevent(MixedLoginEvent):
-        async def QrFetched(self, png: bytes, times: int):
-            showqr(png)
-
-    man.register_hook(inner_qrevent())
     yield man

@@ -3,8 +3,7 @@ import logging
 import time
 from typing import Any, Callable, Optional, TypeVar
 
-import aioqzone.api as qapi
-from aioqzone.event.login import Loginable
+from aioqzone.api import Loginable, QzoneWebAPI
 from aioqzone.exception import CorruptError, LoginError, QzoneError, SkipLoginInterrupt
 from aioqzone.type.internal import AlbumData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
@@ -65,10 +64,9 @@ def add_done_callback(task, cb):
     return task
 
 
-class FeedApi(qapi.DummyQapi, Emittable[FeedEvent]):
+class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
     def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
-        super(qapi.DummyQapi, self).__init__(client, loginman)
-        super(Emittable, self).__init__()
+        super().__init__(client, loginman)
         self.bid = -1
         if init_hb:
             self.hb_api = HeartbeatApi(self)

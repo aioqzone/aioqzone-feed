@@ -33,7 +33,7 @@ class FeedEvent(Event):
     async def FeedMediaUpdate(self, bid: TY_BID, feed: FeedContent):
         """
         The FeedMediaUpdate function is used to update the media of a feed.
-        The :external:meth:`aioqzone.api.DummyQapi.floatview_photo_list` is one of the slow api.
+        The :external:meth:`aioqzone.api.QzoneWebAPI.floatview_photo_list` is one of the slow api.
         The media will be update by raw photos/videos, list order should not be changed
 
         :param bid: Used to identify feed batch (tell from different calling).
