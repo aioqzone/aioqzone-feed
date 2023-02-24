@@ -3,8 +3,8 @@ import logging
 from functools import partial
 from typing import Optional
 
-from aioqzone.api import DummyQapi
-from aioqzone.api.loginman import QrStrategy
+from aioqzone.api import QzoneWebAPI
+from aioqzone.event import LoginMethod
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
 from httpx import HTTPError, HTTPStatusError
 from qqqr.event import Emittable
@@ -19,12 +19,12 @@ log = logging.getLogger(__name__)
 class HeartbeatApi(Emittable[HeartbeatEvent]):
     hb_timer = None
 
-    def __init__(self, api: DummyQapi) -> None:
+    def __init__(self, api: QzoneWebAPI) -> None:
         super().__init__()
         self.api = api
 
     async def heartbeat_refresh(self, *, retry: int = 2, retry_intv: float = 5):
-        """A wrapper function that calls :external:meth:`aioqzone.api.DummyQapi.get_feeds_count`
+        """A wrapper function that calls :external:meth:`aioqzone.api.QzoneWebAPI.get_feeds_count`
         and handles all kinds of excpetions raised during heartbeat.
 
         .. note::
@@ -72,7 +72,7 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
                 log.debug(excname, exc_info=e)
                 break
             except LoginError as e:
-                if e.strategy != QrStrategy.force:
+                if LoginMethod.up in e.methods_tried:
                     # login error means all methods failed.
                     # we should stop HB if up login will fail.
                     r = True

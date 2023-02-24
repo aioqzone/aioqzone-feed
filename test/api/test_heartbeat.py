@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 import pytest_asyncio
-from aioqzone.api import DummyQapi
+from aioqzone.api import QzoneWebAPI
 from aioqzone.api.loginman import MixedLoginMan
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
 from httpx import ConnectError, HTTPError, HTTPStatusError, TimeoutException
@@ -20,7 +20,7 @@ pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture(scope="module")
 async def api(client: ClientAdapter, man: MixedLoginMan):
-    api = HeartbeatApi(DummyQapi(client, man))
+    api = HeartbeatApi(QzoneWebAPI(client, man))
     api.register_hook(HeartbeatEvent())
     yield api
     api.stop()

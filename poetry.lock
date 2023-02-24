@@ -2,21 +2,21 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.11.4.dev1"
+version = "0.12.1.dev1"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.11.4.dev1-py3-none-any.whl", hash = "sha256:8d98db5f9170fb802d5f02ff8cb12e124d944721df8d97e3bf305605c20fc316"},
-    {file = "aioqzone-0.11.4.dev1.tar.gz", hash = "sha256:fd11bb386bb1e66f6fbe2e402e8c7e7ea173ff6bd97719459fcd1d4f41cab252"},
+    {file = "aioqzone-0.12.1.dev1-py3-none-any.whl", hash = "sha256:f4aeecd0601e3cbb4a22c6993d1c52943a2d33a909b00648be686e23a952d7d9"},
+    {file = "aioqzone-0.12.1.dev1.tar.gz", hash = "sha256:cd0514f0d638a600b9c1110b2cc09b53bf595225f6c997a74f90ed00c20af3a7"},
 ]
 
 [package.dependencies]
 cssselect = ">=1.1.0,<2.0.0"
 httpx = ">=0.23.0,<0.24.0"
 lxml = ">=4.9.1,<5.0.0"
-numpy = {version = ">=1.22.3,<2.0.0", markers = "python_version >= \"3.8\" and python_version < \"4.0\""}
+numpy = ">=1.22.3,<2.0.0"
 opencv-python-headless = ">=4.7.0,<5.0.0"
 pydantic = ">=1.10.4,<2.0.0"
 pytz = ">=2022.1,<2023.0"
@@ -833,19 +833,19 @@ files = [
 
 [[package]]
 name = "opencv-python-headless"
-version = "4.7.0.68"
+version = "4.7.0.72"
 description = "Wrapper package for OpenCV python bindings."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "opencv-python-headless-4.7.0.68.tar.gz", hash = "sha256:a2109193e88570bbbdf5335541c74b5b27573f1c922e38f523febaeae77a81be"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-macosx_10_13_x86_64.whl", hash = "sha256:e0c5ab677ff730c87317f3d2e4ee97ce1d95052bec35886a1bf8c8ef328c82a2"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:f39df64ca733eebe1ed78fe4ac13bedb0ef77beeabddbb2c0e291cc6bf5fbcdc"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cdda3cc5b65bf41be8c76f7d2ab9fda78a204a4837689351206d054444b5bb24"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:abfbac281ab85d90c4d17f13febf5adb640b727e2c3557e1ae49a71359a87c31"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-win32.whl", hash = "sha256:636d9517d946048c3ba34bc0addbe1b9fd4273954e228d3dcd96687cd5d447c7"},
-    {file = "opencv_python_headless-4.7.0.68-cp37-abi3-win_amd64.whl", hash = "sha256:e1cb2120720e54e0e563615ae4ccccf0f63d4f8a29b27722a185a22a7638103b"},
+    {file = "opencv-python-headless-4.7.0.72.tar.gz", hash = "sha256:eea59caa92b28b197f9d2a2dd8275ca3869718b2a857c8e53203de6ef3f9f4db"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-macosx_10_16_x86_64.whl", hash = "sha256:2f8b60bddd325411cf4664e4dbea729ce20f0c2ffeaedc5c6724b544fdf36e8a"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:6e13954f705e640e52962dfb252ee1f0a0af7b33cdbe8dd73f27e7e31172b7a2"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f448aea686069474e701223a2ed192df95f501a092b5e06e39171b4927564692"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:18dac3147863d2f4beef6b06b784ee115799a7842e2883adc4ae750c432613f9"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-win32.whl", hash = "sha256:f7f421a2099acbfb69db5e571abaf69a90f43846c3832452c19611efc2c6c926"},
+    {file = "opencv_python_headless-4.7.0.72-cp37-abi3-win_amd64.whl", hash = "sha256:388015ee96816b71e529fed6153aeb68420b69a80efad7aad5445fd7cd7a154c"},
 ]
 
 [package.dependencies]
@@ -853,6 +853,7 @@ numpy = [
     {version = ">=1.21.0", markers = "python_version <= \"3.9\" and platform_system == \"Darwin\" and platform_machine == \"arm64\""},
     {version = ">=1.21.2", markers = "python_version >= \"3.10\""},
     {version = ">=1.21.4", markers = "python_version >= \"3.10\" and platform_system == \"Darwin\""},
+    {version = ">=1.22.0", markers = "python_version >= \"3.11\""},
     {version = ">=1.19.3", markers = "python_version >= \"3.6\" and platform_system == \"Linux\" and platform_machine == \"aarch64\" or python_version >= \"3.9\""},
     {version = ">=1.17.0", markers = "python_version >= \"3.7\""},
     {version = ">=1.17.3", markers = "python_version >= \"3.8\""},
@@ -916,14 +917,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "3.0.4"
+version = "3.1.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pre_commit-3.0.4-py2.py3-none-any.whl", hash = "sha256:9e3255edb0c9e7fe9b4f328cb3dc86069f8fdc38026f1bf521018a05eaf4d67b"},
-    {file = "pre_commit-3.0.4.tar.gz", hash = "sha256:bc4687478d55578c4ac37272fe96df66f73d9b5cf81be6f28627d4e712e752d5"},
+    {file = "pre_commit-3.1.0-py2.py3-none-any.whl", hash = "sha256:7001dfcd174540658822b1fd3630ceadf4f41375a5d1844b5c3b3830f227348c"},
+    {file = "pre_commit-3.1.0.tar.gz", hash = "sha256:61bd9f1b96d3d1e763f2a9a0f8522aed341646800642ff6803c73fac5781f5b7"},
 ]
 
 [package.dependencies]
@@ -1606,4 +1607,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "284689d72557d74f7b01b189ffc9486e0c6642fa17c55b899bb5e2c68d1cd07d"
+content-hash = "2aaa77ba30aa6014a592d0c4386530ef6aa85f101213f8cdcd467471177a85af"
