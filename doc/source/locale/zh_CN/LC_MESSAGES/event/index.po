@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-09 14:12+0800\n"
+"POT-Creation-Date: 2023-03-09 14:23+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -24,7 +24,7 @@ msgid "aioqzone-feed Events"
 msgstr ""
 
 #: ../../source/event/index.rst:4
-msgid "aioqzone-feed follows the hook system defined in :external:mod:`qqqr.event`."
+msgid "aioqzone-feed follows the hook system defined in :external:doc:`qqqr/event/index`."
 msgstr ""
 
 #: aioqzone_feed.event.feed.FeedEvent.FeedDropped:1 of
@@ -205,4 +205,13 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Example:"
+#~ msgstr ""
+
+#~ msgid "aioqzone-feed follows the hook system defined in :external:mod:`qqqr.event`."
+#~ msgstr ""
+
+#~ msgid "aioqzone-feed follows the hook system defined in :external:`qqqr.event`."
+#~ msgstr ""
+
+#~ msgid "aioqzone-feed follows the hook system defined in :external:doc:`qqqr.event`."
 #~ msgstr ""

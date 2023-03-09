@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 21:56+0800\n"
+"POT-Creation-Date: 2023-03-09 14:18+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -21,6 +21,133 @@ msgstr ""
 
 #: ../../source/api/feed.rst:2
 msgid "Feed API"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule:1 of
+msgid ""
+"Drop feeds according to some rules. No need to emit :meth:`FeedEvent.FeedDropped` event, it is "
+"handled by :meth:`_dispatch_feed`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule:4 of
+msgid "Subclasses may inherit this method to customize their own rules."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second of
+msgid "参数"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule:7 of
+msgid "the feed"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch aioqzone_feed.api.feed.h5.FeedH5Api.stop of
+msgid "返回类型"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule:8 of
+msgid ":py:class:`bool`"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch of
+msgid "返回"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.drop_rule:9 of
+msgid "if the feed is dropped."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:1 of
+msgid "Get feeds by count."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:4 of
+msgid "feeds count to get, max as 10, defaults to 10"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second of
+msgid "抛出"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:6
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:9 of
+msgid "qr login canceled"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:7
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:10 of
+msgid "not logined"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:8
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:11 of
+msgid "unexcpected error"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:10
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:13 of
+msgid ":py:class:`int`"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:11
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:14 of
+msgid "feeds num got actually."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:13
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:16 of
+msgid "..note:: You may need :meth:`.new_batch` to generate a new batch id."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:1 of
+msgid "Get feeds by abstime (seconds). Range: `[start - second, start]`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:4 of
+msgid "filter on abstime, calculate from `start`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:6 of
+msgid "start timestamp, defaults to None, means now."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:7 of
+msgid "another criterion to judge if the feed is out of range, defaults to None"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:1 of
+msgid "The new_batch function edit internal batch id and return it."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:3 of
+msgid ""
+"A batch id can be used to identify a batch, thus even the same feed can have different id e.g. "
+"`(bid, uin, abstime)`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:5 of
+msgid ":obj:`FeedEvent.TY_BID`"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:6 of
+msgid "The batch_id."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.stop:1 of
+msgid "Clear **all** registered tasks. All tasks will be CANCELLED if not finished."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.stop:4 of
+msgid ":py:obj:`None`"
 msgstr ""
 
 #~ msgid ""
