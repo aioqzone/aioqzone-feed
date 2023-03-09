@@ -15,10 +15,9 @@ from qqqr.event import Emittable, hook_guard
 from qqqr.exception import HookError, UserBreak
 from qqqr.utils.net import ClientAdapter
 
-from ..event import FeedEvent
-from ..type import FeedContent, VisualMedia
-from .emoji import trans_detail, trans_html
-from .heartbeat import HeartbeatApi
+from aioqzone_feed.api.heartbeat import HeartbeatApi
+from aioqzone_feed.event import FeedEvent
+from aioqzone_feed.type import FeedContent, VisualMedia
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
@@ -64,7 +63,7 @@ def add_done_callback(task, cb):
     return task
 
 
-class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
+class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
     def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
         super().__init__(client, loginman)
         self.bid = -1
@@ -182,13 +181,11 @@ class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
         if feed.uin == 20050606:
             log.info(f"advertisement rule hit: {feed.uin}")
             log.debug(f"Dropped: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return True
 
         if feed.fid.startswith("advertisement"):
             log.info(f"advertisement rule hit: {feed.fid}")
             log.debug(f"Dropped: {feed}")
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
             return True
 
         return False
@@ -207,17 +204,19 @@ class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
 
         :param feed: feed
         """
+        model = FeedContent.from_feed(feed)
+
         if self.drop_rule(feed):
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, model))
             return
 
-        model = FeedContent.from_feedrep(feed)
         has_cur = [311]
 
         try:
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
             log.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, feed))
+            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, model))
             return
         model.set_frominfo(htmlinfo)
 
@@ -239,10 +238,7 @@ class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
                 return self.__default_dispatch(feed, model, htmlinfo, root)
 
             model.set_detail(dt)
-            add_done_callback(
-                self.add_hook_ref("dispatch", trans_detail(model)),
-                lambda t: self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model)),
-            )
+            self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
 
         get_full = self.add_hook_ref("dispatch", self.emotion_msgdetail(feed.uin, feed.fid))
         add_done_callback(get_full, detail_procs)
@@ -253,32 +249,32 @@ class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
         """Default feed processing: Parse info from html feed. If media is detected,
         then request for `floatview_photo_list` album api.
         """
+
         # has to parse html now
         # TODO: HtmlContent.from_html is risky
         def html_content_procs(root: HtmlElement):
             htmlct = HtmlContent.from_html(root, feed.uin)
-            model.set_fromhtml(htmlct, forward=htmlinfo.unikey)
+            model.set_detail(htmlct)
+            if htmlinfo.unikey:
+                model.forward = htmlinfo.unikey
             self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
-            add_done_callback(
-                self.add_hook_ref("dispatch", trans_html(root)),
-                lambda trans_root: html_content_procs(trans_root or root),
-            )
+            html_content_procs(root)
             return
 
-        def full_html_procs(full: str):
-            full_root = fromstring(full)
-            add_done_callback(
-                self.add_hook_ref("dispatch", trans_html(full_root)),
-                lambda trans_root: html_content_procs(trans_root or full_root),
-            )
+        def full_html_procs(full: Optional[str]):
+            if full:
+                full_root = fromstring(full)
+            else:
+                full_root = root
+            html_content_procs(full_root)
 
         get_full = self.add_hook_ref(
             "dispatch", self.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
         )
-        add_done_callback(get_full, lambda full: full and full_html_procs(full))
+        add_done_callback(get_full, full_html_procs)
 
     def _add_mediaupdate_task(self, model: FeedContent, content: HtmlContent) -> None:
         if not (content.album and content.pic):
@@ -323,7 +319,7 @@ class FeedApi(QzoneWebAPI, Emittable[FeedEvent]):
                 return
         else:
             return
-        model.media = [VisualMedia.from_picrep(PicRep.from_floatview(i)) for i in fv]
+        model.media = [VisualMedia.from_pic(PicRep.from_floatview(i)) for i in fv]
         self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
 
     def stop(self) -> None:
