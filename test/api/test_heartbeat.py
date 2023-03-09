@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 import pytest_asyncio
-from aioqzone.api import QzoneWebAPI
+from aioqzone.api import QzoneH5API
 from aioqzone.api.loginman import MixedLoginMan, strategy_to_order
 from aioqzone.event import LoginMethod, QREvent
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
@@ -48,7 +48,7 @@ async def man(client: ClientAdapter):
 
 @pytest_asyncio.fixture(scope="module")
 async def api(client: ClientAdapter, man: MixedLoginMan):
-    api = HeartbeatApi(QzoneWebAPI(client, man))
+    api = HeartbeatApi(QzoneH5API(client, man))
     api.register_hook(HeartbeatEvent())
     yield api
     api.stop()
@@ -72,9 +72,7 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
     ],
 )
 async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], should_alive: bool):
-    from aioqzone.api import QzoneWebAPI
-
-    with patch.object(QzoneWebAPI, "get_feeds_count", side_effect=exc2r):
+    with patch.object(api, "hb_api", side_effect=exc2r):
         api.add_heartbeat(retry=2, hb_intv=0.1, retry_intv=0)
         assert api.hb_timer
         await asyncio.sleep(0.4)
