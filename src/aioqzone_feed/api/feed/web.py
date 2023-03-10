@@ -94,7 +94,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
 
         :return: feeds num got actually.
 
-        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+        .. note:: You may need :meth:`.new_batch` to generate a new batch id.
 
         .. versionchanged:: 0.12.0
 
@@ -138,7 +138,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
 
         :return: feeds num got actually.
 
-        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+        .. note:: You may need :meth:`.new_batch` to generate a new batch id.
 
         .. versionchanged:: 0.12.0
 

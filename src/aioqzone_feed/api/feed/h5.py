@@ -55,7 +55,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         :return: feeds num got actually.
 
-        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+        .. note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
         stop_fetching = False
         got = 0
@@ -95,7 +95,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         :return: feeds num got actually.
 
-        ..note:: You may need :meth:`.new_batch` to generate a new batch id.
+        .. note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
         start = start or time.time()
         end = start - seconds
