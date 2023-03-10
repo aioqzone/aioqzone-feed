@@ -1,27 +1,50 @@
 import asyncio
 import logging
-from functools import partial
-from typing import Optional
+from functools import partial, singledispatch
+from typing import Optional, Union
 
 from aioqzone.api import QzoneWebAPI
+from aioqzone.api.h5 import QzoneH5API
 from aioqzone.event import LoginMethod
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
+from aioqzone.type.resp import FeedsCount as WebFeedsCount
+from aioqzone.type.resp.h5 import FeedCount as H5FeedsCount
 from httpx import HTTPError, HTTPStatusError
 from qqqr.event import Emittable
 from qqqr.exception import HookError
 
-from ..event import HeartbeatEvent
-from ..utils.task import AsyncTimer
+from aioqzone_feed.event import HeartbeatEvent
+from aioqzone_feed.utils.task import AsyncTimer
 
 log = logging.getLogger(__name__)
+
+
+@singledispatch
+def new_feed_cnt(result) -> int:
+    raise TypeError(result, type(result))
+
+
+@new_feed_cnt.register
+def _friendFeeds_new_cnt(result: WebFeedsCount):
+    return result.friendFeeds_new_cnt
+
+
+@new_feed_cnt.register
+def _active_cnt(result: H5FeedsCount):
+    return result.active_cnt
 
 
 class HeartbeatApi(Emittable[HeartbeatEvent]):
     hb_timer = None
 
-    def __init__(self, api: QzoneWebAPI) -> None:
+    def __init__(self, api: Union[QzoneH5API, QzoneWebAPI]) -> None:
         super().__init__()
-        self.api = api
+        if isinstance(api, QzoneH5API):
+            self.hb_api = api.mfeeds_get_count
+        elif isinstance(api, QzoneWebAPI):
+            self.hb_api = api.get_feeds_count
+        else:
+            raise TypeError("wrong api instance:", type(api))
 
     async def heartbeat_refresh(self, *, retry: int = 2, retry_intv: float = 5):
         """A wrapper function that calls :external:meth:`aioqzone.api.QzoneWebAPI.get_feeds_count`
@@ -39,7 +62,7 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
         r = False
         for i in range(retry):
             try:
-                cnt = (await self.api.get_feeds_count()).friendFeeds_new_cnt
+                cnt = new_feed_cnt(await self.hb_api())
                 log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
                 if cnt:
                     self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))

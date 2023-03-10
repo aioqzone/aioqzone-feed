@@ -41,10 +41,12 @@ async def test_timer_exc():
     timer = AsyncTimer(0.1, inc)
     assert timer.state == "INIT"
     timer()
+    assert timer.task
     assert timer.state == "PENDING"
     assert timer.last_call == 0
     await asyncio.sleep(1)
     assert timer.state == "FINISHED"
+    timer.task.exception()
     assert timer.last_call > 0
     assert cnt == 4
 
@@ -65,9 +67,11 @@ async def test_timer_restart():
     for _ in range(2):
         cnt = 0
         timer()
+        assert timer.task
         assert timer.state == "PENDING"
         await asyncio.sleep(1)
         assert timer.state == "FINISHED"
+        timer.task.exception()
         assert cnt == 4
     assert entr == 2
 

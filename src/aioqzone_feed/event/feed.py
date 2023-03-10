@@ -1,20 +1,25 @@
 from typing import Union
 
 from aioqzone.type.resp import FeedRep
+from aioqzone.type.resp.h5 import FeedData
 from qqqr.event import Event
 
-from ..type import FeedContent
+from aioqzone_feed.type import BaseFeed, FeedContent
 
 
 class FeedEvent(Event):
     TY_BID = int
 
-    async def FeedDropped(self, bid: TY_BID, feed: Union[FeedRep, FeedContent]):
+    async def FeedDropped(self, bid: TY_BID, feed: BaseFeed):
         """
         The FeedDropped hook is called when a feed is dropped for hitting some rules (e.g. advertisement)
 
         :param bid: Used to identify feed batch (tell from different calling).
         :param feed: Used to pass a ref to the feed.
+
+        .. versionchanged:: 0.12.3
+
+            `feed` is a :class:`BaseFeed` type.
         """
 
         pass
@@ -42,7 +47,7 @@ class FeedEvent(Event):
 
         pass
 
-    async def StopFeedFetch(self, feed: FeedRep) -> bool:
+    async def StopFeedFetch(self, feed: Union[FeedData, FeedRep]) -> bool:
         """Used to judge if a feed fetching loop should break. Once this hook returns `True`, new pages will
         not be fetched any more. Note that the rest feeds of current page may still trigger `FeedProcEnd`.
 
@@ -50,5 +55,9 @@ class FeedEvent(Event):
         This will also be used in `FeedApi.get_feeds_by_count`.
 
         .. versionadded:: 0.12.0
+
+        .. versionchanged:: 0.12.3
+
+            `feed` might be a :class:`FeedData` for web/h5 api compatability.
         """
         return False

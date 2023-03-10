@@ -4,7 +4,7 @@ from aioqzone.api.loginman import MixedLoginMan
 from aioqzone.exception import LoginError
 from qqqr.utils.net import ClientAdapter
 
-from aioqzone_feed.api.feed import FeedApi
+from aioqzone_feed.api.feed.web import FeedWebApi as FeedApi
 from aioqzone_feed.event import FeedEvent
 from aioqzone_feed.type import FeedContent
 

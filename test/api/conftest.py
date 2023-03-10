@@ -42,6 +42,7 @@ async def man(client: ClientAdapter):
         int(env["TEST_UIN"]),
         strategy_to_order[env.get("TEST_QRSTRATEGY", "forbid")],  # forbid QR by default.
         pwd=env.get("TEST_PASSWORD", None),
+        h5=True,
     )
 
     yield man

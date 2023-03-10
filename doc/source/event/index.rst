@@ -1,7 +1,7 @@
 aioqzone-feed Events
 =========================
 
-aioqzone-feed follows the hook system defined in :external:mod:`qqqr.event`.
+aioqzone-feed follows the hook system defined in :external:doc:`qqqr/event/index`.
 
 .. automodule:: aioqzone_feed.event.feed
     :members:

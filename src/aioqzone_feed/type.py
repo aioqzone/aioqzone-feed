@@ -1,22 +1,47 @@
+import sys
+from functools import singledispatchmethod
 from typing import List, Optional, Union, cast
 
 from aioqzone.type.entity import ConEntity
 from aioqzone.type.internal import LikeData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep, VideoInfo, VideoRep
+from aioqzone.type.resp.h5 import FeedData, FeedOriginal, FeedVideo, PicData, Share
+from aioqzone.utils.entity import split_entities
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl
+from typing_extensions import Self
+
+if sys.version_info < (3, 9):
+    # python 3.8 patch for singledispatchmethod
+    # https://github.com/python/cpython/issues/83860
+    # workaround: https://github.com/python/cpython/issues/83860#issuecomment-1093857837
+
+    def _register(self, cls, method=None):
+        if hasattr(cls, "__func__"):
+            setattr(cls, "__annotations__", cls.__func__.__annotations__)
+        return self.dispatcher.register(cls, func=method)
+
+    singledispatchmethod.register = _register
 
 
 class VisualMedia(BaseModel):
     height: int
     width: int
-    thumbnail: HttpUrl
+    thumbnail: Optional[HttpUrl] = None
     raw: HttpUrl
     is_video: bool
 
+    class Config:
+        keep_untouched = (singledispatchmethod,)
+
+    @singledispatchmethod
+    def from_pic(cls, pic):
+        raise TypeError(pic)
+
+    @from_pic.register
     @classmethod
-    def from_picrep(cls, pic: PicRep):
+    def _(cls, pic: PicRep):
         if pic.is_video:
             assert isinstance(pic, VideoRep)
             return cls.from_video(pic.video_info)
@@ -29,8 +54,30 @@ class VisualMedia(BaseModel):
                 is_video=False,
             )
 
+    @from_pic.register
     @classmethod
-    def from_video(cls, video: VideoInfo):
+    def _(cls, pic: PicData):
+        if pic.videodata:
+            return cls.from_video(pic.videodata)
+
+        raw = pic.photourl.largest
+        thumb = pic.photourl.smallest
+        return cls(
+            is_video=False,
+            height=pic.origin_height,
+            width=pic.origin_width,
+            raw=raw.url,
+            thumbnail=thumb.url,
+        )
+
+    @singledispatchmethod
+    @classmethod
+    def from_video(cls, video):
+        raise TypeError(video)
+
+    @from_video.register
+    @classmethod
+    def _(cls, video: VideoInfo):
         return cls(
             height=video.cover_height,
             width=video.cover_width,
@@ -39,12 +86,24 @@ class VisualMedia(BaseModel):
             is_video=True,
         )
 
+    @from_video.register
+    @classmethod
+    def _(cls, video: FeedVideo):
+        cover = video.coverurl.largest
+        return cls(
+            height=cover.height,
+            width=cover.width,
+            thumbnail=cover.url,
+            raw=video.videourl,
+            is_video=True,
+        )
+
 
 class BaseFeed(BaseModel):
     """FeedModel is a model for storing a feed, with the info to hashing and retrieving the feed."""
 
     appid: int
-    typeid: int
+    typeid: int = 0
     fid: str
     """Feed id, a hex string with 24/32 chars, or a much shorter placeholder.
 
@@ -72,6 +131,7 @@ class BaseFeed(BaseModel):
 
     class Config:
         orm_mode = True
+        keep_untouched = (singledispatchmethod,)
 
     def __hash__(self) -> int:
         return hash((self.uin, self.abstime))
@@ -97,8 +157,14 @@ class BaseFeed(BaseModel):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(uin={self.uin},abstime={self.abstime}')"
 
+    @singledispatchmethod
     @classmethod
-    def from_feedrep(cls, obj: FeedRep, **kwds):
+    def from_feed(cls, obj, **kwds) -> Self:
+        raise TypeError(obj)
+
+    @from_feed.register
+    @classmethod
+    def _(cls, obj: FeedRep, **kwds):
         return cls(
             appid=obj.appid,
             typeid=obj.typeid,
@@ -109,15 +175,39 @@ class BaseFeed(BaseModel):
             **kwds,
         )
 
+    @from_feed.register
+    @classmethod
+    def _(cls, obj: FeedData, **kwds):
+        return cls(
+            appid=obj.common.appid,
+            typeid=obj.common.typeid,
+            fid=obj.cellid,
+            abstime=obj.abstime,
+            uin=obj.userinfo.uin,
+            nickname=obj.userinfo.nickname,
+            **kwds,
+        )
+
 
 class BaseDetail(BaseModel):
-    entities: Optional[List[ConEntity]] = None
+    entities: List[ConEntity] = Field(default_factory=list)
     forward: Union[HttpUrl, str, BaseFeed, None] = None
     """unikey to the feed, or the content itself."""
-    media: Optional[List[VisualMedia]] = None
+    media: List[VisualMedia] = Field(default_factory=list)
 
-    def set_detail(self, obj: FeedDetailRep):
-        self.entities = cast(Optional[list], obj.entities)
+    class Config:
+        keep_untouched = (singledispatchmethod,)
+
+    @singledispatchmethod
+    def set_detail(self, obj) -> None:
+        raise TypeError("Invalid type", type(obj))
+
+    @set_detail.register
+    def _set_detail_from_detail(self, obj: FeedDetailRep):
+        self.entities = obj.entities or []
+        if isinstance(self, BaseFeed):
+            self.nickname = self.nickname or obj.name
+
         if obj.rt_uin:
             assert obj.rt_con
             unikey = LikeData.persudo_unikey(311, obj.rt_uin, fid=obj.rt_fid)
@@ -130,15 +220,15 @@ class BaseDetail(BaseModel):
                 abstime=approx_ts(obj.rt_createTime) if obj.rt_createTime else 0,
                 curkey=unikey,
                 unikey=unikey,
-                entities=cast(Optional[list], obj.rt_con.entities),
+                entities=obj.rt_con.entities or [],
             )
         if obj.pic:
             assert all(i.valid_url() for i in obj.pic)
             if self.forward is None:
-                self.media = [VisualMedia.from_picrep(i) for i in obj.pic]
+                self.media = [VisualMedia.from_pic(i) for i in obj.pic]
             else:
                 assert isinstance(self.forward, FeedContent)
-                self.forward.media = [VisualMedia.from_picrep(i) for i in obj.pic]
+                self.forward.media = [VisualMedia.from_pic(i) for i in obj.pic]
 
         if obj.video:
             if self.forward is None:
@@ -149,10 +239,40 @@ class BaseDetail(BaseModel):
                 self.forward.media = self.forward.media or []
                 self.forward.media.extend(VisualMedia.from_video(i) for i in obj.video)
 
-    def set_fromhtml(self, obj: HtmlContent, forward: Optional[Union[HttpUrl, str]] = None):
-        self.entities = cast(Optional[list], obj.entities)
-        self.forward = forward
-        self.media = [VisualMedia.from_picrep(i) for i in obj.pic] if obj.pic else None
+    @set_detail.register
+    def _set_detail_from_feeddata(self, obj: FeedData):
+        self.entities = split_entities(obj.summary.summary)
+        if obj.original:
+            if isinstance(obj.original, FeedOriginal):
+                org = obj.original
+                self.forward = FeedContent(
+                    entities=split_entities(org.summary.summary),
+                    appid=org.common.appid,
+                    typeid=org.common.typeid,
+                    fid=org.cellid,
+                    abstime=org.common.time,
+                    uin=org.userinfo.uin,
+                    nickname=org.userinfo.nickname,
+                    curkey=org.common.curkey,
+                    unikey=org.common.orgkey,
+                )
+                if org.pic:
+                    self.forward.media = [VisualMedia.from_pic(i) for i in org.pic.picdata]
+
+            elif isinstance(obj.original, Share):
+                self.forward = obj.original.common.orgkey
+
+        if obj.pic:
+            self.media = [VisualMedia.from_pic(i) for i in obj.pic.picdata]
+        if obj.video:
+            self.media.append(VisualMedia.from_video(obj.video))
+
+    @set_detail.register
+    def set_fromhtml(self, obj: HtmlContent):
+        if obj.entities:
+            self.entities = obj.entities
+        if obj.pic:
+            self.media = [VisualMedia.from_pic(i) for i in obj.pic]
 
 
 class FeedContent(BaseFeed, BaseDetail):
@@ -174,7 +294,3 @@ class FeedContent(BaseFeed, BaseDetail):
 
     def __repr__(self) -> str:
         return super().__repr__() + f'(content="{self.entities}",#media={len(self.media or "0")})'
-
-    def set_detail(self, obj: FeedDetailRep):
-        self.nickname = self.nickname or obj.name
-        return super().set_detail(obj)
