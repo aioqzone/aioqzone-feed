@@ -1,6 +1,7 @@
 import sys
+from dataclasses import dataclass, field
 from functools import singledispatchmethod
-from typing import List, Optional, Union, cast
+from typing import List, Optional, Union
 
 from aioqzone.type.entity import ConEntity
 from aioqzone.type.internal import LikeData
@@ -9,7 +10,6 @@ from aioqzone.type.resp.h5 import FeedData, FeedOriginal, FeedVideo, PicData, Sh
 from aioqzone.utils.entity import split_entities
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
-from pydantic import BaseModel, Field, HttpUrl
 from typing_extensions import Self
 
 if sys.version_info < (3, 9):
@@ -25,15 +25,13 @@ if sys.version_info < (3, 9):
     singledispatchmethod.register = _register
 
 
-class VisualMedia(BaseModel):
+@dataclass
+class VisualMedia:
     height: int
     width: int
-    thumbnail: Optional[HttpUrl] = None
-    raw: HttpUrl
+    raw: str
     is_video: bool
-
-    class Config:
-        keep_untouched = (singledispatchmethod,)
+    thumbnail: Optional[str] = None
 
     @singledispatchmethod
     def from_pic(cls, pic):
@@ -49,8 +47,8 @@ class VisualMedia(BaseModel):
             return cls(
                 height=pic.height,
                 width=pic.width,
-                thumbnail=cast(HttpUrl, pic.thumb),
-                raw=cast(HttpUrl, pic.raw),
+                thumbnail=pic.thumb,
+                raw=pic.raw,
                 is_video=False,
             )
 
@@ -99,11 +97,12 @@ class VisualMedia(BaseModel):
         )
 
 
-class BaseFeed(BaseModel):
+@dataclass
+class BaseFeed:
     """FeedModel is a model for storing a feed, with the info to hashing and retrieving the feed."""
 
     appid: int
-    typeid: int = 0
+    typeid: int
     fid: str
     """Feed id, a hex string with 24/32 chars, or a much shorter placeholder.
 
@@ -117,9 +116,9 @@ class BaseFeed(BaseModel):
     """Feed owner uin. (hostuin)"""
     nickname: str
     """Feed owner nickname."""
-    curkey: Optional[Union[HttpUrl, str]] = None
+    curkey: Optional[str] = None
     """The identifier to this feed. May be a url, or just a identifier string."""
-    unikey: Optional[Union[HttpUrl, str]] = None
+    unikey: Optional[str] = None
     """The identifier to the original content. May be a url in all kinds
     (sometimes not strictly in a correct format, but it is from the meaning)"""
     topicId: str = ""
@@ -128,10 +127,6 @@ class BaseFeed(BaseModel):
 
     .. versionadded:: 0.9.2a1
     """
-
-    class Config:
-        orm_mode = True
-        keep_untouched = (singledispatchmethod,)
 
     def __hash__(self) -> int:
         return hash((self.uin, self.abstime))
@@ -189,14 +184,12 @@ class BaseFeed(BaseModel):
         )
 
 
-class BaseDetail(BaseModel):
-    entities: List[ConEntity] = Field(default_factory=list)
-    forward: Union[HttpUrl, str, BaseFeed, None] = None
+@dataclass
+class BaseDetail:
+    entities: List[ConEntity] = field(default_factory=list)
+    forward: Union["FeedContent", str, None] = None
     """unikey to the feed, or the content itself."""
-    media: List[VisualMedia] = Field(default_factory=list)
-
-    class Config:
-        keep_untouched = (singledispatchmethod,)
+    media: List[VisualMedia] = field(default_factory=list)
 
     @singledispatchmethod
     def set_detail(self, obj) -> None:
@@ -275,7 +268,8 @@ class BaseDetail(BaseModel):
             self.media = [VisualMedia.from_pic(i) for i in obj.pic]
 
 
-class FeedContent(BaseFeed, BaseDetail):
+@dataclass
+class FeedContent(BaseDetail, BaseFeed):
     """FeedContent is feed with contents. This might be the common structure to
     represent a feed as what it's known."""
 
