@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 import time
 from typing import Optional
 
@@ -7,7 +8,6 @@ from aioqzone.api import Loginable
 from aioqzone.api.h5 import QzoneH5API
 from aioqzone.exception import LoginError, QzoneError
 from aioqzone.type.resp.h5 import FeedData
-from exceptiongroup import ExceptionGroup
 from httpx import HTTPStatusError
 from qqqr.event import Emittable, hook_guard
 from qqqr.exception import UserBreak
@@ -19,6 +19,10 @@ from aioqzone_feed.type import FeedContent
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
+
+
+if sys.version_info < (3, 11):
+    from exceptiongroup import ExceptionGroup
 
 
 class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):

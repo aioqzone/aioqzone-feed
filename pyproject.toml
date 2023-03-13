@@ -15,7 +15,7 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 [tool.poetry.dependencies]
 python = "^3.8"
 aioqzone = { version = "^0.12.8.dev1", source = "PyPI", allow-prereleases = true }
-
+exceptiongroup = { version = ">=1.0.0rc8", python = "<3.11" }
 
 # dependency groups
 [tool.poetry.group.test]
