@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-10 09:10+0800\n"
+"POT-Creation-Date: 2023-03-13 13:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -110,29 +110,29 @@ msgstr ""
 msgid "not logined"
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:8
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:11
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:9
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:12
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:8
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:11 of
 msgid "unexcpected error"
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:10
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:13
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:11
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:14
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:10
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:13 of
 msgid ":py:class:`int`"
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:11
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:14
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:12
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:15
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:11
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:14 of
 msgid "feeds num got actually."
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:13
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:16
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:14
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:17
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:13
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:16 of
 msgid "You may need :meth:`.new_batch` to generate a new batch id."
@@ -142,7 +142,6 @@ msgstr ""
 msgid "`FeedEvent.StopFeedFetch` works in this method as well."
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:1
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:1 of
 msgid "Get feeds by abstime (seconds). Range: `[start - second, start]`."
 msgstr ""
@@ -200,4 +199,13 @@ msgstr ""
 msgid ""
 "Drop feeds according to some rules. No need to emit :meth:`FeedEvent.FeedDropped` event, it is "
 "handled by :meth:`_dispatch_feed`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:8
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:11 of
+msgid "max error time exceeds"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:1 of
+msgid "Get feeds by abstime (seconds). Range: [`start` - `seconds`, `start`]."
 msgstr ""

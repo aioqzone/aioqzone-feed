@@ -63,7 +63,7 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
         for i in range(retry):
             try:
                 cnt = new_feed_cnt(await self.hb_api())
-                log.debug("heartbeat: friendFeeds_new_cnt=%d", cnt)
+                log.debug("heartbeat: new_feed_cnt=%d", cnt)
                 if cnt:
                     self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
                 return False  # don't stop
