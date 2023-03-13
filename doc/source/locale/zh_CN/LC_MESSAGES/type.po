@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-09 14:12+0800\n"
+"POT-Creation-Date: 2023-03-13 13:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,37 +20,6 @@ msgstr ""
 
 #: ../../source/type.rst:2
 msgid "aioqzone-feed Types"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail aioqzone_feed.type.BaseFeed aioqzone_feed.type.FeedContent
-#: aioqzone_feed.type.VisualMedia of
-msgid "Config"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail:1 aioqzone_feed.type.BaseFeed:1 aioqzone_feed.type.FeedContent:1
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid "**keep_untouched**: *tuple = (<class 'functools.singledispatchmethod'>,)*"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail aioqzone_feed.type.BaseFeed aioqzone_feed.type.FeedContent
-#: aioqzone_feed.type.VisualMedia of
-msgid "Fields"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail:1 of
-msgid ""
-":py:obj:`entities (List[aioqzone.type.entity.ConEntity]) "
-"<aioqzone_feed.type.BaseDetail.entities>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail:1 of
-msgid ""
-":py:obj:`forward (pydantic.networks.HttpUrl | str | aioqzone_feed.type.BaseFeed | None) "
-"<aioqzone_feed.type.BaseDetail.forward>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail:1 of
-msgid ":py:obj:`media (List[aioqzone_feed.type.VisualMedia]) <aioqzone_feed.type.BaseDetail.media>`"
 msgstr ""
 
 #: ../../docstring aioqzone_feed.type.BaseDetail.forward:1 of
@@ -67,46 +36,6 @@ msgstr ""
 
 #: aioqzone_feed.type.BaseFeed:1 of
 msgid "FeedModel is a model for storing a feed, with the info to hashing and retrieving the feed."
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 aioqzone_feed.type.FeedContent:1 of
-msgid "**orm_mode**: *bool = True*"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`abstime (int) <aioqzone_feed.type.BaseFeed.abstime>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`appid (int) <aioqzone_feed.type.BaseFeed.appid>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`curkey (pydantic.networks.HttpUrl | str | None) <aioqzone_feed.type.BaseFeed.curkey>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`fid (str) <aioqzone_feed.type.BaseFeed.fid>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`nickname (str) <aioqzone_feed.type.BaseFeed.nickname>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`topicId (str) <aioqzone_feed.type.BaseFeed.topicId>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`typeid (int) <aioqzone_feed.type.BaseFeed.typeid>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`uin (int) <aioqzone_feed.type.BaseFeed.uin>`"
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid ":py:obj:`unikey (pydantic.networks.HttpUrl | str | None) <aioqzone_feed.type.BaseFeed.unikey>`"
 msgstr ""
 
 #: ../../docstring aioqzone_feed.type.BaseFeed.abstime:1 of
@@ -126,26 +55,6 @@ msgid ""
 "fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is a 24 or 32 "
 "length hex string, which might be satisfied. But for shares that appid!=311, it is a short "
 "string and is commonly used by multiple shares. So do not distinguish all feeds on this field."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.BaseFeed.nickname:1 of
-msgid "Feed owner nickname."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.BaseFeed.topicId:1 of
-msgid ""
-"This is used to reply to this feed, or can be used to update this feed if current user own this "
-"feed."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.BaseFeed.uin:1 of
-msgid "Feed owner uin. (hostuin)"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.BaseFeed.unikey:1 of
-msgid ""
-"The identifier to the original content. May be a url in all kinds (sometimes not strictly in a "
-"correct format, but it is from the meaning)"
 msgstr ""
 
 #: functools.singledispatchmethod.__get__.<locals>._method:1 of
@@ -187,50 +96,30 @@ msgid ""
 "staticmethod builtin."
 msgstr ""
 
+#: ../../docstring aioqzone_feed.type.BaseFeed.nickname:1 of
+msgid "Feed owner nickname."
+msgstr ""
+
+#: ../../docstring aioqzone_feed.type.BaseFeed.topicId:1 of
+msgid ""
+"This is used to reply to this feed, or can be used to update this feed if current user own this "
+"feed."
+msgstr ""
+
+#: ../../docstring aioqzone_feed.type.BaseFeed.uin:1 of
+msgid "Feed owner uin. (hostuin)"
+msgstr ""
+
+#: ../../docstring aioqzone_feed.type.BaseFeed.unikey:1 of
+msgid ""
+"The identifier to the original content. May be a url in all kinds (sometimes not strictly in a "
+"correct format, but it is from the meaning)"
+msgstr ""
+
 #: aioqzone_feed.type.FeedContent:1 of
 msgid ""
 "FeedContent is feed with contents. This might be the common structure to represent a feed as "
 "what it's known."
-msgstr ""
-
-#: aioqzone_feed.type.FeedContent:1 of
-msgid ":py:obj:`islike (int) <aioqzone_feed.type.FeedContent.islike>`"
-msgstr ""
-
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid ":py:obj:`height (int) <aioqzone_feed.type.VisualMedia.height>`"
-msgstr ""
-
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid ":py:obj:`is_video (bool) <aioqzone_feed.type.VisualMedia.is_video>`"
-msgstr ""
-
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid ":py:obj:`raw (pydantic.networks.HttpUrl) <aioqzone_feed.type.VisualMedia.raw>`"
-msgstr ""
-
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid ":py:obj:`thumbnail (pydantic.networks.HttpUrl | None) <aioqzone_feed.type.VisualMedia.thumbnail>`"
-msgstr ""
-
-#: aioqzone_feed.type.VisualMedia:1 of
-msgid ":py:obj:`width (int) <aioqzone_feed.type.VisualMedia.width>`"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.VisualMedia.raw aioqzone_feed.type.VisualMedia.thumbnail of
-msgid "Constraints"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.VisualMedia.raw:1 aioqzone_feed.type.VisualMedia.thumbnail:1 of
-msgid "**minLength** = 1"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.VisualMedia.raw:1 aioqzone_feed.type.VisualMedia.thumbnail:1 of
-msgid "**maxLength** = 2083"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.VisualMedia.raw:1 aioqzone_feed.type.VisualMedia.thumbnail:1 of
-msgid "**format** = uri"
 msgstr ""
 
 #~ msgid "Fields"
@@ -366,4 +255,32 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "**format** = uri"
+#~ msgstr ""
+
+#~ msgid "**keep_untouched**: *tuple = (<class 'functools.singledispatchmethod'>,)*"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":py:obj:`entities (List[aioqzone.type.entity.ConEntity]) "
+#~ "<aioqzone_feed.type.BaseDetail.entities>`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":py:obj:`forward (pydantic.networks.HttpUrl | str | "
+#~ "aioqzone_feed.type.BaseFeed | None) "
+#~ "<aioqzone_feed.type.BaseDetail.forward>`"
+#~ msgstr ""
+
+#~ msgid ":py:obj:`media (List[aioqzone_feed.type.VisualMedia]) <aioqzone_feed.type.BaseDetail.media>`"
+#~ msgstr ""
+
+#~ msgid ":py:obj:`curkey (pydantic.networks.HttpUrl | str | None) <aioqzone_feed.type.BaseFeed.curkey>`"
+#~ msgstr ""
+
+#~ msgid ":py:obj:`unikey (pydantic.networks.HttpUrl | str | None) <aioqzone_feed.type.BaseFeed.unikey>`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":py:obj:`thumbnail (pydantic.networks.HttpUrl | None) "
+#~ "<aioqzone_feed.type.VisualMedia.thumbnail>`"
 #~ msgstr ""

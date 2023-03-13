@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 import time
 from typing import Optional
 
@@ -18,6 +19,10 @@ from aioqzone_feed.type import FeedContent
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
+
+
+if sys.version_info < (3, 11):
+    from exceptiongroup import ExceptionGroup
 
 
 class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
@@ -51,6 +56,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         :raises `qqqr.exception.UserBreak`: qr login canceled
         :raises `aioqzone.exception.LoginError`: not logined
+        :raises `ExceptionGroup`: max error time exceeds
         :raises `SystemExit`: unexcpected error
 
         :return: feeds num got actually.
@@ -61,12 +67,18 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         got = 0
         aux = ""
         exceed_pred = hook_guard(self.hook.StopFeedFetch)
+        err = []
         for page in range(1000):
             try:
                 resp = await self.get_active_feeds(aux)
             except (QzoneError, HTTPStatusError) as e:
+                err.append(e)
                 log.warning(f"Error when fetching page. Skipped. {e}")
+                if len(err) >= 5:
+                    raise ExceptionGroup("max error exceeds", err)
+                await asyncio.sleep(0.5)
                 continue
+
             aux = resp.attachinfo
             for fd in resp.vFeeds[: count - got]:
                 if await exceed_pred(fd):
@@ -83,7 +95,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         seconds: float,
         start: Optional[float] = None,
     ) -> int:
-        """Get feeds by abstime (seconds). Range: `[start - second, start]`.
+        """Get feeds by abstime (seconds). Range: [`start` - `seconds`, `start`].
 
         :param seconds: filter on abstime, calculate from `start`.
         :param start: start timestamp, defaults to None, means now.
@@ -91,6 +103,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         :raises `qqqr.exception.UserBreak`: qr login canceled
         :raises `aioqzone.exception.LoginError`: not logined
+        :raises `ExceptionGroup`: max error time exceeds
         :raises `SystemExit`: unexcpected error
 
         :return: feeds num got actually.
@@ -103,12 +116,18 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         got = 0
         aux = ""
         exceed_pred = hook_guard(self.hook.StopFeedFetch)
+        err = []
         for page in range(1000):
             try:
                 resp = await self.get_active_feeds(aux)
             except (QzoneError, HTTPStatusError) as e:
+                err.append(e)
                 log.warning(f"Error when fetching page. Skipped. {e}")
+                if len(err) >= 5:
+                    raise ExceptionGroup("max error exceeds", err)
+                await asyncio.sleep(0.5)
                 continue
+
             aux = resp.attachinfo
             for fd in resp.vFeeds:
                 if fd.abstime > start:
