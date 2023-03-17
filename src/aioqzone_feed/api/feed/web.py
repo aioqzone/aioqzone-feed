@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 import time
 from typing import Any, Callable, Optional, TypeVar
 
@@ -7,6 +8,7 @@ from aioqzone.api import Loginable, QzoneWebAPI
 from aioqzone.exception import CorruptError, LoginError, QzoneError, SkipLoginInterrupt
 from aioqzone.type.internal import AlbumData
 from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
+from aioqzone.utils.catch import HTTPStatusErrorDispatch, QzoneErrorDispatch
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from httpx import HTTPError, HTTPStatusError
 from lxml.html import HtmlElement, fromstring
@@ -19,6 +21,9 @@ from aioqzone_feed.api.heartbeat import HeartbeatApi
 from aioqzone_feed.event import FeedEvent
 from aioqzone_feed.type import FeedContent, VisualMedia
 
+if sys.version_info < (3, 11):
+    from exceptiongroup import ExceptionGroup
+
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
@@ -26,9 +31,9 @@ T = TypeVar("T")
 
 
 def add_done_callback(task, cb):
-    # type: (asyncio.Task[T], Callable[[Optional[T]], Any]) -> asyncio.Task[T]
+    # type: (asyncio.Future[T], Callable[[Optional[T]], Any]) -> asyncio.Future[T]
     def safe_unpack(task):
-        # type: (asyncio.Task[T]) -> Optional[T]
+        # type: (asyncio.Future[T]) -> Optional[T]
         try:
             return task.result()
         except (
@@ -63,6 +68,17 @@ def add_done_callback(task, cb):
     return task
 
 
+class exc_stack:
+    def __init__(self, max_len: int = 5) -> None:
+        self._exc = []  # type: list[Exception]
+        self.max_len = max_len
+
+    def append(self, e: Exception):
+        self._exc.append(e)
+        if len(self._exc) >= self.max_len:
+            raise ExceptionGroup("max retry exceeds", self._exc)
+
+
 class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
     def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
         super().__init__(client, loginman)
@@ -88,9 +104,11 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
 
         :param count: feeds count to get, max as 10, defaults to 10
 
-        :raises `qqqr.exception.UserBreak`: qr login canceled
-        :raises `aioqzone.exception.LoginError`: not logined
-        :raises `SystemExit`: unexcpected error
+        :raise `qqqr.exception.UserBreak`: qr login canceled
+        :raise `aioqzone.exception.LoginError`: not logined
+        :raise `QzoneError`: when code != -3000
+        :raise `HTTPStatusError`: when code != 403
+        :raise `ExceptionGroup`: max retry exceeds
 
         :return: feeds num got actually.
 
@@ -100,25 +118,39 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
 
             `FeedEvent.StopFeedFetch` works in this method as well.
         """
+        exceed_pred = hook_guard(self.hook.StopFeedFetch)
         stop_fetching = False
         got = 0
         aux = None
-        exceed_pred = hook_guard(self.hook.StopFeedFetch)
+        errs = exc_stack()
+        feeds = []
+
+        def error_dispatch(e):
+            feeds.clear()
+            errs.append(e)
+            log.warning(f"error fetching page: {e}")
+
         for page in range(1000):
-            try:
+            with QzoneErrorDispatch() as qse, HTTPStatusErrorDispatch() as hse:
+                qse.dispatch(-3000, dispatcher=error_dispatch)
+                hse.dispatch(403, dispatcher=error_dispatch)
                 resp = await self.feeds3_html_more(page, count=count - got, aux=aux)
-            except (QzoneError, HTTPStatusError) as e:
-                log.warning(f"Error when fetching page. Skipped. {e}")
-                continue
-            aux = resp.aux
-            for fd in resp.feeds[: count - got]:
+                aux = resp.aux
+                feeds = resp.feeds
+                stop_fetching = not aux.hasMoreFeeds
+
+            for fd in feeds[: count - got]:
                 if await exceed_pred(fd):
                     stop_fetching = True
                     continue
+                if (got := got + 1) >= count:
+                    stop_fetching = True
+                    break
                 self._dispatch_feed(fd)
-                got += 1
-            if stop_fetching or got >= count or not resp.aux.hasMoreFeeds:
+
+            if stop_fetching:
                 break
+
         return got
 
     async def get_feeds_by_second(
@@ -132,9 +164,11 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         :param start: start timestamp, defaults to None, means now.
         :param exceed_pred: another criterion to judge if the feed is out of range, defaults to None
 
-        :raises `qqqr.exception.UserBreak`: qr login canceled
-        :raises `aioqzone.exception.LoginError`: not logined
-        :raises `SystemExit`: unexcpected error
+        :raise `qqqr.exception.UserBreak`: qr login canceled
+        :raise `aioqzone.exception.LoginError`: not logined
+        :raise `QzoneError`: when code != -3000
+        :raise `HTTPStatusError`: when code != 403
+        :raise `ExceptionGroup`: max retry exceeds
 
         :return: feeds num got actually.
 
@@ -150,23 +184,35 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         got = 0
         aux = None
         exceed_pred = hook_guard(self.hook.StopFeedFetch)
+        errs = exc_stack()
+        feeds = []
+
+        def error_dispatch(e):
+            feeds.clear()
+            errs.append(e)
+            log.warning(f"error fetching page: {e}")
+
         for page in range(1000):
-            try:
+            with QzoneErrorDispatch() as qse, HTTPStatusErrorDispatch() as hse:
+                qse.dispatch(-3000, dispatcher=error_dispatch)
+                hse.dispatch(403, dispatcher=error_dispatch)
                 resp = await self.feeds3_html_more(page, aux=aux)
-            except (QzoneError, HTTPStatusError) as e:
-                log.warning(f"Error when fetching page. Skipped. {e}")
-                continue
-            aux = resp.aux
-            for fd in resp.feeds:
+                aux = resp.aux
+                feeds = resp.feeds
+                stop_fetching = not aux.hasMoreFeeds
+
+            for fd in feeds:
                 if fd.abstime > start:
                     continue
                 if fd.abstime < end or await exceed_pred(fd):
                     stop_fetching = True
                     continue
-                self._dispatch_feed(fd)
                 got += 1
-            if stop_fetching or not resp.aux.hasMoreFeeds:
+                self._dispatch_feed(fd)
+
+            if stop_fetching:
                 break
+
         return got
 
     def drop_rule(self, feed: FeedRep) -> bool:

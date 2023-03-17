@@ -1,13 +1,18 @@
+import sys
+from unittest.mock import patch
+
 import pytest
 import pytest_asyncio
 from aioqzone.api.loginman import MixedLoginMan
-from aioqzone.exception import LoginError
+from aioqzone.exception import LoginError, QzoneError
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.feed.h5 import FeedH5Api as FeedApi
 from aioqzone_feed.event import FeedEvent
 from aioqzone_feed.type import FeedContent
 
+if sys.version_info < (3, 11):
+    from exceptiongroup import ExceptionGroup
 pytestmark = pytest.mark.asyncio
 
 
@@ -34,6 +39,20 @@ class FeedEvent4Test(FeedEvent):
 
     async def FeedDropped(self, bid: int, feed):
         self.drop.append(bid)
+
+
+async def test_exception(api: FeedApi):
+    with patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)), pytest.raises(
+        ExceptionGroup, match="max retry exceeds"
+    ) as r:
+        await api.get_feeds_by_count()
+        assert len(r.value.exceptions) == 5
+
+    with patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)), pytest.raises(
+        ExceptionGroup, match="max retry exceeds"
+    ) as r:
+        await api.get_feeds_by_second(86400)
+        assert len(r.value.exceptions) == 5
 
 
 @pytest_asyncio.fixture(scope="module")
