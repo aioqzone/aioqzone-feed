@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-13 13:11+0800\n"
+"POT-Creation-Date: 2023-03-17 22:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -110,35 +110,46 @@ msgstr ""
 msgid "not logined"
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:9
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:12
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:8
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:11 of
-msgid "unexcpected error"
+msgid "when code != -3000"
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:11
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:14
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:9
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:12
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:9
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:12 of
+msgid "when code != 403"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:10
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:13
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:10
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:13 of
-msgid ":py:class:`int`"
+msgid "max retry exceeds"
 msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:12
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:15
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:11
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:14 of
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:12
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:15 of
+msgid ":py:class:`int`"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:16
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:13
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:16 of
 msgid "feeds num got actually."
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:14
-#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:17
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:13
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:16 of
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:15
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:18
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:15
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:18 of
 msgid "You may need :meth:`.new_batch` to generate a new batch id."
 msgstr ""
 
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:17 of
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:19 of
 msgid "`FeedEvent.StopFeedFetch` works in this method as well."
 msgstr ""
 
@@ -161,7 +172,7 @@ msgstr ""
 msgid "another criterion to judge if the feed is out of range, defaults to None"
 msgstr ""
 
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:20 of
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:22 of
 msgid "removed ``exceed_pred``, use `FeedEvent.StopFeedFetch` instead."
 msgstr ""
 
@@ -203,9 +214,19 @@ msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:8
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:11 of
-msgid "max error time exceeds"
+msgid "when code not in -(3000, -10000)"
+msgstr ""
+
+#: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:13 of
+msgid "number of feeds that we got actually."
 msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:1 of
 msgid "Get feeds by abstime (seconds). Range: [`start` - `seconds`, `start`]."
 msgstr ""
+
+#~ msgid "unexcpected error"
+#~ msgstr ""
+
+#~ msgid "max error time exceeds"
+#~ msgstr ""

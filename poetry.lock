@@ -2,24 +2,25 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.12.8.dev1"
+version = "0.12.10.dev2"
 description = "Python wrapper for Qzone web login and Qzone http api."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.12.8.dev1-py3-none-any.whl", hash = "sha256:b3bfe8b6ee684d20b98448a26fd854774b206582e9c2317ecce1ad0e34bce526"},
-    {file = "aioqzone-0.12.8.dev1.tar.gz", hash = "sha256:56c71d20e171195d00946dd8e99fdd382521158e2eb225ae9dadd2b3b5d39f8c"},
+    {file = "aioqzone-0.12.10.dev2-py3-none-any.whl", hash = "sha256:5ea4b426fa44d3900b0f0c2103349d6e2f760e49b6eb9bb0fbd62a3010709b87"},
+    {file = "aioqzone-0.12.10.dev2.tar.gz", hash = "sha256:bee1da8abaef82e20592307c0f22a3ecdf6d9a1bd435dc829ee4a72c6f52bd17"},
 ]
 
 [package.dependencies]
 cssselect = ">=1.1.0,<2.0.0"
+exceptiongroup = {version = ">=1.1.1,<2.0.0", markers = "python_version < \"3.11\""}
 httpx = ">=0.23.0,<0.24.0"
 lxml = ">=4.9.1,<5.0.0"
 numpy = ">=1.22.3,<2.0.0"
 pillow = ">=9.4.0,<10.0.0"
 pydantic = ">=1.10.4,<2.0.0"
-pytz = ">=2022.1,<2023.0"
+pytz = "*"
 rsa = ">=4.8,<5.0"
 
 [[package]]
@@ -1481,4 +1482,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "5dd3f0d82556db201e5770e4b093a7e474d4d5a8b16763ade12ce1e2f72e5f5b"
+content-hash = "db9592f0216ce298a51d9d2df9429db6074805f92762d7cfe321af340678b24b"
