@@ -127,6 +127,7 @@ class BaseFeed:
 
     .. versionadded:: 0.9.2a1
     """
+    islike: bool = False
 
     def __hash__(self) -> int:
         return hash((self.uin, self.abstime))
@@ -180,8 +181,18 @@ class BaseFeed:
             abstime=obj.abstime,
             uin=obj.userinfo.uin,
             nickname=obj.userinfo.nickname,
+            unikey=obj.common.orgkey,
+            curkey=obj.common.curkey,
+            islike=obj.like.isliked,
             **kwds,
         )
+
+    def set_frominfo(self, info: HtmlInfo):
+        self.curkey = info.curkey
+        self.unikey = info.unikey
+        self.islike = bool(info.islike)
+        self.topicId = info.topicid
+        self.nickname = self.nickname or info.nickname
 
 
 @dataclass
@@ -273,18 +284,9 @@ class FeedContent(BaseDetail, BaseFeed):
     """FeedContent is feed with contents. This might be the common structure to
     represent a feed as what it's known."""
 
-    islike: int = 0
-
     def __hash__(self) -> int:
         media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0
         return hash((self.uin, self.abstime, self.forward, media_hash))
-
-    def set_frominfo(self, info: HtmlInfo):
-        self.curkey = info.curkey
-        self.unikey = info.unikey
-        self.islike = info.islike
-        self.topicId = info.topicid
-        self.nickname = self.nickname or info.nickname
 
     def __repr__(self) -> str:
         return super().__repr__() + f'(content="{self.entities}",#media={len(self.media or "0")})'
