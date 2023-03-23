@@ -41,6 +41,7 @@ def add_done_callback(task, cb):
             HTTPStatusError,
             SkipLoginInterrupt,
             KeyboardInterrupt,
+            UserBreak,
             CorruptError,
         ) as e:
             log.warning(f"{e.__class__.__name__} caught in {task}.")
@@ -139,6 +140,8 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
                 feeds = resp.feeds
                 stop_fetching = not aux.hasMoreFeeds
 
+            log.debug(aux, extra=dict(got=got))
+
             for fd in feeds[: count - got]:
                 if await exceed_pred(fd):
                     stop_fetching = True
@@ -200,6 +203,8 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
                 aux = resp.aux
                 feeds = resp.feeds
                 stop_fetching = not aux.hasMoreFeeds
+
+            log.debug(aux, extra=dict(got=got))
 
             for fd in feeds:
                 if fd.abstime > start:

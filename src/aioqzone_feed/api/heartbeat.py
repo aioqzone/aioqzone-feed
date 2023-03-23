@@ -11,7 +11,7 @@ from aioqzone.type.resp import FeedsCount as WebFeedsCount
 from aioqzone.type.resp.h5 import FeedCount as H5FeedsCount
 from httpx import HTTPError, HTTPStatusError
 from qqqr.event import Emittable
-from qqqr.exception import HookError
+from qqqr.exception import HookError, UserBreak
 
 from aioqzone_feed.event import HeartbeatEvent
 from aioqzone_feed.utils.task import AsyncTimer
@@ -87,6 +87,7 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
                 HTTPError,
                 SkipLoginInterrupt,
                 KeyboardInterrupt,
+                UserBreak,
                 asyncio.CancelledError,
             ) as e:
                 # retry in next trigger
