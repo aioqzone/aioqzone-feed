@@ -41,6 +41,7 @@ def add_done_callback(task, cb):
             HTTPStatusError,
             SkipLoginInterrupt,
             KeyboardInterrupt,
+            UserBreak,
             CorruptError,
         ) as e:
             log.warning(f"{e.__class__.__name__} caught in {task}.")
