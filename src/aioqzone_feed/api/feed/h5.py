@@ -83,6 +83,8 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
                 feeds = resp.vFeeds
                 stop_fetching = not resp.hasmore
 
+            log.debug(attach_info, extra=dict(got=got))
+
             for fd in feeds[: count - got]:
                 if await exceed_pred(fd):
                     stop_fetching = True
@@ -137,6 +139,8 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
                 attach_info = resp.attachinfo
                 feeds = resp.vFeeds
                 stop_fetching = not resp.hasmore
+
+            log.debug(attach_info, extra=dict(got=got))
 
             for fd in feeds:
                 if fd.abstime > start:
