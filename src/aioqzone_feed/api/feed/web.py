@@ -1,3 +1,9 @@
+"""
+.. versionchanged:: 0.13.0
+
+    Import this module needs aioqzone extra ``lxml`` to be installed.
+"""
+
 import asyncio
 import logging
 import sys
