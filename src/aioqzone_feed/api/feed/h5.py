@@ -167,8 +167,8 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
             log.debug(f"Dropped: {feed}")
             return True
 
-        if feed.cellid.startswith("advertisement"):
-            log.info(f"advertisement rule hit: {feed.cellid}")
+        if feed.fid.startswith("advertisement"):
+            log.info(f"advertisement rule hit: {feed.fid}")
             log.debug(f"Dropped: {feed}")
             return True
 
@@ -183,6 +183,12 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         :param feed: feed
         """
+        if feed.summary.hasmore:
+            self.add_hook_ref(
+                "dispatch", self.shuoshuo(feed.fid, feed.userinfo.uin, feed.common.appid)
+            ).add_done_callback(lambda t: self._dispatch_feed(t.result()))
+            return
+
         model = FeedContent.from_feed(feed)
 
         if self.drop_rule(feed):

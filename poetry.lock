@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.12.10.dev7"
+version = "0.12.11.dev1"
 description = "Python wrapper for Qzone login and Qzone HTTP APIs."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.12.10.dev7-py3-none-any.whl", hash = "sha256:c63b6e5334b9eca3b1a7269963e9390095a7270250c584883473f8c27e678434"},
-    {file = "aioqzone-0.12.10.dev7.tar.gz", hash = "sha256:d8ba65353262eeb179ddea0758ee0b45b26948d1d21ce2fc2cceab63b2712439"},
+    {file = "aioqzone-0.12.11.dev1-py3-none-any.whl", hash = "sha256:230086eaffd21725b5dc4a8770af025a7969155c20da5c192be4500167e2c9e3"},
+    {file = "aioqzone-0.12.11.dev1.tar.gz", hash = "sha256:bb901a2d297dbc733c913adc3bdfeb2837da658da6911e455dd4b2d609a07d0e"},
 ]
 
 [package.dependencies]
@@ -1464,4 +1464,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "a553e7d9ab040adfe273affc53af45b8feaea8cd45d2f093897cbeabb3ece948"
+content-hash = "afeafadd484f6837e3649c9f31aef3e1ed47fb8a9e1a14083d9ef6e1ad11e257"
