@@ -12,7 +12,7 @@ updates:
       interval: weekly
       day: saturday
       versioning-strategy: increase-if-necessary
-    assignees: [JamzumSum]
+    reviewers: [JamzumSum]
 
   - package-ecosystem: npm
     directory: "/"
