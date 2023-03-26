@@ -11,7 +11,7 @@ updates:
     schedule:
       interval: weekly
       day: saturday
-      versioning-strategy: increase-if-necessary
+    versioning-strategy: increase-if-necessary
     reviewers: [JamzumSum]
 
   - package-ecosystem: npm
@@ -19,4 +19,5 @@ updates:
     schedule:
       interval: weekly
       day: saturday
-      versioning-strategy: increase-if-necessary
+    versioning-strategy: increase-if-necessary
+    reviewers: [JamzumSum]
