@@ -39,6 +39,7 @@ jobs:
         run: |
           echo "::group::Install Dependencies"
           poetry install -n -vv
+          pip install aioqzone[captcha,lxml]
           echo "::endgroup::"
 
           echo "::group::pytest outputs"
