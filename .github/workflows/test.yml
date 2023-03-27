@@ -38,7 +38,7 @@ jobs:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           echo "::group::Install Dependencies"
-          poetry install -n -vv
+          poetry install --all-extras -n -vv
           poetry run pip install aioqzone[captcha,lxml] -q
           echo "::endgroup::"
 
