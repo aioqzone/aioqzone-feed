@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.12.11.dev2"
+version = "0.12.12.dev1"
 description = "Python wrapper for Qzone login and Qzone HTTP APIs."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.12.11.dev2-py3-none-any.whl", hash = "sha256:316ad96287219e832d44de45bed1409a52dda33fd12979787dbb030bd21f9c81"},
-    {file = "aioqzone-0.12.11.dev2.tar.gz", hash = "sha256:57a4dbeb47b071f92ea771ba645d034be85409ca8c2dfcf58bee576418ce6842"},
+    {file = "aioqzone-0.12.12.dev1-py3-none-any.whl", hash = "sha256:a52e13207444b963df9f9733a992e443f00d9c0001e4e8afbafdd1e3f6d81d05"},
+    {file = "aioqzone-0.12.12.dev1.tar.gz", hash = "sha256:f1e4e8466bac9b1628864fb7b7cc62e46a3e7619e7c033bce11f284dbfbd1755"},
 ]
 
 [package.dependencies]
@@ -521,7 +521,7 @@ name = "lxml"
 version = "4.9.2"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
 category = "main"
-optional = false
+optional = true
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, != 3.4.*"
 files = [
     {file = "lxml-4.9.2-cp27-cp27m-macosx_10_15_x86_64.whl", hash = "sha256:76cf573e5a365e790396a5cc2b909812633409306c6531a6877c59061e42c4f2"},
@@ -1326,4 +1326,4 @@ web = ["lxml"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "92da485d14cbe69e516605e71943a0ab649bfb24f413b253b6c78228580f387b"
+content-hash = "4bdd92f596851aab9f4fe89fddf5cea262c94d5fb2ffede210ec6009498cff9c"
