@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-09 14:23+0800\n"
+"POT-Creation-Date: 2023-03-27 09:44+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -94,14 +94,18 @@ msgstr ""
 
 #: aioqzone_feed.event.heartbeat.HeartbeatEvent.HeartbeatFailed:1 of
 msgid ""
-"The HeartbeatFailed function is called when the heartbeat fails. It can be used to log an error "
-"and call :meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat` again if possible."
+"The HeartbeatFailed function is called when the heartbeat is skipped/stopped. It can be used to "
+"log an error and call :meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat` again if possible."
 msgstr ""
 
 #: aioqzone_feed.event.heartbeat.HeartbeatEvent.HeartbeatFailed:6 of
 msgid ""
 "Used to pass an exception object that can be used to determine the cause of the heartbeat "
 "failure."
+msgstr ""
+
+#: aioqzone_feed.event.heartbeat.HeartbeatEvent.HeartbeatFailed:10 of
+msgid "`exc` is not optional"
 msgstr ""
 
 #: aioqzone_feed.event.heartbeat.HeartbeatEvent.HeartbeatRefresh:1 of
