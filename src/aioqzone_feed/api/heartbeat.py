@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 from functools import partial, singledispatch
 from typing import Optional, Union
 
@@ -15,6 +16,9 @@ from qqqr.exception import HookError, UserBreak
 
 from aioqzone_feed.event import HeartbeatEvent
 from aioqzone_feed.utils.task import AsyncTimer
+
+if sys.version_info < (3, 11):
+    from exceptiongroup import ExceptionGroup
 
 log = logging.getLogger(__name__)
 
@@ -46,93 +50,83 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
         else:
             raise TypeError("wrong api instance:", type(api))
 
-    async def heartbeat_refresh(self, *, retry: int = 2, retry_intv: float = 5):
-        """A wrapper function that calls :external:meth:`aioqzone.api.QzoneWebAPI.get_feeds_count`
-        and handles all kinds of excpetions raised during heartbeat.
+    async def heartbeat_refresh(self):
+        """A wrapper function that calls :obj:`hb_api` and handles all kinds of excpetions
+        raised during heartbeat.
 
         .. note::
-            This method calls heartbeat **ONLY ONCE** so it should be called circularly by using
+            This method calls heartbeat **ONLY ONCE** so it should be called periodically by using
             `.add_heartbeat` or other timer/scheduler.
 
-        :param retry: retry times on QzoneError, default as 2.
-        :param retry_intv: retry interval on QzoneError
-        :return: whether the timer should stop, means heartbeat will always fail until something is changed.
+        .. versionchanged:: 0.13.4
+
+            do not retry, just call heartbeat once
+
+        :return: whether the timer is suggested to be stopped,
+            means heartbeat might not success even after a retry, until underlying causes are solved.
         """
-        exc = last_fail_hook = None
-        r = False
-        for i in range(retry):
-            try:
-                cnt = new_feed_cnt(await self.hb_api())
-                log.debug("heartbeat: new_feed_cnt=%d", cnt)
-                if cnt:
-                    self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
-                return False  # don't stop
-            except (
-                QzoneError,
-                HTTPStatusError,
-            ) as e:
-                # retry at once
-                exc, excname = e, e.__class__.__name__
-                log.warning("%s captured in heartbeat, retry at once (%d)", excname, i)
-                log.debug(excname, exc_info=e)
-            except HookError as e:
-                if e.hook.__qualname__ == last_fail_hook:
-                    # if the same hook raises exception twice, we assume it is systematically broken
-                    # so we should stop heartbeat at once.
-                    r = True
-                    break
-                last_fail_hook = e.hook.__qualname__
-                log.error("HookError captured in heartbeat, retry at once (%d)", i)
-            except (
-                HTTPError,
-                SkipLoginInterrupt,
-                KeyboardInterrupt,
-                UserBreak,
-                asyncio.CancelledError,
-            ) as e:
-                # retry in next trigger
-                exc, excname = e, e.__class__.__name__
-                log.warning("%s captured in heartbeat, retry in next trigger", excname)
-                log.debug(excname, exc_info=e)
-                break
-            except LoginError as e:
-                if LoginMethod.up in e.methods_tried:
-                    # login error means all methods failed.
-                    # we should stop HB if up login will fail.
-                    r = True
-                break
-            except BaseException as e:
-                exc, r = e, True
-                log.error("Uncaught error in heartbeat.", exc_info=e)
-                break
-            await asyncio.sleep(retry_intv)
-        else:
-            log.error("Max retry exceeds (%d)", retry)
-
-        if r:
-            log.warning(f"Heartbeat stopped.")
-
-        self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
-        return r  # stop at once
+        fail = lambda exc: self.add_hook_ref("hook", self.hook.HeartbeatFailed(exc))
+        try:
+            cnt = new_feed_cnt(await self.hb_api())
+            log.debug("heartbeat: new_feed_cnt=%d", cnt)
+            if cnt:
+                self.add_hook_ref("hook", self.hook.HeartbeatRefresh(cnt))
+            return False  # don't stop
+        except QzoneError as e:
+            fail(e)
+            log.warning(e)
+            if e.code == -3000 and "登录" in e.msg:
+                return True
+            return False
+        except HTTPStatusError as e:
+            fail(e)
+            log.warning(e)
+            log.debug(e.request, exc_info=e)
+            if e.response.status_code in [403, 302]:
+                return True
+            return False
+        except HookError as e:
+            fail(e)
+            log.error("HookError in heartbeat, stop at once")
+            log.debug(e)
+            return True
+        except (
+            HTTPError,
+            SkipLoginInterrupt,
+            KeyboardInterrupt,
+            UserBreak,
+            asyncio.CancelledError,
+        ) as e:
+            fail(e)
+            log.warning(f"{e.__class__.__name__}in heartbeat, retry in next trigger")
+            log.debug(e)
+            return False
+        except LoginError as e:
+            fail(e)
+            if LoginMethod.up in e.methods_tried:
+                # login error means all methods failed.
+                # we should stop HB if up login will fail.
+                return True
+            return False
+        except BaseException as e:
+            fail(e)
+            log.error("Uncaught error in heartbeat.", exc_info=e)
+            return True
 
     def add_heartbeat(
         self,
         *,
-        retry: int = 5,
-        retry_intv: float = 5,
         hb_intv: float = 300,
         name: Optional[str] = None,
     ):
         """A helper function that creates a heartbeat task and keep a ref of it.
         A heartbeat task is a timer that circularly calls `.heartbeat_refresh`.
 
-        :param retry: max retry times when some exceptions occurs, defaults to 5.
-        :param hb_intv: retry interval, defaults to 5.
         :param hb_intv: heartbeat interval, defaults to 300.
         :param name: timer name
         :return: the heartbeat task
         """
-        heartbeat_refresh = partial(self.heartbeat_refresh, retry=retry, retry_intv=retry_intv)
+        heartbeat_refresh = partial(self.heartbeat_refresh)
         self.hb_timer = AsyncTimer(
             hb_intv, heartbeat_refresh, delay=hb_intv, name=name or "heartbeat"
         )

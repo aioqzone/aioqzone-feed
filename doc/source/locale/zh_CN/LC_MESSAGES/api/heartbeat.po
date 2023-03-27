@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-09 14:12+0800\n"
+"POT-Creation-Date: 2023-03-27 09:41+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -29,24 +29,15 @@ msgid ""
 "timer that circularly calls `.heartbeat_refresh`."
 msgstr ""
 
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh of
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat of
 msgid "参数"
 msgstr ""
 
 #: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:5 of
-msgid "max retry times when some exceptions occurs, defaults to 5."
-msgstr ""
-
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:7 of
-msgid "retry interval, defaults to 5."
-msgstr ""
-
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:8 of
 msgid "heartbeat interval, defaults to 300."
 msgstr ""
 
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:10 of
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:7 of
 msgid "timer name"
 msgstr ""
 
@@ -55,32 +46,30 @@ msgstr ""
 msgid "返回"
 msgstr ""
 
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:11 of
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.add_heartbeat:8 of
 msgid "the heartbeat task"
 msgstr ""
 
 #: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:1 of
 msgid ""
-"A wrapper function that calls :external:meth:`aioqzone.api.QzoneWebAPI.get_feeds_count` and "
-"handles all kinds of excpetions raised during heartbeat."
+"A wrapper function that calls :obj:`hb_api` and handles all kinds of excpetions raised during "
+"heartbeat."
 msgstr ""
 
 #: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:5 of
 msgid ""
-"This method calls heartbeat **ONLY ONCE** so it should be called circularly by using "
+"This method calls heartbeat **ONLY ONCE** so it should be called periodically by using "
 "`.add_heartbeat` or other timer/scheduler."
 msgstr ""
 
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:9 of
-msgid "retry times on QzoneError, default as 2."
-msgstr ""
-
-#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:11 of
-msgid "retry interval on QzoneError"
+#: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:10 of
+msgid "do not retry, just call heartbeat once"
 msgstr ""
 
 #: aioqzone_feed.api.heartbeat.HeartbeatApi.heartbeat_refresh:12 of
-msgid "whether the timer should stop, means heartbeat will always fail until something is changed."
+msgid ""
+"whether the timer is suggested to be stopped, means heartbeat might not success even after a "
+"retry, until underlying causes are solved."
 msgstr ""
 
 #: aioqzone_feed.api.heartbeat.HeartbeatApi.stop:1 of

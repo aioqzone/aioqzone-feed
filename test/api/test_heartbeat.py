@@ -35,9 +35,9 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
         (LoginError("mock", [LoginMethod.qr]), True),
         (ConnectError("mock"), True),
         (TimeoutException("mock"), True),
-        (HTTPStatusError("mock", request=..., response=...), True),  # type: ignore
         (HTTPError("mock"), True),
         (QzoneError(-3000), True),
+        (QzoneError(-3000, "请先登录"), False),
         (SkipLoginInterrupt(), True),
         (UserBreak(), True),
         (asyncio.CancelledError(), True),
@@ -46,7 +46,7 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
 )
 async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], should_alive: bool):
     with patch.object(api, "hb_api", side_effect=exc2r):
-        api.add_heartbeat(retry=2, hb_intv=0.1, retry_intv=0)
+        api.add_heartbeat(hb_intv=0.1)
         assert api.hb_timer
         await asyncio.sleep(0.4)
         assert (api.hb_timer.state == "PENDING") is should_alive

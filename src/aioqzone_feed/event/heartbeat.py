@@ -1,16 +1,18 @@
-from typing import Optional
-
 from qqqr.event import Event
 
 
 class HeartbeatEvent(Event):
-    async def HeartbeatFailed(self, exc: Optional[BaseException] = None):
+    async def HeartbeatFailed(self, exc: BaseException):
         """
-        The HeartbeatFailed function is called when the heartbeat fails.
+        The HeartbeatFailed function is called when the heartbeat is skipped/stopped.
         It can be used to log an error and call :meth:`aioqzone_feed.api.feed.FeedApi.add_heartbeat`
         again if possible.
 
         :param exc: Used to pass an exception object that can be used to determine the cause of the heartbeat failure.
+
+        .. versionchanged:: 0.13.4
+
+            `exc` is not optional
         """
 
         pass
