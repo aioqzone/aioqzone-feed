@@ -177,7 +177,7 @@ class BaseFeed:
         return cls(
             appid=obj.common.appid,
             typeid=obj.common.typeid,
-            fid=obj.cellid,
+            fid=obj.fid,
             abstime=obj.abstime,
             uin=obj.userinfo.uin,
             nickname=obj.userinfo.nickname,
@@ -253,7 +253,7 @@ class BaseDetail:
                     entities=split_entities(org.summary.summary),
                     appid=org.common.appid,
                     typeid=org.common.typeid,
-                    fid=org.cellid,
+                    fid=org.fid,
                     abstime=org.common.time,
                     uin=org.userinfo.uin,
                     nickname=org.userinfo.nickname,
