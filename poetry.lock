@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aioqzone"
-version = "0.12.12.dev1"
+version = "0.12.12.dev2"
 description = "Python wrapper for Qzone login and Qzone HTTP APIs."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-0.12.12.dev1-py3-none-any.whl", hash = "sha256:a52e13207444b963df9f9733a992e443f00d9c0001e4e8afbafdd1e3f6d81d05"},
-    {file = "aioqzone-0.12.12.dev1.tar.gz", hash = "sha256:f1e4e8466bac9b1628864fb7b7cc62e46a3e7619e7c033bce11f284dbfbd1755"},
+    {file = "aioqzone-0.12.12.dev2-py3-none-any.whl", hash = "sha256:7e5b48277f37b103b3ba31b8d3c6da562c48ad6ad0a95753b4842ef59a26a560"},
+    {file = "aioqzone-0.12.12.dev2.tar.gz", hash = "sha256:73310366d971a29e9f05c9ce590ab153e12d88a8fd846e1bd9af9464ec9d359d"},
 ]
 
 [package.dependencies]
