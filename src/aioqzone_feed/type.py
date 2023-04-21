@@ -262,6 +262,8 @@ class BaseDetail:
                 )
                 if org.pic:
                     self.forward.media = [VisualMedia.from_pic(i) for i in org.pic.picdata]
+                if org.video:
+                    self.forward.media.insert(0, VisualMedia.from_video(org.video))
 
             elif isinstance(obj.original, Share):
                 self.forward = obj.original.common.orgkey
@@ -269,7 +271,7 @@ class BaseDetail:
         if obj.pic:
             self.media = [VisualMedia.from_pic(i) for i in obj.pic.picdata]
         if obj.video:
-            self.media.append(VisualMedia.from_video(obj.video))
+            self.media.insert(0, VisualMedia.from_video(obj.video))
 
     @set_detail.register
     def set_fromhtml(self, obj: HtmlContent):
@@ -287,6 +289,3 @@ class FeedContent(BaseDetail, BaseFeed):
     def __hash__(self) -> int:
         media_hash = hash(tuple(i.raw for i in self.media)) if self.media else 0
         return hash((self.uin, self.abstime, self.forward, media_hash))
-
-    def __repr__(self) -> str:
-        return super().__repr__() + f'(content="{self.entities}",#media={len(self.media or "0")})'
