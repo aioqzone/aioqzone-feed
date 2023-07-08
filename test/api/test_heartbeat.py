@@ -36,7 +36,7 @@ async def api(client: ClientAdapter, man: MixedLoginMan):
         (ConnectError("mock"), True),
         (TimeoutException("mock"), True),
         (HTTPError("mock"), True),
-        (QzoneError(-3000), True),
+        (QzoneError(-3000), False),
         (QzoneError(-3000, "请先登录"), False),
         (SkipLoginInterrupt(), True),
         (UserBreak(), True),

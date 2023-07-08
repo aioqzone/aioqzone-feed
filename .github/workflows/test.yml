@@ -20,9 +20,6 @@ jobs:
         python-version: ["3.11", "3.8"]
     steps:
       - uses: actions/checkout@v3
-      - uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
       - name: Install Poetry
         run: pipx install poetry
 
@@ -39,7 +36,6 @@ jobs:
         run: |
           echo "::group::Install Dependencies"
           poetry install --all-extras -n -vv
-          poetry run pip install aioqzone[captcha,lxml] -q
           echo "::endgroup::"
 
           echo "::group::pytest outputs"

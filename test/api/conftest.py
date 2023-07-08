@@ -1,4 +1,5 @@
 import asyncio
+import io
 
 import pytest
 import pytest_asyncio
@@ -7,8 +8,6 @@ from aioqzone.event import QREvent
 from httpx import AsyncClient
 from qqqr.event import sub_of
 from qqqr.utils.net import ClientAdapter
-
-from . import showqr
 
 
 @pytest.fixture(scope="module")
@@ -28,16 +27,24 @@ async def client():
 async def man(client: ClientAdapter):
     from os import environ as env
 
-    class show_qr_in_test(MixedLoginMan):
-        @sub_of(QREvent)
-        def _sub_qrevent(self, base):
-            class inner_qrevent(QREvent):
-                async def QrFetched(self, png: bytes, times: int):
-                    showqr(png)
+    try:
+        from PIL import Image as image
+    except ImportError:
+        cls = MixedLoginMan
+    else:
 
-            return inner_qrevent
+        class show_qr_in_test(MixedLoginMan):
+            @sub_of(QREvent)
+            def _sub_qrevent(self, base):
+                class inner_qrevent(QREvent):
+                    async def QrFetched(self, png: bytes, times: int):
+                        image.open(io.BytesIO(png)).show()
 
-    man = show_qr_in_test(
+                return inner_qrevent
+
+        cls = show_qr_in_test
+
+    man = cls(
         client,
         int(env["TEST_UIN"]),
         strategy_to_order[env.get("TEST_QRSTRATEGY", "forbid")],  # forbid QR by default.
