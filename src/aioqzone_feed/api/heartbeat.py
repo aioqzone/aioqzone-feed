@@ -75,9 +75,7 @@ class HeartbeatApi(Emittable[HeartbeatEvent]):
         except QzoneError as e:
             fail(e)
             log.warning(e)
-            if e.code == -3000 and "登录" in e.msg:
-                return True
-            return False
+            return e.code == -3000
         except HTTPStatusError as e:
             fail(e)
             log.warning(e)
