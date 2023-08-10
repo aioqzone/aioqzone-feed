@@ -6,29 +6,28 @@
 
 import asyncio
 import logging
-import sys
 import time
 from typing import Any, Callable, Optional, TypeVar
 
-from aioqzone.api import Loginable, QzoneWebAPI
+from aioqzone.api import Loginable
+from aioqzone.api.web import QzoneWebAPI
 from aioqzone.exception import CorruptError, LoginError, QzoneError, SkipLoginInterrupt
-from aioqzone.type.internal import AlbumData
-from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep
+from aioqzone.model import AlbumData
+from aioqzone.model.response.web import FeedDetailRep, FeedRep, PicRep
 from aioqzone.utils.catch import HTTPStatusErrorDispatch, QzoneErrorDispatch
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from httpx import HTTPError, HTTPStatusError
 from lxml.html import HtmlElement, fromstring
 from pydantic import ValidationError
-from qqqr.event import Emittable, hook_guard
-from qqqr.exception import HookError, UserBreak
+from qqqr.exception import UserBreak
 from qqqr.utils.net import ClientAdapter
+from tylisten.futstore import FutureStore
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
-from aioqzone_feed.event import FeedEvent
+from aioqzone_feed.message import FeedApiEmitterMixin
+from aioqzone_feed.message.feed import TY_BID
 from aioqzone_feed.type import FeedContent, VisualMedia
-
-if sys.version_info < (3, 11):
-    from exceptiongroup import ExceptionGroup
+from aioqzone_feed.utils.exc_barrier import ExcBarrier
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
@@ -52,8 +51,6 @@ def add_done_callback(task, cb):
         ) as e:
             log.warning(f"{e.__class__.__name__} caught in {task}.")
             log.debug("", exc_info=e)
-        except HookError as e:
-            log.error(f"Error occurs in {e.hook}", exc_info=e)
         except (
             HTTPError,
             LoginError,
@@ -63,7 +60,7 @@ def add_done_callback(task, cb):
         except SystemExit:
             raise
         except RuntimeError as e:
-            if e.args[0] == "Session is closed":
+            if e.args and e.args[0] == "Session is closed":
                 log.error(f"DEBUG: {task}", exc_info=True)
             else:
                 raise
@@ -75,31 +72,21 @@ def add_done_callback(task, cb):
     return task
 
 
-class exc_stack:
-    def __init__(self, max_len: int = 5) -> None:
-        self._exc = []  # type: list[Exception]
-        self.max_len = max_len
-
-    def append(self, e: Exception):
-        self._exc.append(e)
-        if len(self._exc) >= self.max_len:
-            raise ExceptionGroup("max retry exceeds", self._exc)
-
-
-class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
+class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
     def __init__(self, client: ClientAdapter, loginman: Loginable, *, init_hb=True):
         super().__init__(client, loginman)
+        self.slowapi = FutureStore()
         self.bid = -1
         if init_hb:
             self.hb_api = HeartbeatApi(self)
 
-    def new_batch(self) -> FeedEvent.TY_BID:
+    def new_batch(self) -> TY_BID:
         """
         The new_batch function edit internal batch id and return it.
 
         A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
 
-        :rtype: :obj:`FeedEvent.TY_BID`
+        :rtype: :obj:`TY_BID`
         :return: The batch_id.
         """
 
@@ -125,11 +112,10 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
 
             `FeedEvent.StopFeedFetch` works in this method as well.
         """
-        exceed_pred = hook_guard(self.hook.StopFeedFetch)
         stop_fetching = False
         got = 0
         aux = None
-        errs = exc_stack()
+        errs = ExcBarrier()
         feeds = []
 
         def error_dispatch(e):
@@ -149,7 +135,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
             log.debug(aux, extra=dict(got=got))
 
             for fd in feeds[: count - got]:
-                if await exceed_pred(fd):
+                if await self.stop_fetch(fd):
                     stop_fetching = True
                     continue
                 if (got := got + 1) >= count:
@@ -192,8 +178,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         stop_fetching = False
         got = 0
         aux = None
-        exceed_pred = hook_guard(self.hook.StopFeedFetch)
-        errs = exc_stack()
+        errs = ExcBarrier()
         feeds = []
 
         def error_dispatch(e):
@@ -215,7 +200,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
             for fd in feeds:
                 if fd.abstime > start:
                     continue
-                if fd.abstime < end or await exceed_pred(fd):
+                if fd.abstime < end or await self.stop_fetch(fd):
                     stop_fetching = True
                     continue
                 got += 1
@@ -264,7 +249,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         model = FeedContent.from_feed(feed)
 
         if self.drop_rule(feed):
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, model))
+            self.ch_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
             return
 
         has_cur = [311]
@@ -273,7 +258,7 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
             log.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, model))
+            self.ch_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
             return
         model.set_frominfo(htmlinfo)
 
@@ -295,9 +280,9 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
                 return self.__default_dispatch(feed, model, htmlinfo, root)
 
             model.set_detail(dt)
-            self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
+            self.ch_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
 
-        get_full = self.add_hook_ref("dispatch", self.emotion_msgdetail(feed.uin, feed.fid))
+        get_full = self.ch_dispatch.add_awaitable(self.emotion_msgdetail(feed.uin, feed.fid))
         add_done_callback(get_full, detail_procs)
 
     def __default_dispatch(
@@ -313,8 +298,8 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
             htmlct = HtmlContent.from_html(root, feed.uin)
             model.set_detail(htmlct)
             if htmlinfo.unikey:
-                model.forward = htmlinfo.unikey
-            self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
+                model.forward = str(htmlinfo.unikey)
+            self.ch_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
@@ -328,8 +313,8 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
                 full_root = root
             html_content_procs(full_root)
 
-        get_full = self.add_hook_ref(
-            "dispatch", self.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
+        get_full = self.ch_dispatch.add_awaitable(
+            self.emotion_getcomments(feed.uin, feed.fid, htmlinfo.feedstype)
         )
         add_done_callback(get_full, full_html_procs)
 
@@ -337,8 +322,8 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         if not (content.album and content.pic):
             return
 
-        task = self.add_hook_ref(
-            "slowapi", self.__fv_retry(model, content, self.bid, content.album, len(content.pic))
+        task = self.slowapi.add_awaitable(
+            self.__fv_retry(model, content, self.bid, content.album, len(content.pic))
         )
         log.info(f"Media update task registered: {task}")
 
@@ -377,11 +362,11 @@ class FeedWebApi(QzoneWebAPI, Emittable[FeedEvent]):
         else:
             return
         model.media = [VisualMedia.from_pic(PicRep.from_floatview(i)) for i in fv]
-        self.add_hook_ref("hook", self.hook.FeedMediaUpdate(bid, model))
+        self.ch_notify.add_awaitable(self.feed_media_updated.emit(bid, model))
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
         log.warning("FeedApi stopping...")
-        self.clear(*self._tasks.keys())
+        super().stop()
         if hasattr(self, "hb_api"):
             self.hb_api.stop()
