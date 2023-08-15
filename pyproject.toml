@@ -15,8 +15,8 @@ documentation = "https://aioqzone.github.io/aioqzone-feed"
 [tool.poetry.dependencies]
 python = "^3.8"
 aioqzone = [
-    { version = "^0.14.1.dev0", allow-prereleases = true },
-    { version = "^0.14.1.dev0", allow-prereleases = true, extras = [
+    { version = "^0.14.1.dev8", allow-prereleases = true },
+    { version = "^0.14.1.dev8", allow-prereleases = true, extras = [
         "captcha",
     ], optional = true },
 ]
