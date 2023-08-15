@@ -17,6 +17,13 @@ if sys.version_info < (3, 11):
 pytestmark = pytest.mark.asyncio
 
 
+@pytest_asyncio.fixture(scope="module")
+async def api(client: ClientAdapter, man: UnifiedLoginManager):
+    api = FeedApi(client, man, init_hb=False)
+    yield api
+    api.stop()
+
+
 async def test_exception(api: FeedApi):
     with ExitStack() as stack:
         stack.enter_context(patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)))
@@ -29,13 +36,6 @@ async def test_exception(api: FeedApi):
         r = stack.enter_context(pytest.raises(ExceptionGroup, match="max retry exceeds"))
         await api.get_feeds_by_second(86400)
         assert len(r.value.exceptions) == 5
-
-
-@pytest_asyncio.fixture(scope="module")
-async def api(client: ClientAdapter, man: UnifiedLoginManager):
-    api = FeedApi(client, man, init_hb=False)
-    yield api
-    api.stop()
 
 
 async def test_by_count(api: FeedApi):
