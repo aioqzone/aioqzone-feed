@@ -19,13 +19,13 @@ pytestmark = pytest.mark.asyncio
 
 async def test_exception(api: FeedApi):
     with ExitStack() as stack:
-        stack.enter_context(patch.object(api, "feeds3_html_more", side_effect=QzoneError(-3000)))
+        stack.enter_context(patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)))
         r = stack.enter_context(pytest.raises(ExceptionGroup, match="max retry exceeds"))
         await api.get_feeds_by_count()
         assert len(r.value.exceptions) == 5
 
     with ExitStack() as stack:
-        stack.enter_context(patch.object(api, "feeds3_html_more", side_effect=QzoneError(-3000)))
+        stack.enter_context(patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)))
         r = stack.enter_context(pytest.raises(ExceptionGroup, match="max retry exceeds"))
         await api.get_feeds_by_second(86400)
         assert len(r.value.exceptions) == 5
