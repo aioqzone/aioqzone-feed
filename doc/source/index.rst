@@ -14,7 +14,7 @@ feeds fetched by Qzone API. `aioqzone-feed` could be regarded as a set of high-l
    :caption: Contents
 
    api/index
-   event/index
+   message/index
    type
 
 

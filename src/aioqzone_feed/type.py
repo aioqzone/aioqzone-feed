@@ -3,10 +3,9 @@ from dataclasses import dataclass, field
 from functools import singledispatchmethod
 from typing import List, Optional, Union
 
-from aioqzone.type.entity import ConEntity
-from aioqzone.type.internal import LikeData
-from aioqzone.type.resp import FeedDetailRep, FeedRep, PicRep, VideoInfo, VideoRep
-from aioqzone.type.resp.h5 import FeedData, FeedOriginal, FeedVideo, PicData, Share
+from aioqzone.model import FeedData, FeedOriginal, FeedVideo, PicData, Share
+from aioqzone.model.protocol import ConEntity, LikeData
+from aioqzone.model.response.web import FeedDetailRep, FeedRep, PicRep, VideoInfo, VideoRep
 from aioqzone.utils.entity import split_entities
 from aioqzone.utils.html import HtmlContent, HtmlInfo
 from aioqzone.utils.time import approx_ts
@@ -47,8 +46,8 @@ class VisualMedia:
             return cls(
                 height=pic.height,
                 width=pic.width,
-                thumbnail=pic.thumb,
-                raw=pic.raw,
+                thumbnail=str(pic.thumb),
+                raw=str(pic.raw),
                 is_video=False,
             )
 
@@ -64,8 +63,8 @@ class VisualMedia:
             is_video=False,
             height=pic.origin_height,
             width=pic.origin_width,
-            raw=raw.url,
-            thumbnail=thumb.url,
+            raw=str(raw.url),
+            thumbnail=str(thumb.url),
         )
 
     @singledispatchmethod
@@ -79,8 +78,8 @@ class VisualMedia:
         return cls(
             height=video.cover_height,
             width=video.cover_width,
-            thumbnail=video.thumb,
-            raw=video.raw,
+            thumbnail=str(video.thumb),
+            raw=str(video.raw),
             is_video=True,
         )
 
@@ -91,8 +90,8 @@ class VisualMedia:
         return cls(
             height=cover.height,
             width=cover.width,
-            thumbnail=cover.url,
-            raw=video.videourl,
+            thumbnail=str(cover.url),
+            raw=str(video.videourl),
             is_video=True,
         )
 
@@ -181,15 +180,15 @@ class BaseFeed:
             abstime=obj.abstime,
             uin=obj.userinfo.uin,
             nickname=obj.userinfo.nickname,
-            unikey=obj.common.orgkey,
-            curkey=obj.common.curkey,
+            unikey=str(obj.common.orgkey),
+            curkey=str(obj.common.curkey),
             islike=obj.like.isliked,
             **kwds,
         )
 
     def set_frominfo(self, info: HtmlInfo):
-        self.curkey = info.curkey
-        self.unikey = info.unikey
+        self.curkey = str(info.curkey)
+        self.unikey = str(info.unikey)
         self.islike = bool(info.islike)
         self.topicId = info.topicid
         self.nickname = self.nickname or info.nickname
@@ -257,8 +256,8 @@ class BaseDetail:
                     abstime=org.common.time,
                     uin=org.userinfo.uin,
                     nickname=org.userinfo.nickname,
-                    curkey=org.common.curkey,
-                    unikey=org.common.orgkey,
+                    curkey=str(org.common.curkey),
+                    unikey=str(org.common.orgkey),
                 )
                 if org.pic:
                     self.forward.media = [VisualMedia.from_pic(i) for i in org.pic.picdata]
@@ -266,7 +265,7 @@ class BaseDetail:
                     self.forward.media.insert(0, VisualMedia.from_video(org.video))
 
             elif isinstance(obj.original, Share):
-                self.forward = obj.original.common.orgkey
+                self.forward = str(obj.original.common.orgkey)
 
         if obj.pic:
             self.media = [VisualMedia.from_pic(i) for i in obj.pic.picdata]

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-17 22:36+0800\n"
+"POT-Creation-Date: 2023-08-10 14:10+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -190,7 +190,7 @@ msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:5 aioqzone_feed.api.feed.web.FeedWebApi.new_batch:5
 #: of
-msgid ":obj:`FeedEvent.TY_BID`"
+msgid ":obj:`TY_BID`"
 msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:6 aioqzone_feed.api.feed.web.FeedWebApi.new_batch:6
@@ -229,4 +229,7 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "max error time exceeds"
+#~ msgstr ""
+
+#~ msgid ":obj:`FeedEvent.TY_BID`"
 #~ msgstr ""

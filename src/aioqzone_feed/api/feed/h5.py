@@ -1,29 +1,27 @@
 import asyncio
 import logging
-import sys
 import time
 from typing import Optional
 
 from aioqzone.api import Loginable
 from aioqzone.api.h5 import QzoneH5API
 from aioqzone.exception import LoginError
-from aioqzone.type.resp.h5 import FeedData
+from aioqzone.model import FeedData
 from aioqzone.utils.catch import HTTPStatusErrorDispatch, QzoneErrorDispatch
-from qqqr.event import Emittable, hook_guard
 from qqqr.exception import UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
-from aioqzone_feed.event import FeedEvent
+from aioqzone_feed.message import FeedApiEmitterMixin
+from aioqzone_feed.message.feed import TY_BID
 from aioqzone_feed.type import FeedContent
-
-from .web import exc_stack
+from aioqzone_feed.utils.exc_barrier import ExcBarrier
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
 
 
-class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
+class FeedH5Api(FeedApiEmitterMixin[FeedData], QzoneH5API):
     """
     .. versionadded:: 0.13.0
     """
@@ -34,13 +32,13 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         if init_hb:
             self.hb_api = HeartbeatApi(self)
 
-    def new_batch(self) -> FeedEvent.TY_BID:
+    def new_batch(self) -> TY_BID:
         """
         The new_batch function edit internal batch id and return it.
 
         A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
 
-        :rtype: :obj:`FeedEvent.TY_BID`
+        :rtype: :obj:`TY_BID`
         :return: The batch_id.
         """
 
@@ -62,11 +60,10 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         .. note:: You may need :meth:`.new_batch` to generate a new batch id.
         """
-        exceed_pred = hook_guard(self.hook.StopFeedFetch)
         stop_fetching = False
         got = 0
         attach_info = ""
-        errs = exc_stack()
+        errs = ExcBarrier()
         feeds = []
 
         def error_dispatch(e):
@@ -86,7 +83,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
             log.debug(attach_info, extra=dict(got=got))
 
             for fd in feeds[: count - got]:
-                if await exceed_pred(fd):
+                if await self.stop_fetch(fd):
                     stop_fetching = True
                     continue
                 if (got := got + 1) >= count:
@@ -122,8 +119,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         stop_fetching = False
         got = 0
         attach_info = ""
-        exceed_pred = hook_guard(self.hook.StopFeedFetch)
-        errs = exc_stack()
+        errs = ExcBarrier()
         feeds = []
 
         def error_dispatch(e):
@@ -145,7 +141,7 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
             for fd in feeds:
                 if fd.abstime > start:
                     continue
-                if fd.abstime < end or await exceed_pred(fd):
+                if fd.abstime < end or await self.stop_fetch(fd):
                     stop_fetching = True
                     continue
                 got += 1
@@ -184,8 +180,8 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
         :param feed: feed
         """
         if feed.summary.hasmore:
-            self.add_hook_ref(
-                "dispatch", self.shuoshuo(feed.fid, feed.userinfo.uin, feed.common.appid)
+            self.ch_dispatch.add_awaitable(
+                self.shuoshuo(feed.fid, feed.userinfo.uin, feed.common.appid)
             ).add_done_callback(lambda t: self._dispatch_feed(t.result()))
             return
 
@@ -193,15 +189,15 @@ class FeedH5Api(QzoneH5API, Emittable[FeedEvent]):
 
         if self.drop_rule(feed):
             FeedContent.from_feed(feed)
-            self.add_hook_ref("dispatch", self.hook.FeedDropped(self.bid, model))
+            self.ch_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
             return
 
         model.set_detail(feed)
-        self.add_hook_ref("hook", self.hook.FeedProcEnd(self.bid, model))
+        self.ch_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
         log.warning("FeedApi stopping...")
-        self.clear(*self._tasks.keys())
+        super().stop()
         if hasattr(self, "hb_api"):
             self.hb_api.stop()
