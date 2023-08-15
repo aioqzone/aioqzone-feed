@@ -26,9 +26,9 @@ async def api(client: ClientAdapter, man: UnifiedLoginManager):
 @pytest.mark.parametrize(
     "exc2r,should_alive",
     [
-        (LoginError("mock", ["up", "qr"]), False),
+        (LoginError(dict.fromkeys(["up", "qr"], "mock")), False),
         (SystemExit(), False),
-        (LoginError("mock", ["qr"]), True),
+        (LoginError(dict.fromkeys(["qr"], "mock")), True),
         (ConnectError("mock"), True),
         (TimeoutException("mock"), True),
         (HTTPError("mock"), True),

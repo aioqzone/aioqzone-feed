@@ -67,3 +67,4 @@ async def test_by_second(api: FeedApi):
         pytest.skip(str(e))
     await asyncio.gather(api.ch_dispatch.wait(), api.ch_notify.wait())
     assert len(set(batch)) == len(batch)
+    assert len(set(batch)) == n - len(drop)

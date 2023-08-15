@@ -16,8 +16,8 @@ from qqqr.utils.net import ClientAdapter
 class test_env(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="test_")
     uin: int = 0
-    pwd: SecretStr = Field(default="")
-    order: List[LoginMethod] = ["qr"]
+    password: SecretStr = Field(default="")
+    order: List[LoginMethod] = ["up"]
 
 
 @pytest.fixture(scope="session")
@@ -42,7 +42,7 @@ async def client():
 def man(client: ClientAdapter, env: test_env):
     man = UnifiedLoginManager(
         client,
-        up_config=UpLoginConfig(uin=env.uin, pwd=env.pwd),
+        up_config=UpLoginConfig(uin=env.uin, pwd=env.password),
         qr_config=QrLoginConfig(uin=env.uin),
     )
     with suppress(ImportError):
