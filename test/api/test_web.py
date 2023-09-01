@@ -17,13 +17,13 @@ if sys.version_info < (3, 11):
 pytestmark = pytest.mark.asyncio
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def man(man: UnifiedLoginManager):
     man.h5(False)
     yield man
 
 
-@pytest_asyncio.fixture(scope="module")
+@pytest_asyncio.fixture
 async def api(client: ClientAdapter, man: UnifiedLoginManager):
     api = FeedApi(client, man, init_hb=False)
     yield api
