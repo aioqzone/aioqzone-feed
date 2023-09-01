@@ -6,17 +6,16 @@ import pytest
 import pytest_asyncio
 from aioqzone.api import QzoneH5API, UnifiedLoginManager
 from aioqzone.exception import LoginError, QzoneError, SkipLoginInterrupt
-from httpx import ConnectError, HTTPError, HTTPStatusError, TimeoutException
+from httpx import ConnectError, HTTPError, TimeoutException
 from qqqr.exception import UserBreak
 from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api import HeartbeatApi
-from aioqzone_feed.message import HeartbeatEmitterMixin
 
 pytestmark = pytest.mark.asyncio
 
 
-@pytest_asyncio.fixture(scope="module")
+@pytest_asyncio.fixture
 async def api(client: ClientAdapter, man: UnifiedLoginManager):
     api = HeartbeatApi(QzoneH5API(client, man))
     yield api

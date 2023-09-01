@@ -38,7 +38,7 @@ async def client():
         yield ClientAdapter(client)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def man(client: ClientAdapter, env: test_env):
     man = UnifiedLoginManager(
         client,
