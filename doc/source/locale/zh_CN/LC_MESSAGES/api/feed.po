@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-10 14:10+0800\n"
+"POT-Creation-Date: 2023-09-02 09:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -131,8 +131,10 @@ msgstr ""
 
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_count:12
 #: aioqzone_feed.api.feed.h5.FeedH5Api.get_feeds_by_second:15
+#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:5
 #: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_count:12
-#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:15 of
+#: aioqzone_feed.api.feed.web.FeedWebApi.get_feeds_by_second:15
+#: aioqzone_feed.api.feed.web.FeedWebApi.new_batch:5 of
 msgid ":py:class:`int`"
 msgstr ""
 
@@ -188,11 +190,6 @@ msgid ""
 "`(bid, uin, abstime)`."
 msgstr ""
 
-#: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:5 aioqzone_feed.api.feed.web.FeedWebApi.new_batch:5
-#: of
-msgid ":obj:`TY_BID`"
-msgstr ""
-
 #: aioqzone_feed.api.feed.h5.FeedH5Api.new_batch:6 aioqzone_feed.api.feed.web.FeedWebApi.new_batch:6
 #: of
 msgid "The batch_id."
@@ -232,4 +229,7 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ":obj:`FeedEvent.TY_BID`"
+#~ msgstr ""
+
+#~ msgid ":obj:`TY_BID`"
 #~ msgstr ""

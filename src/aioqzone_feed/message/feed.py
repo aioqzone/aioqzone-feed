@@ -9,15 +9,13 @@ from tylisten.futstore import FutureStore
 from aioqzone_feed.type import BaseFeed, FeedContent
 
 _F = TypeVar("_F", FeedData, FeedRep)
-TY_BID = int
-"""Batch ID type. Currently it is a `int`."""
 
-__all__ = ["raw_feed", "processed_feed", "FeedApiEmitterMixin", "TY_BID"]
+__all__ = ["raw_feed", "processed_feed", "FeedApiEmitterMixin"]
 
 
 @dataclass
 class raw_feed(BaseMessage):
-    bid: TY_BID
+    bid: int
     """Used to identify feed batch (tell from different calling)."""
     feed: BaseFeed
     """Used to pass a ref to the feed."""
@@ -25,7 +23,7 @@ class raw_feed(BaseMessage):
 
 @dataclass
 class processed_feed(BaseMessage):
-    bid: TY_BID
+    bid: int
     """Used to identify feed batch (tell from different calling)."""
     feed: FeedContent
     """Used to pass the feed content."""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-10 14:17+0800\n"
+"POT-Creation-Date: 2023-09-02 09:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -49,10 +49,6 @@ msgstr ""
 
 #: aioqzone_feed.message.feed.FeedApiEmitterMixin.stop_fetch:4 of
 msgid ":py:class:`bool`"
-msgstr ""
-
-#: builtins.int:1 of
-msgid "Batch ID type. Currently it is a `int`."
 msgstr ""
 
 #: ../../docstring aioqzone_feed.message.feed.processed_feed.bid:1
@@ -97,4 +93,7 @@ msgid "number of new feeds"
 msgstr ""
 
 #~ msgid "aioqzone-feed Events"
+#~ msgstr ""
+
+#~ msgid "Batch ID type. Currently it is a `int`."
 #~ msgstr ""

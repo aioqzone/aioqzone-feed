@@ -25,12 +25,16 @@ from tylisten.futstore import FutureStore
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
 from aioqzone_feed.message import FeedApiEmitterMixin
-from aioqzone_feed.message.feed import TY_BID
 from aioqzone_feed.type import FeedContent, VisualMedia
 from aioqzone_feed.utils.exc_barrier import ExcBarrier
 
 log = logging.getLogger(__name__)
 login_exc = (LoginError, UserBreak, asyncio.CancelledError)
+MAX_BID = 0x7FFF
+"""The max batch id.
+
+.. versionadded:: 0.14.1
+"""
 
 T = TypeVar("T")
 
@@ -80,17 +84,16 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
         if init_hb:
             self.hb_api = HeartbeatApi(self)
 
-    def new_batch(self) -> TY_BID:
+    def new_batch(self) -> int:
         """
         The new_batch function edit internal batch id and return it.
 
         A batch id can be used to identify a batch, thus even the same feed can have different id e.g. `(bid, uin, abstime)`.
 
-        :rtype: :obj:`TY_BID`
         :return: The batch_id.
         """
 
-        self.bid += 1
+        self.bid = (self.bid + 1) % MAX_BID
         return self.bid
 
     async def get_feeds_by_count(self, count: int = 10) -> int:
