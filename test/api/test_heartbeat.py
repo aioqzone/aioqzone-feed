@@ -40,9 +40,9 @@ async def api(client: ClientAdapter, man: UnifiedLoginManager):
 )
 async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], should_alive: bool):
     pool = []
-    api.hb_failed.listeners.append(lambda m: pool.append(m.stop))
+    api.hb_failed.add_impl(lambda exc, stop: pool.append(stop))
     with patch.object(api, "hb_api", side_effect=exc2r):
         await api.heartbeat_refresh()
-        await api.hb_failed.wait()
+        await api.ch_hb.wait()
         assert pool
         assert not pool[0] is should_alive

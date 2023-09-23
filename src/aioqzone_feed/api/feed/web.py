@@ -252,7 +252,7 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
         model = FeedContent.from_feed(feed)
 
         if self.drop_rule(feed):
-            self.ch_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
+            self.ch_dispatch.add_awaitable(self.feed_dropped.results(self.bid, model))
             return
 
         has_cur = [311]
@@ -261,7 +261,7 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
             root, htmlinfo = HtmlInfo.from_html(feed.html)
         except ValidationError:
             log.debug("HtmlInfo ValidationError, html=%s", feed.html, exc_info=True)
-            self.ch_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
+            self.ch_dispatch.add_awaitable(self.feed_dropped.results(self.bid, model))
             return
         model.set_frominfo(htmlinfo)
 
@@ -283,7 +283,7 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
                 return self.__default_dispatch(feed, model, htmlinfo, root)
 
             model.set_detail(dt)
-            self.ch_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
+            self.ch_notify.add_awaitable(self.feed_processed.results(self.bid, model))
 
         get_full = self.ch_dispatch.add_awaitable(self.emotion_msgdetail(feed.uin, feed.fid))
         add_done_callback(get_full, detail_procs)
@@ -302,7 +302,7 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
             model.set_detail(htmlct)
             if htmlinfo.unikey:
                 model.forward = str(htmlinfo.unikey)
-            self.ch_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
+            self.ch_notify.add_awaitable(self.feed_processed.results(self.bid, model))
             self._add_mediaupdate_task(model, htmlct)
 
         if htmlinfo.complete:
@@ -365,7 +365,7 @@ class FeedWebApi(FeedApiEmitterMixin[FeedRep], QzoneWebAPI):
         else:
             return
         model.media = [VisualMedia.from_pic(PicRep.from_floatview(i)) for i in fv]
-        self.ch_notify.add_awaitable(self.feed_media_updated.emit(bid, model))
+        self.ch_notify.add_awaitable(self.feed_media_updated.results(bid, model))
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""

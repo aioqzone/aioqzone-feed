@@ -48,8 +48,8 @@ async def test_by_count(api: FeedApi):
     batch = []
     drop = []
 
-    api.feed_processed.listeners.append(lambda m: batch.append(m.feed))
-    api.feed_dropped.listeners.append(lambda m: drop.append(m.bid))
+    api.feed_processed.add_impl(lambda bid, feed: batch.append(feed))
+    api.feed_dropped.add_impl(lambda bid, feed: drop.append(bid))
 
     try:
         n = await api.get_feeds_by_count(10)
@@ -64,8 +64,8 @@ async def test_by_second(api: FeedApi):
     batch = []
     drop = []
 
-    api.feed_processed.listeners.append(lambda m: batch.append(m.feed))
-    api.feed_dropped.listeners.append(lambda m: drop.append(m.bid))
+    api.feed_processed.add_impl(lambda bid, feed: batch.append(feed))
+    api.feed_dropped.add_impl(lambda bid, feed: drop.append(bid))
 
     try:
         n = await api.get_feeds_by_second(3 * 86400)

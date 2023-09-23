@@ -55,14 +55,14 @@ class HeartbeatApi(HeartbeatEmitterMixin):
         """
 
         fail = (
-            lambda exc, stopped: self.ch_hb.add_awaitable(self.hb_failed.emit(exc, stopped))
+            lambda exc, stopped: self.ch_hb.add_awaitable(self.hb_failed.results(exc, stopped))
             and None
         )
         try:
             cnt = new_feed_cnt(await self.hb_api())
             log.debug("heartbeat: new_feed_cnt=%d", cnt)
             if cnt:
-                self.ch_hb.add_awaitable(self.hb_refresh.emit(cnt))
+                self.ch_hb.add_awaitable(self.hb_refresh.results(cnt))
             return
         except QzoneError as e:
             log.warning(e)
