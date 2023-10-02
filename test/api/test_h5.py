@@ -49,7 +49,7 @@ async def test_by_count(api: FeedApi):
         n = await api.get_feeds_by_count(10)
     except LoginError as e:
         pytest.skip(str(e))
-    await asyncio.gather(api.ch_dispatch.wait(), api.ch_notify.wait())
+    await asyncio.gather(api.ch_feed_dispatch.wait(), api.ch_feed_notify.wait())
     assert len(batch) == n - len(drop)
     assert len(set(batch)) == n - len(drop)
 
@@ -65,6 +65,6 @@ async def test_by_second(api: FeedApi):
         n = await api.get_feeds_by_second(3 * 86400)
     except LoginError as e:
         pytest.skip(str(e))
-    await asyncio.gather(api.ch_dispatch.wait(), api.ch_notify.wait())
+    await asyncio.gather(api.ch_feed_dispatch.wait(), api.ch_feed_notify.wait())
     assert len(set(batch)) == len(batch)
     assert len(set(batch)) == n - len(drop)

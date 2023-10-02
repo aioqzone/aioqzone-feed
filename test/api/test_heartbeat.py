@@ -43,6 +43,6 @@ async def test_heartbeat_exc(api: HeartbeatApi, exc2r: Type[BaseException], shou
     api.hb_failed.add_impl(lambda exc, stop: pool.append(stop))
     with patch.object(api, "hb_api", side_effect=exc2r):
         await api.heartbeat_refresh()
-        await api.ch_hb.wait()
+        await api.ch_heartbeat_notify.wait()
         assert pool
         assert not pool[0] is should_alive
