@@ -1,13 +1,8 @@
-from typing import Generic, TypeVar
-
 from aioqzone.model import FeedData
-from aioqzone.model.response.web import FeedRep
 from tylisten import hookdef
 from tylisten.futstore import FutureStore
 
 from aioqzone_feed.type import BaseFeed, FeedContent
-
-_F = TypeVar("_F", FeedData, FeedRep)
 
 __all__ = ["raw_feed", "processed_feed", "FeedApiEmitterMixin"]
 
@@ -28,7 +23,7 @@ def processed_feed(bid: int, feed: FeedContent):
     """
 
 
-class FeedApiEmitterMixin(Generic[_F]):
+class FeedApiEmitterMixin:
     def __init__(self, *args, **kwds) -> None:
         super().__init__(*args, **kwds)
         self.feed_dropped = raw_feed.new()
@@ -39,7 +34,7 @@ class FeedApiEmitterMixin(Generic[_F]):
         self.ch_feed_notify = FutureStore()
         """A future store serves as message notify channel."""
 
-    async def stop_fetch(self, feed: _F) -> bool:
+    async def stop_fetch(self, feed: FeedData) -> bool:
         """An async callback to determine if fetch should be stopped (after processing current batch)."""
         return False
 

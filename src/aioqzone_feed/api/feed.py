@@ -2,10 +2,7 @@ import logging
 import time
 import typing as t
 
-from aioqzone.api import Loginable
-from aioqzone.api.h5 import QzoneH5API
 from aioqzone.model import FeedData
-from qqqr.utils.net import ClientAdapter
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
 from aioqzone_feed.message import FeedApiEmitterMixin
@@ -19,7 +16,7 @@ MAX_BID = 0x7FFF
 """
 
 
-class FeedH5Api(FeedApiEmitterMixin[FeedData], HeartbeatApi):
+class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
     """
     .. versionadded:: 0.13.0
     """
