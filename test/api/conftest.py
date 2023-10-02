@@ -1,23 +1,24 @@
 import asyncio
 import io
 from contextlib import suppress
-from typing import List
+from os import environ
 
 import pytest
 import pytest_asyncio
-from aioqzone.api import QrLoginConfig, UnifiedLoginManager, UpLoginConfig
-from aioqzone.message import LoginMethod
-from httpx import AsyncClient
+from aioqzone.api import UpLoginConfig, UpLoginManager
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from qqqr.utils.net import ClientAdapter
+
+loginman_list = ["up"]
+if environ.get("CI") is None:
+    loginman_list.append("qr")
 
 
 class test_env(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="test_")
     uin: int = 0
     password: SecretStr = Field(default="")
-    order: List[LoginMethod] = ["up"]
 
 
 @pytest.fixture(scope="session")
@@ -34,22 +35,22 @@ def event_loop():
 
 @pytest_asyncio.fixture(scope="module")
 async def client():
-    async with AsyncClient() as client:
-        yield ClientAdapter(client)
+    async with ClientAdapter() as client:
+        yield client
 
 
-@pytest.fixture
-def man(client: ClientAdapter, env: test_env):
-    man = UnifiedLoginManager(
-        client,
-        up_config=UpLoginConfig(uin=env.uin, pwd=env.password),
-        qr_config=QrLoginConfig(uin=env.uin),
-    )
-    man.order = env.order
+@pytest.fixture(params=loginman_list)
+def man(request, client: ClientAdapter, env: test_env):
+    if request.param == "up":
+        return UpLoginManager(client, UpLoginConfig(uin=env.uin, pwd=env.password))
 
-    with suppress(ImportError):
-        from PIL import Image as image
+    if request.param == "qr":
+        from aioqzone.api import QrLoginConfig, QrLoginManager
 
-        man.qr_fetched.add_impl(lambda png, times: image.open(io.BytesIO(png)).show())
+        man = QrLoginManager(client, QrLoginConfig(uin=env.uin))
+        with suppress(ImportError):
+            from PIL import Image as image
 
-    yield man
+            man.qr_fetched.add_impl(lambda png, times: image.open(io.BytesIO(png)).show())
+
+        return man

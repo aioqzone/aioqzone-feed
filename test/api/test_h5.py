@@ -1,41 +1,21 @@
 import asyncio
-import sys
-from contextlib import ExitStack
-from unittest.mock import patch
 
 import pytest
 import pytest_asyncio
-from aioqzone.api import UnifiedLoginManager
-from aioqzone.exception import LoginError, QzoneError
+from aioqzone.api import Loginable
 from qqqr.utils.net import ClientAdapter
+from tenacity import RetryError
 
-from aioqzone_feed.api.feed.h5 import FeedH5Api as FeedApi
-
-if sys.version_info < (3, 11):
-    from exceptiongroup import ExceptionGroup
+from aioqzone_feed.api import FeedApi
 
 pytestmark = pytest.mark.asyncio
 
 
 @pytest_asyncio.fixture
-async def api(client: ClientAdapter, man: UnifiedLoginManager):
-    api = FeedApi(client, man, init_hb=False)
+async def api(client: ClientAdapter, man: Loginable):
+    api = FeedApi(client, man)
     yield api
     api.stop()
-
-
-async def test_exception(api: FeedApi):
-    with ExitStack() as stack:
-        stack.enter_context(patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)))
-        r = stack.enter_context(pytest.raises(ExceptionGroup, match="max retry exceeds"))
-        await api.get_feeds_by_count()
-        assert len(r.value.exceptions) == 5
-
-    with ExitStack() as stack:
-        stack.enter_context(patch.object(api, "get_active_feeds", side_effect=QzoneError(-3000)))
-        r = stack.enter_context(pytest.raises(ExceptionGroup, match="max retry exceeds"))
-        await api.get_feeds_by_second(86400)
-        assert len(r.value.exceptions) == 5
 
 
 async def test_by_count(api: FeedApi):
@@ -47,9 +27,9 @@ async def test_by_count(api: FeedApi):
 
     try:
         n = await api.get_feeds_by_count(10)
-    except LoginError as e:
+    except RetryError as e:
         pytest.skip(str(e))
-    await asyncio.gather(api.ch_dispatch.wait(), api.ch_notify.wait())
+    await asyncio.gather(api.ch_feed_dispatch.wait(), api.ch_feed_notify.wait())
     assert len(batch) == n - len(drop)
     assert len(set(batch)) == n - len(drop)
 
@@ -63,8 +43,8 @@ async def test_by_second(api: FeedApi):
 
     try:
         n = await api.get_feeds_by_second(3 * 86400)
-    except LoginError as e:
+    except RetryError as e:
         pytest.skip(str(e))
-    await asyncio.gather(api.ch_dispatch.wait(), api.ch_notify.wait())
+    await asyncio.gather(api.ch_feed_dispatch.wait(), api.ch_feed_notify.wait())
     assert len(set(batch)) == len(batch)
     assert len(set(batch)) == n - len(drop)

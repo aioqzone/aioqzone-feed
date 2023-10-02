@@ -5,13 +5,11 @@ __all__ = ["heartbeat_failed", "heartbeat_refresh", "HeartbeatEmitterMixin"]
 
 
 @hookdef
-def heartbeat_failed(exc: BaseException, stop: bool):
+def heartbeat_failed(exc: BaseException):
     """
     This message is emitted when the heartbeat got an error.
 
     :param exc: An exception object that can be used to determine the cause of the heartbeat failure.
-    :param stop: Whether the heartbeat is suggested to restart or even stop. One can check :obj:`.exc`
-    and make his own decision.
     """
 
 
@@ -34,8 +32,8 @@ class HeartbeatEmitterMixin:
         """This emitter is triggered after a heartbeat succeeded and there are new feeds.
         Use this event to wait for all dispatch task to be finished, and send received feeds.
         """
-        self.ch_hb = FutureStore()
+        self.ch_heartbeat_notify = FutureStore()
         """A future store serves as heartbeat channel."""
 
     def stop(self):
-        self.ch_hb.clear()
+        self.ch_heartbeat_notify.clear()
