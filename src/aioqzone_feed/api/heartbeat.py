@@ -1,11 +1,6 @@
-import asyncio
 import logging
-import typing as t
 
-from aiohttp import ClientError
 from aioqzone.api.h5 import QzoneH5API
-from aioqzone.exception import QzoneError, UnexpectedLoginError
-from qqqr.exception import UserBreak
 from tenacity import RetryError
 
 from aioqzone_feed.message import HeartbeatEmitterMixin
@@ -36,10 +31,10 @@ class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
         except RetryError as e:
             e = e.last_attempt.exception()
             log.warning(e)
-            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.results(e))
+            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
         except BaseException as e:
             log.error("心跳出现未捕获的异常", exc_info=e)
-            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.results(e))
+            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
