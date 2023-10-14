@@ -148,11 +148,11 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
 
         if self.drop_rule(feed):
             FeedContent.from_feed(feed)
-            self.ch_feed_dispatch.add_awaitable(self.feed_dropped.results(self.bid, model))
+            self.ch_feed_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
             return
 
         model.set_detail(feed)
-        self.ch_feed_notify.add_awaitable(self.feed_processed.results(self.bid, model))
+        self.ch_feed_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""
