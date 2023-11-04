@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from aioqzone.model import FeedData, FeedOriginal, FeedVideo, PicData, Share
+from aioqzone.model import FeedData
+from aioqzone.model.api.feed import FeedOriginal, FeedVideo, PicData, Share
 from aioqzone.model.protocol import ConEntity
 from aioqzone.utils.entity import split_entities
 
@@ -16,7 +17,7 @@ class VisualMedia:
 
     @classmethod
     def from_pic(cls, pic: PicData):
-        if pic.videodata:
+        if pic.videodata.videourl:
             return cls.from_video(pic.videodata)
 
         raw = pic.photourl.largest
@@ -31,6 +32,7 @@ class VisualMedia:
 
     @classmethod
     def from_video(cls, video: FeedVideo):
+        assert video.videourl
         cover = video.coverurl.largest
         return cls(
             height=cover.height,
