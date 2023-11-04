@@ -30,6 +30,7 @@ def env():
 def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
+    loop.run_until_complete(loop.shutdown_asyncgens())
     loop.close()
 
 
@@ -51,6 +52,8 @@ def man(request, client: ClientAdapter, env: test_env):
         with suppress(ImportError):
             from PIL import Image as image
 
-            man.qr_fetched.add_impl(lambda png, times: image.open(io.BytesIO(png)).show())
+            man.qr_fetched.add_impl(
+                lambda png, times, qr_renew=False: image.open(io.BytesIO(png)).show()
+            )
 
         return man
