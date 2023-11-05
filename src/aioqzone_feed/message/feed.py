@@ -26,9 +26,9 @@ def processed_feed(bid: int, feed: FeedContent):
 class FeedApiEmitterMixin:
     def __init__(self, *args, **kwds) -> None:
         super().__init__(*args, **kwds)
-        self.feed_dropped = raw_feed.new()
-        self.feed_processed = processed_feed.new()
-        self.feed_media_updated = processed_feed.new()
+        self.feed_dropped = raw_feed()
+        self.feed_processed = processed_feed()
+        self.feed_media_updated = processed_feed()
         self.ch_feed_dispatch = FutureStore()
         """A future store serves as feed dispatch channel."""
         self.ch_feed_notify = FutureStore()

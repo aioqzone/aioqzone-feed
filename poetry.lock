@@ -110,13 +110,13 @@ speedups = ["Brotli", "aiodns", "cchardet"]
 
 [[package]]
 name = "aioqzone"
-version = "1.5.2.dev3"
+version = "1.5.4.dev1"
 description = "A Python wrapper for Qzone login and H5 APIs."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioqzone-1.5.2.dev3-py3-none-any.whl", hash = "sha256:b66a0b1f71370581af8f27dfc91fd4cb0f5db0b0801feff1b42cbfff13721946"},
-    {file = "aioqzone-1.5.2.dev3.tar.gz", hash = "sha256:6b2f56515263dded9819c44d4410519ef7519d125dac1f0ceddbf9f7140378de"},
+    {file = "aioqzone-1.5.4.dev1-py3-none-any.whl", hash = "sha256:953b6e0bfd658dbb3912138029b10e2a71525131528b7cbdd2a03fb31247c3a1"},
+    {file = "aioqzone-1.5.4.dev1.tar.gz", hash = "sha256:d0a72e4ebb0ab361285c2afec2aa2f9f6c3df500d148d9a7358c26379227f8f8"},
 ]
 
 [package.dependencies]
@@ -131,7 +131,7 @@ pydantic = ">=2.0.3,<3.0.0"
 pydantic-settings = ">=2.0.2,<3.0.0"
 rsa = ">=4.8,<5.0"
 tenacity = ">=8.2.3,<9.0.0"
-tylisten = ">=1.1.2,<2.0.0"
+tylisten = ">=2.0.1,<3.0.0"
 
 [package.extras]
 captcha = ["numpy (>=1.22.3,<2.0.0)", "pillow (>=10.0.1,<11.0.0)", "pychaosvm (>=0.2.7,<0.3.0)"]
@@ -1741,22 +1741,17 @@ files = [
 
 [[package]]
 name = "tylisten"
-version = "1.1.2"
-description = "A fully typed async hook library."
+version = "2.0.1"
+description = "A tiny hook specification library with typing support."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "tylisten-1.1.2-py3-none-any.whl", hash = "sha256:dc7db9b71cb4c1b7ce37f4b95a50adcf8e6a85f160302a4ca072f0cfb65105ea"},
-    {file = "tylisten-1.1.2.tar.gz", hash = "sha256:686af7652b112b308829a693087391bd3d4fd6179e80199934305784fbf6f656"},
+    {file = "tylisten-2.0.1-py3-none-any.whl", hash = "sha256:e6de8523f17ba0dd0c413d7ab10f23ba8bdb7daa15c432403ef3f6d973ea1ea8"},
+    {file = "tylisten-2.0.1.tar.gz", hash = "sha256:1cf40107ea25b130678ffe5b1acf32af7040b437fded69013abc82a76ace1f38"},
 ]
 
 [package.dependencies]
 typing_extensions = ">=4.6.0"
-
-[package.source]
-type = "legacy"
-url = "https://aioqzone.github.io/aioqzone-index/simple"
-reference = "aioqzone-index"
 
 [[package]]
 name = "typing-extensions"
@@ -1914,4 +1909,4 @@ captcha = ["aioqzone", "aioqzone"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "fdac65771d50c5efaca3a42bf540426e3214187757d4785e91e7894383b0e584"
+content-hash = "fd161a1319591f725f05cfb9c247ed492944479c5fe43ca2688ecc30870bc058"

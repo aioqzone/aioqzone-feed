@@ -24,11 +24,11 @@ def heartbeat_refresh(num: int):
 class HeartbeatEmitterMixin:
     def __init__(self, *args, **kwds) -> None:
         super().__init__(*args, **kwds)
-        self.hb_failed = heartbeat_failed.new()
+        self.hb_failed = heartbeat_failed()
         """
         This emitter is triggered when the heartbeat fails because of a exception.
         """
-        self.hb_refresh = heartbeat_refresh.new()
+        self.hb_refresh = heartbeat_refresh()
         """This emitter is triggered after a heartbeat succeeded and there are new feeds.
         Use this event to wait for all dispatch task to be finished, and send received feeds.
         """
