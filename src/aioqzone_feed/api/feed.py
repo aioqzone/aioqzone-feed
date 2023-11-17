@@ -63,7 +63,7 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
             for fd in feeds:
                 if filter_pred and filter_pred(fd):
                     continue
-                if stop_pred(fd, cnt_got) or await self.stop_fetch(fd):
+                if stop_pred(fd, cnt_got) or any(await self.stop_fetch.results(fd)):
                     stop_fetching = True
                     continue
                 cnt_got += 1
