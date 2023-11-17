@@ -23,20 +23,23 @@ def processed_feed(bid: int, feed: FeedContent):
     """
 
 
+@hookdef
+def stop_fetch(feed: FeedData) -> bool:
+    """An async callback to determine if fetch should be stopped (after processing current batch)."""
+    return False
+
+
 class FeedApiEmitterMixin:
     def __init__(self, *args, **kwds) -> None:
         super().__init__(*args, **kwds)
         self.feed_dropped = raw_feed()
         self.feed_processed = processed_feed()
         self.feed_media_updated = processed_feed()
+        self.stop_fetch = stop_fetch()
         self.ch_feed_dispatch = FutureStore()
         """A future store serves as feed dispatch channel."""
         self.ch_feed_notify = FutureStore()
         """A future store serves as message notify channel."""
-
-    async def stop_fetch(self, feed: FeedData) -> bool:
-        """An async callback to determine if fetch should be stopped (after processing current batch)."""
-        return False
 
     def stop(self):
         self.ch_feed_dispatch.clear()
