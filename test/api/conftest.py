@@ -54,6 +54,8 @@ def man(request, client: ClientAdapter, env: test_env):
 
             man.qr_fetched.add_impl(
                 lambda png, times, qr_renew=False: image.open(io.BytesIO(png)).show()
+                if png
+                else None
             )
 
         return man

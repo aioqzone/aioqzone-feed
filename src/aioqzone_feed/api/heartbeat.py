@@ -1,5 +1,6 @@
 import logging
 
+from aiohttp.client_exceptions import ClientResponseError
 from aioqzone.api.h5 import QzoneH5API
 from tenacity import RetryError
 
@@ -30,6 +31,9 @@ class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
             return
         except RetryError as e:
             e = e.last_attempt.exception()
+            log.warning(e)
+            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
+        except ClientResponseError as e:
             log.warning(e)
             self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
         except BaseException as e:
