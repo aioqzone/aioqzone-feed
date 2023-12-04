@@ -9,108 +9,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-13 13:11+0800\n"
+"POT-Creation-Date: 2023-12-04 17:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.13.1\n"
 
 #: ../../source/type.rst:2
 msgid "aioqzone-feed Types"
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseDetail.forward:1 of
+#: ../../../docstring aioqzone_feed.type.BaseDetail.forward:1 of
 msgid "unikey to the feed, or the content itself."
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail.set_detail of
-msgid "返回类型"
-msgstr ""
-
-#: aioqzone_feed.type.BaseDetail.set_detail:2 of
-msgid ":py:obj:`None`"
 msgstr ""
 
 #: aioqzone_feed.type.BaseFeed:1 of
 msgid "FeedModel is a model for storing a feed, with the info to hashing and retrieving the feed."
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.abstime:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.abstime:1 of
 msgid "Feed created time. common alias: `created_time`"
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.curkey:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.curkey:1 of
 msgid "The identifier to this feed. May be a url, or just a identifier string."
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.fid:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.fid:1 of
 msgid "Feed id, a hex string with 24/32 chars, or a much shorter placeholder."
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.fid:4 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.fid:4 of
 msgid ""
 "fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is a 24 or 32 "
 "length hex string, which might be satisfied. But for shares that appid!=311, it is a short "
 "string and is commonly used by multiple shares. So do not distinguish all feeds on this field."
 msgstr ""
 
-#: functools.singledispatchmethod.__get__.<locals>._method:1 of
-msgid "classmethod(function) -> method"
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:3 of
-msgid "Convert a function to be a class method."
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:5 of
-msgid ""
-"A class method receives the class as implicit first argument, just like an instance method "
-"receives the instance. To declare a class method, use this idiom:"
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:12 of
-msgid "class C:"
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:10 of
-msgid "@classmethod def f(cls, arg1, arg2, ...):"
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:12 of
-msgid "..."
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:14 of
-msgid ""
-"It can be called either on the class (e.g. C.f()) or on an instance (e.g. C().f()).  The "
-"instance is ignored except for its class. If a class method is called for a derived class, the "
-"derived class object is passed as the implied first argument."
-msgstr ""
-
-#: functools.singledispatchmethod.__get__.<locals>._method:19 of
-msgid ""
-"Class methods are different than C++ or Java static methods. If you want those, see the "
-"staticmethod builtin."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.type.BaseFeed.nickname:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.nickname:1 of
 msgid "Feed owner nickname."
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.topicId:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.topicId:1 of
 msgid ""
 "This is used to reply to this feed, or can be used to update this feed if current user own this "
 "feed."
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.uin:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.uin:1 of
 msgid "Feed owner uin. (hostuin)"
 msgstr ""
 
-#: ../../docstring aioqzone_feed.type.BaseFeed.unikey:1 of
+#: ../../../docstring aioqzone_feed.type.BaseFeed.unikey:1 of
 msgid ""
 "The identifier to the original content. May be a url in all kinds (sometimes not strictly in a "
 "correct format, but it is from the meaning)"
@@ -283,4 +236,47 @@ msgstr ""
 #~ msgid ""
 #~ ":py:obj:`thumbnail (pydantic.networks.HttpUrl | None) "
 #~ "<aioqzone_feed.type.VisualMedia.thumbnail>`"
+#~ msgstr ""
+
+#~ msgid "返回类型"
+#~ msgstr ""
+
+#~ msgid ":py:obj:`None`"
+#~ msgstr ""
+
+#~ msgid "classmethod(function) -> method"
+#~ msgstr ""
+
+#~ msgid "Convert a function to be a class method."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A class method receives the class as implicit "
+#~ "first argument, just like an instance method "
+#~ "receives the instance. To declare a class method,"
+#~ " use this idiom:"
+#~ msgstr ""
+
+#~ msgid "class C:"
+#~ msgstr ""
+
+#~ msgid "@classmethod def f(cls, arg1, arg2, ...):"
+#~ msgstr ""
+
+#~ msgid "..."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "It can be called either on the class (e.g."
+#~ " C.f()) or on an instance (e.g. C().f()).  The"
+#~ " instance is ignored except for its class. If"
+#~ " a class method is called for a derived "
+#~ "class, the derived class object is passed as "
+#~ "the implied first argument."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Class methods are different than C++ or Java "
+#~ "static methods. If you want those, see the "
+#~ "staticmethod builtin."
 #~ msgstr ""

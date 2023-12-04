@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 09:22+0800\n"
+"POT-Creation-Date: 2023-12-04 17:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.13.1\n"
 
 #: ../../source/message/index.rst:2
 msgid "aioqzone-feed Messages"
@@ -31,69 +31,58 @@ msgstr ""
 msgid "Feed Messages"
 msgstr ""
 
-#: ../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.ch_dispatch:1 of
-msgid "A future store serves as feed dispatch channel."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.ch_notify:1 of
-msgid "A future store serves as message notify channel."
-msgstr ""
-
-#: aioqzone_feed.message.feed.FeedApiEmitterMixin.stop_fetch:1 of
-msgid "An async callback to determine if fetch should be stopped (after processing current batch)."
-msgstr ""
-
-#: aioqzone_feed.message.feed.FeedApiEmitterMixin.stop_fetch of
-msgid "返回类型"
-msgstr ""
-
-#: aioqzone_feed.message.feed.FeedApiEmitterMixin.stop_fetch:4 of
-msgid ":py:class:`bool`"
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.feed.processed_feed.bid:1
-#: aioqzone_feed.message.feed.raw_feed.bid:1 of
-msgid "Used to identify feed batch (tell from different calling)."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.feed.processed_feed.feed:1 of
-msgid "Used to pass the feed content."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.feed.raw_feed.feed:1 of
-msgid "Used to pass a ref to the feed."
-msgstr ""
-
 #: ../../source/message/index.rst:13
 msgid "Heartbeat Messages"
-msgstr ""
-
-#: aioqzone_feed.message.heartbeat.heartbeat_failed:1 of
-msgid "This message is emitted when the heartbeat got an error."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed.exc:1 of
-msgid "An exception object that can be used to determine the cause of the heartbeat failure."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed.stop:1 of
-msgid ""
-"Whether the heartbeat is suggested to restart or even stop. One can check :obj:`.exc` and make "
-"his own decision."
-msgstr ""
-
-#: aioqzone_feed.message.heartbeat.heartbeat_refresh:1 of
-msgid ""
-"This message is emitted after a heartbeat succeeded and there are new feeds. Use this event to "
-"wait for all dispatch task to be finished, and send received feeds."
-msgstr ""
-
-#: ../../docstring aioqzone_feed.message.heartbeat.heartbeat_refresh.num:1 of
-msgid "number of new feeds"
 msgstr ""
 
 #~ msgid "aioqzone-feed Events"
 #~ msgstr ""
 
 #~ msgid "Batch ID type. Currently it is a `int`."
+#~ msgstr ""
+
+#~ msgid "A future store serves as feed dispatch channel."
+#~ msgstr ""
+
+#~ msgid "A future store serves as message notify channel."
+#~ msgstr ""
+
+#~ msgid "An async callback to determine if fetch should be stopped (after processing current batch)."
+#~ msgstr ""
+
+#~ msgid "返回类型"
+#~ msgstr ""
+
+#~ msgid ":py:class:`bool`"
+#~ msgstr ""
+
+#~ msgid "Used to identify feed batch (tell from different calling)."
+#~ msgstr ""
+
+#~ msgid "Used to pass the feed content."
+#~ msgstr ""
+
+#~ msgid "Used to pass a ref to the feed."
+#~ msgstr ""
+
+#~ msgid "This message is emitted when the heartbeat got an error."
+#~ msgstr ""
+
+#~ msgid "An exception object that can be used to determine the cause of the heartbeat failure."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the heartbeat is suggested to restart or"
+#~ " even stop. One can check :obj:`.exc` and make"
+#~ " his own decision."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This message is emitted after a heartbeat succeeded"
+#~ " and there are new feeds. Use this event "
+#~ "to wait for all dispatch task to be finished,"
+#~ " and send received feeds."
+#~ msgstr ""
+
+#~ msgid "number of new feeds"
 #~ msgstr ""
