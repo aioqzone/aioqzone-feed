@@ -10,6 +10,11 @@ def heartbeat_failed(exc: BaseException):
     This message is emitted when the heartbeat got an error.
 
     :param exc: An exception object that can be used to determine the cause of the heartbeat failure.
+
+    .. hint::
+
+        - :external+aioqzone:exc:`QzoneError`(code=-3000): Login expired. Relogin is needed.
+        - :external+aiohttp:exc:`ClientResponseError`(status=500): Qzone server buzy. Ignore it.
     """
 
 

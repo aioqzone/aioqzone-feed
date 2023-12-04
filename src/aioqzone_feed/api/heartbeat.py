@@ -30,7 +30,8 @@ class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
                 self.ch_heartbeat_notify.add_awaitable(self.hb_refresh.emit(cnt))
             return
         except RetryError as e:
-            e = e.last_attempt.exception()
+            if e.last_attempt.failed:
+                e = e.last_attempt.exception()
             log.warning(e)
             self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
         except ClientResponseError as e:
