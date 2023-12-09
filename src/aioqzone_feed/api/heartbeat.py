@@ -1,12 +1,13 @@
 import logging
 
-from aiohttp.client_exceptions import ClientResponseError
+from aiohttp.client_exceptions import ClientResponseError, ServerTimeoutError
 from aioqzone.api.h5 import QzoneH5API
 from tenacity import RetryError
 
 from aioqzone_feed.message import HeartbeatEmitterMixin
 
 log = logging.getLogger(__name__)
+known_exc = (ClientResponseError, ServerTimeoutError)
 
 
 class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
@@ -34,7 +35,7 @@ class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
                 e = e.last_attempt.exception()
             log.warning(e)
             self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
-        except ClientResponseError as e:
+        except known_exc as e:
             log.warning(e)
             self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
         except BaseException as e:
