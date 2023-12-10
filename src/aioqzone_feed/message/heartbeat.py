@@ -1,3 +1,5 @@
+import typing as t
+
 from tylisten import hookdef
 from tylisten.futstore import FutureStore
 
@@ -5,7 +7,7 @@ __all__ = ["heartbeat_failed", "heartbeat_refresh", "HeartbeatEmitterMixin"]
 
 
 @hookdef
-def heartbeat_failed(exc: BaseException):
+def heartbeat_failed(exc: BaseException) -> t.Any:
     """
     This message is emitted when the heartbeat got an error.
 
@@ -13,13 +15,15 @@ def heartbeat_failed(exc: BaseException):
 
     .. hint::
 
-        - :external+aioqzone:exc:`QzoneError`(code=-3000): Login expired. Relogin is needed.
-        - :external+aiohttp:exc:`ClientResponseError`(status=500): Qzone server buzy. Ignore it.
+        Recommended handling strategy:
+
+        - :exc:`~aioqzone.exception.QzoneError` if :obj:`~aioqzone.exception.QzoneError.code` = -3000: Login expired. Relogin is needed.
+        - :exc:`~aiohttp.ServerTimeoutError` / :exc:`~aiohttp.ClientResponseError` if :obj:`~aiohttp.ClientResponseError.status` = 500: Qzone server buzy. Ignore it.
     """
 
 
 @hookdef
-def heartbeat_refresh(num: int):
+def heartbeat_refresh(num: int) -> t.Any:
     """This message is emitted after a heartbeat succeeded and there are new feeds.
     Use this event to wait for all dispatch task to be finished, and send received feeds.
 
@@ -41,4 +45,5 @@ class HeartbeatEmitterMixin:
         """A future store serves as heartbeat channel."""
 
     def stop(self):
+        """Clear future stores."""
         self.ch_heartbeat_notify.clear()

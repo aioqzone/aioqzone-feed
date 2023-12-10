@@ -1,5 +1,5 @@
 Heartbeat API
 ==========================
 
-.. automodule:: aioqzone_feed.api.heartbeat
+.. autoclass:: aioqzone_feed.api.heartbeat.HeartbeatApi
     :members:
