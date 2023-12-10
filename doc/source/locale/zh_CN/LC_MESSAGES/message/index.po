@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:22+0800\n"
+"POT-Creation-Date: 2023-12-10 10:42+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -23,16 +23,130 @@ msgstr ""
 msgid "aioqzone-feed Messages"
 msgstr ""
 
-#: ../../source/message/index.rst:4
+#: ../../source/message/index.rst:6
 msgid "aioqzone-feed uses `tylisten` to dispatch and subscribte messages."
 msgstr ""
 
-#: ../../source/message/index.rst:7
+#: ../../source/message/index.rst:9
 msgid "Feed Messages"
 msgstr ""
 
-#: ../../source/message/index.rst:13
+#: aioqzone_feed.message.feed.processed_feed aioqzone_feed.message.feed.raw_feed
+#: aioqzone_feed.message.heartbeat.heartbeat_failed aioqzone_feed.message.heartbeat.heartbeat_refresh
+#: of
+msgid "参数"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.processed_feed:1
+#: aioqzone_feed.message.feed.raw_feed:1 of
+msgid "Used to identify feed batch (tell from different calling)."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.raw_feed:2 of
+msgid "Used to pass a ref to the feed."
+msgstr ""
+
+#: aioqzone_feed.message.feed.processed_feed aioqzone_feed.message.feed.raw_feed
+#: aioqzone_feed.message.feed.stop_fetch of
+msgid "返回类型"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.processed_feed:4
+#: aioqzone_feed.message.feed.raw_feed:4 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.processed_feed:2 of
+msgid "Used to pass the feed content."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.stop_fetch:1 of
+msgid "An async callback to determine if fetch should be stopped (after processing current batch)."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.stop_fetch:4 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.feed_dropped:1 of
+msgid "This emitter is triggered when a feed is dropped."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.feed_processed:1 of
+msgid "This emitter is triggered when a feed is processed."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.feed_media_updated:1 of
+msgid "This emitter is triggered when a feed's media is updated."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.stop_fetch:1 of
+msgid "This hook is used to determin whether a fetch should stop."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.ch_feed_dispatch:1 of
+msgid "A future store serves as feed dispatch channel."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.feed.FeedApiEmitterMixin.ch_feed_notify:1 of
+msgid "A future store serves as message notify channel."
+msgstr ""
+
+#: aioqzone_feed.message.feed.FeedApiEmitterMixin.stop:1
+#: aioqzone_feed.message.heartbeat.HeartbeatEmitterMixin.stop:1 of
+msgid "Clear future stores."
+msgstr ""
+
+#: ../../source/message/index.rst:20
 msgid "Heartbeat Messages"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_refresh:1 of
+msgid ""
+"This message is emitted after a heartbeat succeeded and there are new feeds. Use this event to "
+"wait for all dispatch task to be finished, and send received feeds."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_refresh:4 of
+msgid "number of new feeds"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed:1 of
+msgid "This message is emitted when the heartbeat got an error."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed:3 of
+msgid "An exception object that can be used to determine the cause of the heartbeat failure."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed:7 of
+msgid "Recommended handling strategy:"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed:9 of
+msgid ""
+":exc:`~aioqzone.exception.QzoneError` if :obj:`~aioqzone.exception.QzoneError.code` = -3000: "
+"Login expired. Relogin is needed."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.heartbeat_failed:10 of
+msgid ""
+":exc:`~aiohttp.ServerTimeoutError` / :exc:`~aiohttp.ClientResponseError` if "
+":obj:`~aiohttp.ClientResponseError.status` = 500: Qzone server buzy. Ignore it."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.HeartbeatEmitterMixin.hb_failed:1 of
+msgid "This emitter is triggered when the heartbeat fails because of a exception."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.HeartbeatEmitterMixin.hb_refresh:1 of
+msgid ""
+"This emitter is triggered after a heartbeat succeeded and there are new feeds. Use this event to"
+" wait for all dispatch task to be finished, and send received feeds."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.message.heartbeat.HeartbeatEmitterMixin.ch_heartbeat_notify:1 of
+msgid "A future store serves as heartbeat channel."
 msgstr ""
 
 #~ msgid "aioqzone-feed Events"
@@ -85,4 +199,38 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "number of new feeds"
+#~ msgstr ""
+
+#~ msgid ":external+aioqzone:exc:`QzoneError`(code=-3000): Login expired. Relogin is needed."
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":external+aioqzone:exc:`QzoneError` if :external:obj:`~QzoneError.code` ="
+#~ " -3000: Login expired. Relogin is needed."
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":external+aiohttp:exc:`ServerTimeoutError` / "
+#~ ":external+aiohttp:exc:`ClientResponseError`(status=500): Qzone server buzy."
+#~ " Ignore it."
+#~ msgstr ""
+
+#~ msgid ":exc:`QzoneError` if :obj:`~QzoneError.code` = -3000: Login expired. Relogin is needed."
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":exc:`ServerTimeoutError` / :exc:`ClientResponseError` if "
+#~ ":obj:`~ClientResponseError.status` = 500: Qzone server buzy."
+#~ " Ignore it."
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":exc:`~aioqzone.exception.QzoneError` if :obj:`~QzoneError.code` = "
+#~ "-3000: Login expired. Relogin is needed."
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":exc:`~aiohttp.ServerTimeoutError` / :exc:`ClientResponseError` if "
+#~ ":obj:`~ClientResponseError.status` = 500: Qzone server buzy."
+#~ " Ignore it."
 #~ msgstr ""

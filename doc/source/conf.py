@@ -64,8 +64,12 @@ html_static_path = ["_static"]
 # external inventory
 intersphinx_mapping = {
     "aiohttp": ("https://docs.aiohttp.org/en/stable/", None),
+    "tylisten": ("https://JamzumSum.github.io/tylisten", None),
     "aioqzone": ("https://aioqzone.github.io/aioqzone", None),
 }
+
+# autodoc settings
+autodoc_member_order = "bysource"
 
 # autodoc_pydantic settings
 autodoc_pydantic_model_show_json = False
