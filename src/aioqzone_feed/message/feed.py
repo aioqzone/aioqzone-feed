@@ -1,12 +1,13 @@
 import typing as t
 
-from aioqzone.model import FeedData
+from aioqzone.model import FeedData, ProfileFeedData
 from tylisten import hookdef
 from tylisten.futstore import FutureStore
 
 from aioqzone_feed.type import BaseFeed, FeedContent
 
 __all__ = ["raw_feed", "processed_feed", "stop_fetch", "FeedApiEmitterMixin"]
+FEED_TYPES = t.Union[FeedData, ProfileFeedData]
 
 
 @hookdef
@@ -26,7 +27,7 @@ def processed_feed(bid: int, feed: FeedContent) -> t.Any:
 
 
 @hookdef
-def stop_fetch(feed: FeedData) -> bool:
+def stop_fetch(feed: FEED_TYPES) -> bool:
     """An async callback to determine if fetch should be stopped (after processing current batch)."""
     return False
 

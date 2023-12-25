@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from aioqzone.model import FeedData
+from aioqzone.model import FeedData, ProfileFeedData
 from aioqzone.model.api.feed import FeedOriginal, FeedVideo, PicData, Share
+from aioqzone.model.api.profile import ProfilePicData
 from aioqzone.model.protocol import ConEntity
 from aioqzone.utils.entity import split_entities
 
@@ -16,7 +17,10 @@ class VisualMedia:
     thumbnail: Optional[str] = None
 
     @classmethod
-    def from_pic(cls, pic: PicData):
+    def from_pic(cls, pic: Union[PicData, ProfilePicData]):
+        if isinstance(pic, ProfilePicData):
+            return cls.from_profile_picdata(pic)
+
         if pic.videodata.videourl:
             return cls.from_video(pic.videodata)
 
@@ -40,6 +44,18 @@ class VisualMedia:
             thumbnail=str(cover.url),
             raw=str(video.videourl),
             is_video=True,
+        )
+
+    @classmethod
+    def from_profile_picdata(cls, pic: ProfilePicData):
+        raw = pic.photourl.largest
+        thumb = pic.photourl.smallest
+        return cls(
+            is_video=False,
+            height=raw.height,
+            width=raw.width,
+            raw=str(raw.url),
+            thumbnail=str(thumb.url),
         )
 
 
@@ -100,7 +116,7 @@ class BaseFeed:
         return f"{self.__class__.__name__}(uin={self.uin},abstime={self.abstime}')"
 
     @classmethod
-    def from_feed(cls, obj: FeedData, **kwds):
+    def from_feed(cls, obj: Union[FeedData, ProfileFeedData], **kwds):
         return cls(
             appid=obj.common.appid,
             typeid=obj.common.typeid,
@@ -122,7 +138,7 @@ class BaseDetail:
     """unikey to the feed, or the content itself."""
     media: List[VisualMedia] = field(default_factory=list)
 
-    def set_detail(self, obj: FeedData):
+    def set_detail(self, obj: Union[FeedData, ProfileFeedData]):
         self.entities = split_entities(obj.summary.summary)
         if obj.original:
             if isinstance(obj.original, FeedOriginal):
@@ -148,7 +164,7 @@ class BaseDetail:
 
         if obj.pic:
             self.media = [VisualMedia.from_pic(i) for i in obj.pic.picdata]
-        if obj.video:
+        if isinstance(obj, FeedData) and obj.video:
             self.media.insert(0, VisualMedia.from_video(obj.video))
 
 
