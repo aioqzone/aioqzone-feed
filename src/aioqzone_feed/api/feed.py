@@ -2,10 +2,11 @@ import logging
 import time
 import typing as t
 
-from aioqzone.model import FeedData
+from aioqzone.model.api.response import FeedPageResp, ProfileResp
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
 from aioqzone_feed.message import FeedApiEmitterMixin
+from aioqzone_feed.message.feed import FEED_TYPES
 from aioqzone_feed.type import FeedContent
 
 log = logging.getLogger(__name__)
@@ -35,10 +36,34 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
         self.bid = (self.bid + 1) % MAX_BID
         return self.bid
 
+    @t.overload
+    async def get_feedpage_by_uin(
+        self, uin: t.Literal[None] = None, attach_info: t.Optional[str] = None
+    ) -> FeedPageResp:
+        ...
+
+    @t.overload
+    async def get_feedpage_by_uin(
+        self, uin: int, attach_info: t.Optional[str] = None
+    ) -> ProfileResp:
+        ...
+
+    async def get_feedpage_by_uin(
+        self, uin: t.Optional[int] = None, attach_info: t.Optional[str] = None
+    ) -> FeedPageResp:
+        """This method combines :external+aioqzone:meth:`get_active_feeds` and
+        :external+aioqzone:meth:`get_feeds` , depends on the :obj:`uin` passed in.
+        """
+        if not uin:
+            return await self.get_active_feeds(attach_info=attach_info)
+
+        return await self.get_feeds(uin, attach_info)
+
     async def _get_feeds_by_pred(
         self,
-        stop_pred: t.Callable[[FeedData, int], bool],
-        filter_pred: t.Optional[t.Callable[[FeedData], bool]] = None,
+        stop_pred: t.Callable[[FEED_TYPES, int], bool],
+        uin: t.Optional[int] = None,
+        filter_pred: t.Optional[t.Callable[[FEED_TYPES], bool]] = None,
     ):
         """
         :meta public:
@@ -53,7 +78,7 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
         cnt_got = 0
 
         while not stop_fetching:
-            resp = await self.get_active_feeds(attach_info)
+            resp = await self.get_feedpage_by_uin(uin, attach_info)
             attach_info = resp.attachinfo
             feeds = resp.vFeeds
             stop_fetching = not resp.hasmore
@@ -71,7 +96,12 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
 
         return cnt_got
 
-    async def get_feeds_by_count(self, count: int = 10) -> int:
+    async def get_feeds_by_count(
+        self,
+        count: int = 10,
+        *,
+        uin: t.Optional[int] = None,
+    ) -> int:
         """Get feeds by count.
 
         :param count: feeds count to get, max as 10, defaults to 10
@@ -81,11 +111,13 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
         if count <= 0:
             return 0
         count = min(count, 10)
-        return await self._get_feeds_by_pred(lambda _, cnt: cnt >= count)
+        return await self._get_feeds_by_pred(lambda _, cnt: cnt >= count, uin)
 
     async def get_feeds_by_second(
         self,
         seconds: float,
+        *,
+        uin: t.Optional[int] = None,
         start: t.Optional[float] = None,
     ) -> int:
         """Get feeds by abstime (seconds). Range: [`start` - `seconds`, `start`].
@@ -105,10 +137,10 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
             return 0
 
         return await self._get_feeds_by_pred(
-            lambda feed, _: feed.abstime < end, lambda feed: feed.abstime > start
+            lambda feed, _: feed.abstime < end, uin, lambda feed: feed.abstime > start
         )
 
-    def drop_rule(self, feed: FeedData) -> bool:
+    def drop_rule(self, feed: FEED_TYPES) -> bool:
         """Drop feeds according to some rules.
         No need to emit :meth:`FeedEvent.FeedDropped` event, it is handled by :meth:`_dispatch_feed`.
 
@@ -129,7 +161,7 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
 
         return False
 
-    def _dispatch_feed(self, feed: FeedData) -> None:
+    def _dispatch_feed(self, feed: FEED_TYPES) -> None:
         """dispatch feed according to api support.
 
         1. Drop feed according to rules defined in `drop_rule`, trigger :meth:`FeedDropped` hook if dropped;
