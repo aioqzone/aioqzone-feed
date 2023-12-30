@@ -71,11 +71,12 @@ class BaseFeed:
     .. note::
         fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is
         a 24 or 32 length hex string, which might be satisfied. But for shares that appid!=311, it is a
-        short string and is commonly used by multiple shares. So do not distinguish all feeds on this field."""
+        short string and is commonly used by multiple shares. So do not distinguish all feeds on this field.
+    """
     abstime: int
     """Feed created time. common alias: `created_time`"""
     uin: int
-    """Feed owner uin. (hostuin)"""
+    """Feed owner :external+aioqzone:term:`uin`."""
     nickname: str
     """Feed owner nickname."""
     curkey: Optional[str] = None

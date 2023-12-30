@@ -51,8 +51,8 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
     async def get_feedpage_by_uin(
         self, uin: t.Optional[int] = None, attach_info: t.Optional[str] = None
     ) -> FeedPageResp:
-        """This method combines :external+aioqzone:meth:`get_active_feeds` and
-        :external+aioqzone:meth:`get_feeds` , depends on the :obj:`uin` passed in.
+        """This method combines :external:meth:`~aioqzone.api.h5.QzoneH5API.get_active_feeds` and
+        :external:meth:`~aioqzone.api.h5.QzoneH5API.get_feeds` , depends on the :obj:`uin` passed in.
         """
         if not uin:
             return await self.get_active_feeds(attach_info=attach_info)

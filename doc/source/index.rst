@@ -11,12 +11,20 @@ feeds fetched by Qzone API. `aioqzone-feed` could be regarded as a set of high-l
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :caption: Catagories
 
    api/index
    message/index
    type
+   examples
 
+.. toctree::
+   :caption: Links
+   :hidden:
+
+   aioqzone documents <https://aioqzone.github.io/aioqzone>
+   tylisten documents <https://JamzumSum.github.io/tylisten>
+   Qzone2TG repository <https://github.com/aioqzone/Qzone2TG>
 
 Indices and tables
 ==================

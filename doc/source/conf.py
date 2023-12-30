@@ -17,7 +17,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "aioqzone-feed"
-copyright = "2022-2023, aioqzone"
+copyright = "2022-2024, aioqzone"
 author = "aioqzone"
 
 # The full version, including alpha/beta/rc tags
@@ -55,6 +55,7 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = "furo"
+html_logo = "https://aioqzone.github.io/aioqzone/_static/penguin-blob.webp"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

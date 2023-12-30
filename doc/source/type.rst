@@ -1,6 +1,13 @@
 aioqzone-feed Types
 ============================
 
-.. automodule:: aioqzone_feed.type
+.. currentmodule:: aioqzone_feed.type
+
+.. autoclass:: FeedContent
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+.. autoclass:: VisualMedia
     :members:
     :undoc-members:
