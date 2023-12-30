@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 21:31+0800\n"
+"POT-Creation-Date: 2023-12-30 22:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -131,6 +131,10 @@ msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api.drop_rule:9 of
 msgid "if the feed is dropped."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.wait:1 of
+msgid "Wait until all feeds are dispatched and emitted."
 msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api.stop:1 of

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 21:34+0800\n"
+"POT-Creation-Date: 2023-12-30 22:51+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -22,3 +22,51 @@ msgstr ""
 #: ../../source/examples.rst:2
 msgid "Examples"
 msgstr ""
+
+#: ../../source/examples.rst:5
+msgid "Where to get examples"
+msgstr ""
+
+#: ../../source/examples.rst:7
+msgid ""
+"`aioqzone-feed test suits <https://github.com/aioqzone/aioqzone-"
+"feed/blob/beta/test/api/test_h5.py>`_ could provide a basic example;"
+msgstr ""
+
+#: ../../source/examples.rst:8
+msgid "`Qzone2TG repository <https://github.com/aioqzone/Qzone2TG>`_ is an example in practical project."
+msgstr ""
+
+#: ../../source/examples.rst:11
+msgid "Get feed list"
+msgstr ""
+
+#: ../../source/examples.rst:13
+msgid "Here is an example (with zh-CN comments!) about how to:"
+msgstr ""
+
+#: ../../source/examples.rst:15
+msgid "initiate a login manager and an API instance"
+msgstr ""
+
+#: ../../source/examples.rst:16
+msgid "register hooks"
+msgstr ""
+
+#: ../../source/examples.rst:17
+msgid "start a fetch process and block until all feeds are processed"
+msgstr ""
+
+#~ msgid ""
+#~ "`Qzone2TG repository <https://github.com/aioqzone/Qzone2TG>` is an"
+#~ " example in practical project."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "`aioqzone-feed test suits <https://github.com/aioqzone/aioqzone-"
+#~ "feed/blob/beta/test/api/test_h5.py>`_ could provide a basic "
+#~ "example"
+#~ msgstr ""
+
+#~ msgid "Here is an example (with zh-CN comments!) about how to"
+#~ msgstr ""
