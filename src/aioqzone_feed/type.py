@@ -7,6 +7,8 @@ from aioqzone.model.api.profile import ProfilePicData
 from aioqzone.model.protocol import ConEntity
 from aioqzone.utils.entity import split_entities
 
+FEED_TYPES = Union[FeedData, ProfileFeedData]
+
 
 @dataclass
 class VisualMedia:

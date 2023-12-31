@@ -1,13 +1,11 @@
 import typing as t
 
-from aioqzone.model import FeedData, ProfileFeedData
 from tylisten import hookdef
 from tylisten.futstore import FutureStore
 
-from aioqzone_feed.type import BaseFeed, FeedContent
+from aioqzone_feed.type import FEED_TYPES, BaseFeed, FeedContent
 
 __all__ = ["raw_feed", "processed_feed", "stop_fetch", "FeedApiEmitterMixin"]
-FEED_TYPES = t.Union[FeedData, ProfileFeedData]
 
 
 @hookdef

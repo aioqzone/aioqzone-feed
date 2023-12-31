@@ -7,8 +7,7 @@ from aioqzone.model.api.response import FeedPageResp, ProfileResp
 
 from aioqzone_feed.api.heartbeat import HeartbeatApi
 from aioqzone_feed.message import FeedApiEmitterMixin
-from aioqzone_feed.message.feed import FEED_TYPES
-from aioqzone_feed.type import FeedContent
+from aioqzone_feed.type import FEED_TYPES, FeedContent
 
 log = logging.getLogger(__name__)
 MAX_BID = 0x7FFF
