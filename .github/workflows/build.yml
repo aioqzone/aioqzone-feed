@@ -44,7 +44,6 @@ jobs:
           poetry build
 
       - name: Upload to Release
-        if: github.event_name != 'pull_request'
         id: upload
         uses: JamzumSum/actions/hash-release@master
         with:
@@ -53,7 +52,6 @@ jobs:
           files: dist/*
 
       - name: Add to aioqzone-index
-        if: github.event_name != 'pull_request'
         env:
           urls: ${{ steps.upload.outputs.urls }}
           GH_TOKEN: ${{ secrets.REPO_TOKEN }} # this is a fine-grained PAT
