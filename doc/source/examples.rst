@@ -16,6 +16,6 @@ Here is an example (with zh-CN comments!) about how to:
 2. register hooks
 3. start a fetch process and block until all feeds are processed
 
-.. literalinclude:: _static\example.py
+.. literalinclude:: _static/example.py
     :language: python
     :linenos:
