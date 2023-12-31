@@ -43,12 +43,12 @@ class FeedApiEmitterMixin:
         """This emitter is triggered when a feed's media is updated."""
         self.stop_fetch = stop_fetch()
         """This hook is used to determin whether a fetch should stop."""
-        self.ch_feed_dispatch = FutureStore()
-        """A future store serves as feed dispatch channel."""
+        self._ch_feed_dispatch = FutureStore()
+        """An internal future store serves as feed dispatch channel."""
         self.ch_feed_notify = FutureStore()
         """A future store serves as message notify channel."""
 
     def stop(self):
         """Clear future stores."""
-        self.ch_feed_dispatch.clear()
+        self._ch_feed_dispatch.clear()
         self.ch_feed_notify.clear()

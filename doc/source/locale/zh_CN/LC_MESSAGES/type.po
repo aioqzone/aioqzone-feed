@@ -9,70 +9,66 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:22+0800\n"
+"POT-Creation-Date: 2023-12-30 21:40+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.13.1\n"
+"Generated-By: Babel 2.14.0\n"
 
 #: ../../source/type.rst:2
 msgid "aioqzone-feed Types"
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseDetail.forward:1 of
-msgid "unikey to the feed, or the content itself."
-msgstr ""
-
-#: aioqzone_feed.type.BaseFeed:1 of
-msgid "FeedModel is a model for storing a feed, with the info to hashing and retrieving the feed."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.abstime:1 of
-msgid "Feed created time. common alias: `created_time`"
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.curkey:1 of
-msgid "The identifier to this feed. May be a url, or just a identifier string."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.fid:1 of
-msgid "Feed id, a hex string with 24/32 chars, or a much shorter placeholder."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.fid:4 of
-msgid ""
-"fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is a 24 or 32 "
-"length hex string, which might be satisfied. But for shares that appid!=311, it is a short "
-"string and is commonly used by multiple shares. So do not distinguish all feeds on this field."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.nickname:1 of
-msgid "Feed owner nickname."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.topicId:1 of
-msgid ""
-"This is used to reply to this feed, or can be used to update this feed if current user own this "
-"feed."
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.uin:1 of
-msgid "Feed owner uin. (hostuin)"
-msgstr ""
-
-#: ../../../docstring aioqzone_feed.type.BaseFeed.unikey:1 of
-msgid ""
-"The identifier to the original content. May be a url in all kinds (sometimes not strictly in a "
-"correct format, but it is from the meaning)"
 msgstr ""
 
 #: aioqzone_feed.type.FeedContent:1 of
 msgid ""
 "FeedContent is feed with contents. This might be the common structure to represent a feed as "
 "what it's known."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.curkey:1 of
+msgid "The identifier to this feed. May be a url, or just a identifier string."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.forward:1 of
+msgid "unikey to the feed, or the content itself."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.topicId:1 of
+msgid ""
+"This is used to reply to this feed, or can be used to update this feed if current user own this "
+"feed."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.unikey:1 of
+msgid ""
+"The identifier to the original content. May be a url in all kinds (sometimes not strictly in a "
+"correct format, but it is from the meaning)"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.fid:1 of
+msgid "Feed id, a hex string with 24/32 chars, or a much shorter placeholder."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.fid:4 of
+msgid ""
+"fid is not a enough identifier for ANY feed. For comman feed that appid==311, it is a 24 or 32 "
+"length hex string, which might be satisfied. But for shares that appid!=311, it is a short "
+"string and is commonly used by multiple shares. So do not distinguish all feeds on this field."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.abstime:1 of
+msgid "Feed created time. common alias: `created_time`"
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.uin:1 of
+msgid "Feed owner :external+aioqzone:term:`uin`."
+msgstr ""
+
+#: ../../../docstring aioqzone_feed.type.FeedContent.nickname:1 of
+msgid "Feed owner nickname."
 msgstr ""
 
 #~ msgid "Fields"

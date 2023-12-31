@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import time
 import typing as t
@@ -51,8 +52,8 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
     async def get_feedpage_by_uin(
         self, uin: t.Optional[int] = None, attach_info: t.Optional[str] = None
     ) -> FeedPageResp:
-        """This method combines :external+aioqzone:meth:`get_active_feeds` and
-        :external+aioqzone:meth:`get_feeds` , depends on the :obj:`uin` passed in.
+        """This method combines :external:meth:`~aioqzone.api.h5.QzoneH5API.get_active_feeds` and
+        :external:meth:`~aioqzone.api.h5.QzoneH5API.get_feeds` , depends on the :obj:`uin` passed in.
         """
         if not uin:
             return await self.get_active_feeds(attach_info=attach_info)
@@ -171,7 +172,7 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
         :param feed: feed
         """
         if feed.summary.hasmore:
-            self.ch_feed_dispatch.add_awaitable(
+            self._ch_feed_dispatch.add_awaitable(
                 self.shuoshuo(feed.fid, feed.userinfo.uin, feed.common.appid)
             ).add_done_callback(lambda t: self._dispatch_feed(t.result()))
             return
@@ -180,11 +181,19 @@ class FeedH5Api(FeedApiEmitterMixin, HeartbeatApi):
 
         if self.drop_rule(feed):
             FeedContent.from_feed(feed)
-            self.ch_feed_dispatch.add_awaitable(self.feed_dropped.emit(self.bid, model))
+            self.ch_feed_notify.add_awaitable(self.feed_dropped.emit(self.bid, model))
             return
 
         model.set_detail(feed)
         self.ch_feed_notify.add_awaitable(self.feed_processed.emit(self.bid, model))
+
+    async def wait(self):
+        """Wait until all feeds are dispatched and emitted.
+
+        .. versionadded:: 1.2.1.dev1
+        """
+        await asyncio.gather(self._ch_feed_dispatch.wait(), self.ch_feed_notify.wait())
+        await self.ch_feed_notify.wait()
 
     def stop(self) -> None:
         """Clear **all** registered tasks. All tasks will be CANCELLED if not finished."""

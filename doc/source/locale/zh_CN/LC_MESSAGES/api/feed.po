@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: aioqzone-feed \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 17:23+0800\n"
+"POT-Creation-Date: 2023-12-30 22:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -17,15 +17,52 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.13.1\n"
+"Generated-By: Babel 2.14.0\n"
 
 #: ../../source/api/feed.rst:2
 msgid "Feed API"
 msgstr ""
 
+#: aioqzone_feed.api.feed.FeedH5Api.new_batch:1 of
+msgid "The new_batch function edit internal batch id and return it."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.new_batch:3 of
+msgid ""
+"A batch id can be used to identify a batch, thus even the same feed can have different id e.g. "
+"`(bid, uin, abstime)`."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule aioqzone_feed.api.feed.FeedH5Api.get_feedpage_by_uin
+#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count
+#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_second aioqzone_feed.api.feed.FeedH5Api.new_batch
+#: aioqzone_feed.api.feed.FeedH5Api.stop of
+msgid "返回类型"
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:5
+#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_second:7 aioqzone_feed.api.feed.FeedH5Api.new_batch:5
+#: of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`int\\``"
+msgstr ""
+
 #: aioqzone_feed.api.feed.FeedH5Api._get_feeds_by_pred aioqzone_feed.api.feed.FeedH5Api.drop_rule
 #: aioqzone_feed.api.feed.FeedH5Api.new_batch of
 msgid "返回"
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.new_batch:6 of
+msgid "The batch_id."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.get_feedpage_by_uin:1 of
+msgid ""
+"This method combines :external:meth:`~aioqzone.api.h5.QzoneH5API.get_active_feeds` and "
+":external:meth:`~aioqzone.api.h5.QzoneH5API.get_feeds` , depends on the :obj:`uin` passed in."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.get_feedpage_by_uin:5 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~aioqzone.model.api.response.FeedPageResp\\``"
 msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api._get_feeds_by_pred:2 of
@@ -44,14 +81,8 @@ msgstr ""
 msgid "You may need :meth:`.new_batch` to generate a new batch id."
 msgstr ""
 
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:1 of
-msgid ""
-"Drop feeds according to some rules. No need to emit :meth:`FeedEvent.FeedDropped` event, it is "
-"handled by :meth:`_dispatch_feed`."
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:4 of
-msgid "Subclasses may inherit this method to customize their own rules."
+#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:1 of
+msgid "Get feeds by count."
 msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api.drop_rule aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count
@@ -59,36 +90,8 @@ msgstr ""
 msgid "参数"
 msgstr ""
 
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:7 of
-msgid "the feed"
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count
-#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_second aioqzone_feed.api.feed.FeedH5Api.new_batch
-#: aioqzone_feed.api.feed.FeedH5Api.stop of
-msgid "返回类型"
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:8 of
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:9 of
-msgid "if the feed is dropped."
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:1 of
-msgid "Get feeds by count."
-msgstr ""
-
 #: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:4 of
 msgid "feeds count to get, max as 10, defaults to 10"
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:5
-#: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_second:7 aioqzone_feed.api.feed.FeedH5Api.new_batch:5
-#: of
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`int\\``"
 msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api.get_feeds_by_count:7
@@ -108,18 +111,30 @@ msgstr ""
 msgid "start timestamp, defaults to None, means now."
 msgstr ""
 
-#: aioqzone_feed.api.feed.FeedH5Api.new_batch:1 of
-msgid "The new_batch function edit internal batch id and return it."
-msgstr ""
-
-#: aioqzone_feed.api.feed.FeedH5Api.new_batch:3 of
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:1 of
 msgid ""
-"A batch id can be used to identify a batch, thus even the same feed can have different id e.g. "
-"`(bid, uin, abstime)`."
+"Drop feeds according to some rules. No need to emit :meth:`FeedEvent.FeedDropped` event, it is "
+"handled by :meth:`_dispatch_feed`."
 msgstr ""
 
-#: aioqzone_feed.api.feed.FeedH5Api.new_batch:6 of
-msgid "The batch_id."
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:4 of
+msgid "Subclasses may inherit this method to customize their own rules."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:7 of
+msgid "the feed"
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:8 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.drop_rule:9 of
+msgid "if the feed is dropped."
+msgstr ""
+
+#: aioqzone_feed.api.feed.FeedH5Api.wait:1 of
+msgid "Wait until all feeds are dispatched and emitted."
 msgstr ""
 
 #: aioqzone_feed.api.feed.FeedH5Api.stop:1 of
@@ -250,4 +265,10 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Get feeds by abstime (seconds). Range: [`start` - `seconds`, `start`]."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This method combines :external+aioqzone:meth:`get_active_feeds` and"
+#~ " :external+aioqzone:meth:`get_feeds` , depends on the "
+#~ ":obj:`uin` passed in."
 #~ msgstr ""

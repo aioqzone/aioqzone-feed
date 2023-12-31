@@ -1,19 +1,15 @@
 name: Release and Upload to aioqzone-index
 
 on:
+  workflow_dispatch:
   pull_request:
-    types:
-      - review_requested
-    branches:
-      - "beta"
-      - "beta/**"
-  pull_request_target:
     types:
       - closed
     branches:
+      - "release"
+      - "release/**"
       - "beta"
       - "beta/**"
-  workflow_dispatch:
 
 concurrency:
   group: build-${{ github.ref_name }}
