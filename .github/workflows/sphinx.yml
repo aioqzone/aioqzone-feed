@@ -37,7 +37,7 @@ jobs:
       - name: Install Library and Build HTML
         run: |
           echo "::group::Install Library"
-          poetry install --with docs --without test
+          poetry install --with docs --without test -vv
           echo "::endgroup::"
 
           echo "::group::Build HTML"
