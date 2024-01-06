@@ -1,6 +1,6 @@
 import logging
 
-from aiohttp.client_exceptions import ClientResponseError, ServerTimeoutError
+from aiohttp.client_exceptions import ClientConnectorError, ClientResponseError, ServerTimeoutError
 from aioqzone.api.h5 import QzoneH5API
 from tenacity import RetryError
 
@@ -30,6 +30,9 @@ class HeartbeatApi(HeartbeatEmitterMixin, QzoneH5API):
             if cnt > 0:
                 self.ch_heartbeat_notify.add_awaitable(self.hb_refresh.emit(cnt))
             return
+        except ClientConnectorError as e:
+            log.warning("网络连接较差，或许可以稍后再试。")
+            self.ch_heartbeat_notify.add_awaitable(self.hb_failed.emit(e))
         except RetryError as e:
             if e.last_attempt.failed:
                 e = e.last_attempt.exception()
