@@ -35,7 +35,7 @@ jobs:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           echo "::group::Install Dependencies"
-          poetry install --all-extras -n -vv
+          poetry install -n -vv
           echo "::endgroup::"
 
           echo "::group::pytest outputs"
