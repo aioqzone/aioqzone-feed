@@ -28,20 +28,14 @@ jobs:
       contents: write # release needs write permission
     steps:
       - uses: actions/checkout@v4
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-          # cache: poetry
+      - uses: astral-sh/setup-uv@v6
 
       - name: Build dist
         id: build
         run: |
-          version=$(poetry version -s)
+          version=$(uv version --short)
           echo "version=$version" >> $GITHUB_ENV
-
-          poetry build
+          uv build
 
       - name: Upload to Release
         id: upload
