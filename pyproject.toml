@@ -20,7 +20,7 @@ slide-captcha = ["slide-tc~=0.1.3"]
 "Bug Tracker" = "https://github.com/aioqzone/aioqzone-feed/issues"
 
 [dependency-groups]
-test = ["pytest>=8.2.1", "pytest-asyncio~=1.1.0"]
+test = ["pytest>=8.2.1", "pytest-asyncio~=1.2.0"]
 dev = ["pre-commit", "ruff"]
 doc = [
     "Sphinx>=7.0.1; python_version >= '3.9' and python_version < '3.11'",
