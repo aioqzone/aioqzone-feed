@@ -24,7 +24,7 @@ test = ["pytest>=8.2.1", "pytest-asyncio~=1.1.0"]
 dev = ["pre-commit", "ruff"]
 doc = [
     "Sphinx>=7.0.1; python_version >= '3.9' and python_version < '3.11'",
-    "Sphinx~=8.2; python_version >= '3.11'",
+    "Sphinx~=7.4; python_version >= '3.11'",
     "autodoc-pydantic",
     "sphinx-autodoc-typehints>=1.19",
     "furo",
