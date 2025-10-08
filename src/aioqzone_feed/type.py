@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from aioqzone.model import FeedData, ProfileFeedData
 from aioqzone.model.api.feed import FeedOriginal, FeedVideo, PicData, Share
-from aioqzone.model.api.profile import ProfilePicData
+from aioqzone.model.api.profile import ProfileFeedOriginal, ProfilePicData
 from aioqzone.model.protocol import ConEntity
 from aioqzone.utils.entity import split_entities
 
@@ -144,7 +144,7 @@ class BaseDetail:
     def set_detail(self, obj: Union[FeedData, ProfileFeedData]):
         self.entities = split_entities(obj.summary.summary)
         if obj.original:
-            if isinstance(obj.original, FeedOriginal):
+            if isinstance(obj.original, (FeedOriginal, ProfileFeedOriginal)):
                 org = obj.original
                 self.forward = FeedContent(
                     entities=split_entities(org.summary.summary),
