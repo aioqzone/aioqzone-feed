@@ -22,7 +22,7 @@ jobs:
           NO_COLOR: 1
         run: |
           set -euo pipefail
-          uv lock -U --dry-run > /tmp/preview.txt
+          uv lock -U --dry-run 2>&1 | grep -E '^(Update|Add|Remove|Downgrade)' > /tmp/preview.txt || true
           DELIM="EOF_$(date +%s)_$$"
           {
             echo "log<<$DELIM"
@@ -44,7 +44,7 @@ jobs:
       - name: Create Pull Request
         if: steps.update.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
         run: |
           set -euo pipefail
           BRANCH="deps/update-uv-$(date +%Y%m%d%H%M%S)"
