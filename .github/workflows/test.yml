@@ -1,10 +1,10 @@
 name: Test
 
 on:
-  workflow_dispatch:
   pull_request:
     types:
       - review_requested
+      - opened
     branches:
       - beta
       - release
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   test:
+    if: github.event_name != 'pull_request' || github.event.action != 'opened' || startsWith(github.head_ref, 'deps/')
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -47,7 +47,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          BRANCH="dev/update-uv-$(date +%Y%m%d%H%M%S)"
+          BRANCH="deps/update-uv-$(date +%Y%m%d%H%M%S)"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
@@ -66,4 +66,3 @@ jobs:
             --body "${{ steps.preview.outputs.log }}" \
             --label dependencies)
           gh pr merge "$PR_URL" --auto --rebase
-          gh workflow run test.yml --ref "$BRANCH"
