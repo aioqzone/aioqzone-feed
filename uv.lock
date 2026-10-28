@@ -221,7 +221,7 @@ dependencies = [
     { name = "pychaosvm" },
     { name = "pydantic" },
     { name = "pydantic-settings", version = "2.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "pydantic-settings", version = "2.16.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pydantic-settings", version = "2.16.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "rsa" },
     { name = "tenacity" },
     { name = "tylisten" },
@@ -260,7 +260,7 @@ doc = [
     { name = "sphinx", version = "9.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
     { name = "sphinx-autodoc-typehints", version = "3.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "sphinx-autodoc-typehints", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
-    { name = "sphinx-autodoc-typehints", version = "3.17.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "sphinx-autodoc-typehints", version = "3.17.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "sphinx-intl" },
 ]
 test = [
@@ -350,7 +350,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings", version = "2.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "pydantic-settings", version = "2.16.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pydantic-settings", version = "2.16.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "sphinx", version = "8.1.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
     { name = "sphinx", version = "9.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.12.*'" },
@@ -1960,7 +1960,7 @@ wheels = [
 
 [[package]]
 name = "platformdirs"
-version = "4.13.6"
+version = "4.13.7"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -1968,9 +1968,9 @@ resolution-markers = [
     "python_full_version >= '3.11.5' and python_full_version < '3.12'",
     "python_full_version >= '3.11' and python_full_version < '3.11.5'",
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1a/43/8c4b5fe23f0e119cf4e1b16c2d16240ab9057cdbb138568c91d5a48abf81/platformdirs-4.13.6.tar.gz", hash = "sha256:211d176e24674b5895dedf9021c262bcf9fad008a70610bfb147d4a8d6d8fe1b", size = 62750, upload-time = "2026-10-27T08:19:11.538Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/35/e9/bf409046a91b6a9ca652e9b0ac3c39481674f6774e23e58b52315516099a/platformdirs-4.13.7.tar.gz", hash = "sha256:f7f351c027d6632c30471124e1fdb6ac0fef9ccc5cbac1b34cb333431b1fc3e1", size = 63906, upload-time = "2026-10-28T05:49:31.898Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/24/b312a9466839b1f708eed42790b47e927dc7f774a528bb49b1cdf8b734b9/platformdirs-4.13.6-py3-none-any.whl", hash = "sha256:21fc198fb09f3e78cadcdfd8a6ae4fd65cadc64a3cba78b694321c2996114a3e", size = 32767, upload-time = "2026-10-27T08:19:10.405Z" },
+    { url = "https://files.pythonhosted.org/packages/46/ff/8ed4a836cbf7de39708a2d305d6b67575990908d072bc3565dd8ad71748e/platformdirs-4.13.7-py3-none-any.whl", hash = "sha256:47664602fbecad0a6efa561fb690d20dbc26875fe8aedf65ba362935df619bbb", size = 33111, upload-time = "2026-10-28T05:49:30.545Z" },
 ]
 
 [[package]]
@@ -2372,7 +2372,7 @@ wheels = [
 
 [[package]]
 name = "pydantic-settings"
-version = "2.16.1"
+version = "2.16.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -2386,9 +2386,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/ca/7817b4bf0c4b15c6a6ab8cdf4cb96c268335a8ca2f525de93b6ebe4c7d28/pydantic_settings-2.16.1.tar.gz", hash = "sha256:aff602a1886338c2df3d1e958e2193a8dc33cec75b91f202e83fd98484b4b0da", size = 303436, upload-time = "2026-10-20T11:37:19.024Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d0/31/21d21e0e38a8f5f7a7f0cde22820117b6d17d6bc36f348129527f915d7f4/pydantic_settings-2.16.2.tar.gz", hash = "sha256:3dc08ffabed2bbd5dc2dd55ead7b78b4e4c5cd776aecd04310db5f1224caaf46", size = 309225, upload-time = "2026-10-28T11:14:28.066Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/74/fdf926afe145d8629c4b2ff57f4ea1d64ed7abc4d84d97463b2517a2547e/pydantic_settings-2.16.1-py3-none-any.whl", hash = "sha256:30f5313340da4e8f1b440d1910b92a5bc3ccbb6b4ba70ec2b8395bc921f418f5", size = 80771, upload-time = "2026-10-20T11:37:17.298Z" },
+    { url = "https://files.pythonhosted.org/packages/39/88/4131c51ff87b7cd7f82a1194d0c0a2b7ca68c72d9da04c3b7e69ab91a79f/pydantic_settings-2.16.2-py3-none-any.whl", hash = "sha256:8d523e5c129b097686bde019bd6109bff53f4c8c3f63f1ddf9933ffa42e5ab4f", size = 81994, upload-time = "2026-10-28T11:14:26.716Z" },
 ]
 
 [[package]]
@@ -2408,7 +2408,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/48/ef/c72abcfa2c6accd03
 
 [[package]]
 name = "pytest"
-version = "9.1.1"
+version = "9.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
@@ -2419,9 +2419,9 @@ dependencies = [
     { name = "pygments" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e4/47/b9efed96c114afcfa3c9d3fe98a76a1d14c74a9e266d397cf6eb64be5e01/pytest-9.1.1.tar.gz", hash = "sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313", size = 1636369, upload-time = "2026-06-19T10:58:32.857Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/79/42/bb4641652e58dedeac2ec51abc1f8cae4fee4ec63899a0999016229a0f2a/pytest-9.2.0.tar.gz", hash = "sha256:97c4f3b1f3c7414aa36465e09b8220f1d03627993bd51b1282e193753c80557b", size = 1797555, upload-time = "2026-10-27T21:30:20.728Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/25/1de2678b631f5a49215c6c96fff41ba892b0a34df68d6d80292b1b48aa7f/pytest-9.1.1-py3-none-any.whl", hash = "sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c", size = 386536, upload-time = "2026-06-19T10:58:31.347Z" },
+    { url = "https://files.pythonhosted.org/packages/51/39/1f5d8c8877a0fa327db959c19341d4be61660de1ab6b7391f9eb805bcd67/pytest-9.2.0-py3-none-any.whl", hash = "sha256:07acdcf88ec174f907dc01af70bf52d49b014bbab03faeeade31c96b18c2e588", size = 411776, upload-time = "2026-10-27T21:30:19.131Z" },
 ]
 
 [[package]]
@@ -2440,15 +2440,15 @@ wheels = [
 
 [[package]]
 name = "python-discovery"
-version = "1.6.5"
+version = "1.6.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filelock", version = "4.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b7/ba/2bdce36c8f1b081db630c61b433fcc7efa5094ba621147923232bdaa7332/python_discovery-1.6.5.tar.gz", hash = "sha256:f9420b2107a429ec9912bd10039135fc9bb8f15e99a00e614533977529f56bb3", size = 115599, upload-time = "2026-10-27T07:11:52.519Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a3/0b/908da9ef8a14b600fc188eee8d63ede071996114613721153f6fc9ea3cd5/python_discovery-1.6.7.tar.gz", hash = "sha256:7f7c28568c8ec3d988d8bddbdbec8e65f08e8767e52f734e18b8b498549b9b70", size = 117807, upload-time = "2026-10-28T06:24:21.878Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/41/18675fa48c8d5aaa1c4c2607716e985d482159e780f9624c2b755bb3b7e5/python_discovery-1.6.5-py3-none-any.whl", hash = "sha256:b531f0f90c4d6ec22f1f8e78996980048bd7d494b7d366b0cf98e39b293565e0", size = 38785, upload-time = "2026-10-27T07:11:50.826Z" },
+    { url = "https://files.pythonhosted.org/packages/57/e4/1c7c388e874222c28afb92fe3ebfeebe55555276523ba7aab0a82a10b2b5/python_discovery-1.6.7-py3-none-any.whl", hash = "sha256:5422f67e5f533bb02d7b73de1c422ed74037536fd869e05156c07565926ec68e", size = 39156, upload-time = "2026-10-28T06:24:20.462Z" },
 ]
 
 [[package]]
@@ -2795,7 +2795,7 @@ wheels = [
 
 [[package]]
 name = "sphinx-autodoc-typehints"
-version = "3.17.3"
+version = "3.17.4"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -2806,9 +2806,9 @@ dependencies = [
     { name = "sphinx", version = "9.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
     { name = "typing-extensions", marker = "python_full_version < '3.15'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5b/8c/2ab7bd22aa2988c9e4f4791688d6de24a00395afbd5d7dffa16b35db81fb/sphinx_autodoc_typehints-3.17.3.tar.gz", hash = "sha256:bb61ba0e2ab46e24631b0cc6ea0818176d6218a35225e0e632586e8dffc4ff4d", size = 510825, upload-time = "2026-10-27T07:00:16.582Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/a9/cfe13ff89678c6d310a8a9060333b7823bae1dbce9615c7032be89aaec20/sphinx_autodoc_typehints-3.17.4.tar.gz", hash = "sha256:a5ddd545192380292f13dd9fc232717a0925fbc66617bc51b3db1e0480db0fec", size = 511398, upload-time = "2026-10-27T19:18:44.225Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/9e/ab4db759c0a8dbc37aef2993976db7874bb2bde5f719d3c5b3448022f0d3/sphinx_autodoc_typehints-3.17.3-py3-none-any.whl", hash = "sha256:a87c08a7fe562a50557d1be6715bd47d403c23a7ead932dfc96de709b8a2b8ba", size = 140276, upload-time = "2026-10-27T07:00:14.696Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/66/40004fe2aea60edc4800328599dd115b3058f79bf148be1746349281f308/sphinx_autodoc_typehints-3.17.4-py3-none-any.whl", hash = "sha256:251271a49e46573c2e752bcc92dae232def822a2c9983272cb04d282eadc2bfa", size = 140603, upload-time = "2026-10-27T19:18:42.674Z" },
 ]
 
 [[package]]
@@ -3022,7 +3022,7 @@ wheels = [
 
 [[package]]
 name = "virtualenv"
-version = "21.15.0"
+version = "21.15.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distlib" },
@@ -3030,13 +3030,13 @@ dependencies = [
     { name = "filelock", version = "4.2.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "packaging" },
     { name = "platformdirs", version = "4.12.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "platformdirs", version = "4.13.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "platformdirs", version = "4.13.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "python-discovery" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/00/c27937345311d2aaf6197203231a59010073d7abffae3971503ac0e65477/virtualenv-21.15.0.tar.gz", hash = "sha256:41a0cfec413c886a991bf7657d02f8996e69e192485aa127b410f29f1e35cfd3", size = 5515331, upload-time = "2026-10-27T06:02:22.096Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b2/24/20282bc8e69ff8dee680dc2b95e9dc81fa7e7894b14c1a8d06330e97fef7/virtualenv-21.15.1.tar.gz", hash = "sha256:e79c90b8f601701599c25905e02839924fede2c798d52325670d24fbdaab74ee", size = 5517048, upload-time = "2026-10-28T01:12:50.919Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0f/25/fe570da03bdfda1bd489f3286ff9ca820e15ad8a1480d0d2c12871d58c84/virtualenv-21.15.0-py3-none-any.whl", hash = "sha256:013eb9c340466186ac8923ce920ae05becfa1390fdf3565b7eae0d191a2f4a2e", size = 5558480, upload-time = "2026-10-27T06:02:19.717Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/23/cdab19d3a9da42ca0938081e163e25f81e610141800ead743ba1ee881f0e/virtualenv-21.15.1-py3-none-any.whl", hash = "sha256:0d14a991689c67600316880eadc0a37b7690cb632e3b4ac67e2bc05b2b2e24a4", size = 5558848, upload-time = "2026-10-28T01:12:48.605Z" },
 ]
 
 [[package]]
