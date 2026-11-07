@@ -1,6 +1,6 @@
 [project]
 name = "aioqzone-feed"
-version = "1.3.2.dev1"
+version = "1.4.0.dev1"
 description = "aioqzone plugin that provides higher level apis for processing feeds."
 authors = [{ name = "aioqzone" }]
 maintainers = [
@@ -8,8 +8,8 @@ maintainers = [
 ]
 license = { text = "AGPL-3.0" }
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = ["aioqzone>=1.9.6.dev1", "pychaosvm"]
+requires-python = ">=3.11"
+dependencies = ["aioqzone>=1.10.2.dev1", "pychaosvm"]
 
 [project.optional-dependencies]
 slide-captcha = ["slide-tc~=0.1.3"]
@@ -20,11 +20,10 @@ slide-captcha = ["slide-tc~=0.1.3"]
 "Bug Tracker" = "https://github.com/aioqzone/aioqzone-feed/issues"
 
 [dependency-groups]
-test = ["pytest>=9.0.3", "pytest-asyncio>=1.3,<1.5"]
+test = ["pytest>=9.0.3", "pytest-asyncio>=1.3"]
 dev = ["pre-commit", "ruff"]
 doc = [
-    "Sphinx>=8.1.3; python_version >= '3.10' and python_version < '3.11'",
-    "Sphinx~=9.0; python_version >= '3.11'",
+    "Sphinx~=9.0",
     "autodoc-pydantic",
     "sphinx-autodoc-typehints>=1.19",
     "furo",
@@ -54,5 +53,5 @@ asyncio_default_fixture_loop_scope = "module"
 line-length = 99
 
 [tool.pyright]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 pythonPlatform = "All"
